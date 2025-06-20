@@ -1,0 +1,23 @@
+{
+  "app_name": "Gestion Aéroportuaire",
+  "version": "1.0.0",
+  "last_backup": "2025-06-18T13:53:19.851068",
+  "auto_save": true,
+  "auto_save_interval": 300,
+  "simulation_speed_options": [
+    0.5,
+    1,
+    2,
+    5,
+    10,
+    30,
+    60
+  ],
+  "default_simulation_speed": 1.0,
+  "max_events_log": 1000,
+  "ui_settings": {
+    "window_width": 1400,
+    "window_height": 900,
+    "theme": "default"
+  }
+}

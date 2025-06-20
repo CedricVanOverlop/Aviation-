@@ -1,0 +1,16 @@
+{
+  "31dc084c-c2c8-4484-9344-21d6c07596c2": {
+    "num_id": "123",
+    "modele": "RG65",
+    "capacite": 180,
+    "compagnie_aerienne": "Python Airline",
+    "vitesse_croisiere": 850.0,
+    "autonomie": 6000.0,
+    "localisation": {
+      "longitude": 2.3522,
+      "latitude": 48.8566
+    },
+    "etat": "au_sol",
+    "derniere_maintenance": null
+  }
+}

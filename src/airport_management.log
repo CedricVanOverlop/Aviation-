@@ -1,0 +1,142 @@
+2025-06-18 11:43:10,779 - __main__ - INFO - Démarrage de l'application de gestion aéroportuaire
+2025-06-18 11:43:11,015 - gui.utils.json_manager - INFO - Fichier initialisé: data\avions.json
+2025-06-18 11:43:11,016 - gui.utils.json_manager - INFO - Fichier initialisé: data\personnels.json
+2025-06-18 11:43:11,017 - gui.utils.json_manager - INFO - Fichier initialisé: data\passagers.json
+2025-06-18 11:43:11,017 - gui.utils.json_manager - INFO - Fichier initialisé: data\vols.json
+2025-06-18 11:43:11,018 - gui.utils.json_manager - INFO - Fichier initialisé: data\aeroports.json
+2025-06-18 11:43:11,018 - gui.utils.json_manager - INFO - Fichier initialisé: data\reservations.json
+2025-06-18 11:43:11,019 - gui.utils.json_manager - INFO - Fichier initialisé: data\compagnies.json
+2025-06-18 11:43:11,019 - gui.utils.json_manager - INFO - Fichier initialisé: data\simulation_state.json
+2025-06-18 11:43:11,020 - gui.utils.json_manager - INFO - Fichier initialisé: data\events_log.json
+2025-06-18 11:43:11,020 - gui.utils.json_manager - INFO - Fichier initialisé: data\app_config.json
+2025-06-18 11:43:11,020 - gui.utils.json_manager - INFO - JSONDataManager initialisé avec dossier: data
+2025-06-18 11:43:11,026 - gui.utils.time_simulator - INFO - État de simulation chargé: 0 événements programmés
+2025-06-18 11:43:11,026 - gui.utils.time_simulator - INFO - Simulateur temporel initialisé
+2025-06-18 11:43:11,026 - gui.controllers.data_controller - INFO - Chargement de toutes les données...
+2025-06-18 11:43:11,030 - gui.controllers.data_controller - INFO - Toutes les données chargées avec succès
+2025-06-18 11:43:11,030 - gui.controllers.data_controller - INFO - DataController initialisé
+2025-06-18 11:43:11,251 - gui.views.simulation_panel - INFO - Panneau de simulation initialisé
+2025-06-18 11:43:11,288 - gui.views.dashboard - INFO - Dashboard initialisé
+2025-06-18 11:43:11,312 - gui.views.flight_management - INFO - Vue gestion des vols initialisée
+2025-06-18 11:43:11,336 - gui.views.fleet_management - INFO - Vue gestion de la flotte initialisée
+2025-06-18 11:43:11,352 - gui.views.event_log - INFO - Vue journal des événements initialisée
+2025-06-18 11:43:11,353 - gui.main_window - INFO - Thread de simulation démarré
+2025-06-18 11:43:11,353 - gui.main_window - INFO - Interface graphique initialisée
+2025-06-18 11:43:11,354 - __main__ - INFO - Interface graphique initialisée
+2025-06-18 11:43:11,354 - gui.main_window - INFO - Démarrage de l'interface graphique
+2025-06-18 11:43:48,860 - gui.utils.time_simulator - INFO - Simulation démarrée (vitesse: 1.0x)
+2025-06-18 11:43:48,861 - gui.main_window - INFO - Simulation démarrée depuis l'interface
+2025-06-18 11:43:54,890 - gui.utils.time_simulator - INFO - Simulation arrêtée
+2025-06-18 11:43:54,892 - gui.main_window - INFO - Simulation mise en pause
+2025-06-18 11:44:19,767 - gui.utils.time_simulator - INFO - Simulation démarrée (vitesse: 1.0x)
+2025-06-18 11:44:19,767 - gui.main_window - INFO - Simulation démarrée depuis l'interface
+2025-06-18 11:44:32,740 - gui.utils.time_simulator - WARNING - La simulation est déjà en cours
+2025-06-18 11:44:32,741 - gui.views.simulation_panel - INFO - Simulation démarrée depuis le panneau
+2025-06-18 11:44:38,285 - gui.utils.time_simulator - INFO - Simulation arrêtée
+2025-06-18 11:44:38,286 - gui.main_window - INFO - Simulation mise en pause
+2025-06-18 11:44:39,677 - gui.main_window - INFO - Simulation arrêtée
+2025-06-18 11:44:41,943 - gui.views.simulation_panel - INFO - Simulation arrêtée
+2025-06-18 11:44:43,138 - gui.utils.time_simulator - INFO - Simulation démarrée (vitesse: 1.0x)
+2025-06-18 11:44:43,139 - gui.views.simulation_panel - INFO - Simulation démarrée depuis le panneau
+2025-06-18 11:44:44,262 - gui.utils.time_simulator - INFO - Simulation arrêtée
+2025-06-18 11:44:44,263 - gui.views.simulation_panel - INFO - Simulation arrêtée
+2025-06-18 11:44:46,929 - gui.utils.time_simulator - INFO - Simulation démarrée (vitesse: 60.0x)
+2025-06-18 11:44:46,930 - gui.views.simulation_panel - INFO - Simulation démarrée depuis le panneau
+2025-06-18 11:45:05,799 - gui.controllers.data_controller - INFO - Sauvegarde de toutes les données...
+2025-06-18 11:45:05,820 - gui.controllers.data_controller - INFO - Toutes les données sauvegardées
+2025-06-18 11:45:05,821 - gui.main_window - INFO - Sauvegarde manuelle effectuée
+2025-06-18 11:45:07,079 - gui.utils.time_simulator - INFO - Simulation arrêtée
+2025-06-18 11:45:07,080 - gui.views.simulation_panel - INFO - Simulation mise en pause
+2025-06-18 11:47:18,869 - gui.controllers.data_controller - INFO - Sauvegarde de toutes les données...
+2025-06-18 11:47:18,888 - gui.controllers.data_controller - INFO - Toutes les données sauvegardées
+2025-06-18 11:47:18,917 - gui.utils.json_manager - INFO - Sauvegarde créée: data\backup_20250618_114718 (10 fichiers)
+2025-06-18 11:47:18,917 - gui.main_window - INFO - Application fermée proprement
+2025-06-18 11:47:18,980 - gui.main_window - INFO - Interface graphique fermée
+2025-06-18 11:47:18,981 - __main__ - INFO - Arrêt de l'application
+2025-06-18 12:19:49,643 - __main__ - INFO - Démarrage de l'application de gestion aéroportuaire
+2025-06-18 12:19:49,879 - gui.utils.json_manager - INFO - JSONDataManager initialisé avec dossier: data
+2025-06-18 12:19:49,880 - gui.utils.time_simulator - INFO - État de simulation chargé: 0 événements programmés
+2025-06-18 12:19:49,880 - gui.utils.time_simulator - INFO - Simulateur temporel initialisé
+2025-06-18 12:19:49,881 - gui.controllers.data_controller - INFO - Chargement de toutes les données...
+2025-06-18 12:19:49,882 - gui.controllers.data_controller - INFO - Toutes les données chargées avec succès
+2025-06-18 12:19:49,882 - gui.controllers.data_controller - INFO - DataController initialisé
+2025-06-18 12:19:50,106 - gui.views.simulation_panel - INFO - Panneau de simulation initialisé
+2025-06-18 12:19:50,106 - __main__ - ERROR - Erreur lors du démarrage: 'AirportManagementGUI' object has no attribute 'setup_main_notebook'
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Test\Final Boom\main.py", line 64, in main
+    app = AirportManagementGUI()
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Test\Final Boom\gui\main_window.py", line 42, in __init__
+    self.setup_ui()
+  File "C:\Users\User\Desktop\Test\Final Boom\gui\main_window.py", line 122, in setup_ui
+    self.setup_main_notebook()
+    ^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AirportManagementGUI' object has no attribute 'setup_main_notebook'
+2025-06-18 12:19:59,888 - __main__ - INFO - Arrêt de l'application
+2025-06-18 12:24:38,363 - __main__ - INFO - Démarrage de l'application de gestion aéroportuaire
+2025-06-18 12:24:38,467 - gui.utils.json_manager - INFO - JSONDataManager initialisé avec dossier: data
+2025-06-18 12:24:38,467 - gui.utils.time_simulator - INFO - État de simulation chargé: 0 événements programmés
+2025-06-18 12:24:38,468 - gui.utils.time_simulator - INFO - Simulateur temporel initialisé
+2025-06-18 12:24:38,471 - gui.controllers.data_controller - INFO - Chargement de toutes les données...
+2025-06-18 12:24:38,471 - gui.controllers.data_controller - INFO - Toutes les données chargées avec succès
+2025-06-18 12:24:38,471 - gui.controllers.data_controller - INFO - DataController initialisé
+2025-06-18 12:24:38,667 - gui.views.simulation_panel - INFO - Panneau de simulation initialisé
+2025-06-18 12:24:38,696 - gui.views.dashboard - INFO - Dashboard initialisé
+2025-06-18 12:24:38,717 - gui.views.flight_management - INFO - Vue gestion des vols initialisée
+2025-06-18 12:24:38,738 - gui.views.fleet_management - INFO - Vue gestion de la flotte initialisée
+2025-06-18 12:24:38,752 - gui.views.event_log - INFO - Vue journal des événements initialisée
+2025-06-18 12:24:38,752 - __main__ - ERROR - Erreur lors du démarrage: 'AirportManagementGUI' object has no attribute 'setup_statusbar'
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Test\Final Boom\main.py", line 64, in main
+    app = AirportManagementGUI()
+          ^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Test\Final Boom\gui\main_window.py", line 42, in __init__
+    self.setup_ui()
+  File "C:\Users\User\Desktop\Test\Final Boom\gui\main_window.py", line 151, in setup_ui
+    self.setup_statusbar()
+    ^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'AirportManagementGUI' object has no attribute 'setup_statusbar'
+2025-06-18 12:25:09,440 - __main__ - INFO - Arrêt de l'application
+2025-06-18 12:26:06,025 - __main__ - INFO - Démarrage de l'application de gestion aéroportuaire
+2025-06-18 12:26:06,108 - gui.utils.json_manager - INFO - JSONDataManager initialisé avec dossier: data
+2025-06-18 12:26:06,109 - gui.utils.time_simulator - INFO - État de simulation chargé: 0 événements programmés
+2025-06-18 12:26:06,109 - gui.utils.time_simulator - INFO - Simulateur temporel initialisé
+2025-06-18 12:26:06,110 - gui.controllers.data_controller - INFO - Chargement de toutes les données...
+2025-06-18 12:26:06,111 - gui.controllers.data_controller - INFO - Toutes les données chargées avec succès
+2025-06-18 12:26:06,111 - gui.controllers.data_controller - INFO - DataController initialisé
+2025-06-18 12:26:06,321 - gui.views.simulation_panel - INFO - Panneau de simulation initialisé
+2025-06-18 12:26:06,362 - gui.views.dashboard - INFO - Dashboard initialisé
+2025-06-18 12:26:06,386 - gui.views.flight_management - INFO - Vue gestion des vols initialisée
+2025-06-18 12:26:06,410 - gui.views.fleet_management - INFO - Vue gestion de la flotte initialisée
+2025-06-18 12:26:06,427 - gui.views.event_log - INFO - Vue journal des événements initialisée
+2025-06-18 12:26:06,429 - gui.main_window - INFO - Thread de simulation démarré
+2025-06-18 12:26:06,429 - gui.main_window - INFO - Interface graphique initialisée
+2025-06-18 12:26:06,430 - __main__ - INFO - Interface graphique initialisée
+2025-06-18 12:26:06,430 - gui.main_window - INFO - Démarrage de l'interface graphique
+2025-06-20 15:22:02,827 - __main__ - INFO - Démarrage de l'application de gestion aéroportuaire
+2025-06-20 15:22:03,013 - gui.utils.json_manager - INFO - JSONDataManager initialisé avec dossier: data
+2025-06-20 15:22:03,019 - gui.utils.time_simulator - INFO - État de simulation chargé: 0 événements programmés
+2025-06-20 15:22:03,019 - gui.utils.time_simulator - INFO - Simulateur temporel initialisé
+2025-06-20 15:22:03,019 - gui.controllers.data_controller - INFO - Chargement de toutes les données...
+2025-06-20 15:22:03,025 - gui.controllers.data_controller - INFO - Toutes les données chargées avec succès
+2025-06-20 15:22:03,025 - gui.controllers.data_controller - INFO - DataController initialisé
+2025-06-20 15:22:03,261 - gui.views.simulation_panel - INFO - Panneau de simulation initialisé
+2025-06-20 15:22:03,298 - gui.views.dashboard - INFO - Dashboard initialisé
+2025-06-20 15:22:03,322 - gui.views.flight_management - INFO - Vue gestion des vols initialisée
+2025-06-20 15:22:03,345 - gui.views.fleet_management - INFO - Vue gestion de la flotte initialisée
+2025-06-20 15:22:03,361 - gui.views.event_log - INFO - Vue journal des événements initialisée
+2025-06-20 15:22:03,362 - gui.main_window - INFO - Thread de simulation démarré
+2025-06-20 15:22:03,362 - gui.main_window - INFO - Interface graphique initialisée
+2025-06-20 15:22:03,362 - __main__ - INFO - Interface graphique initialisée
+2025-06-20 15:22:03,362 - gui.main_window - INFO - Démarrage de l'interface graphique
+2025-06-20 15:26:26,030 - gui.controllers.data_controller - INFO - Nouvel avion créé: FZACK
+2025-06-20 15:27:03,362 - gui.controllers.data_controller - INFO - Sauvegarde de toutes les données...
+2025-06-20 15:27:03,397 - gui.controllers.data_controller - INFO - Toutes les données sauvegardées
+2025-06-20 15:32:03,406 - gui.controllers.data_controller - INFO - Sauvegarde de toutes les données...
+2025-06-20 15:32:03,428 - gui.controllers.data_controller - INFO - Toutes les données sauvegardées
+2025-06-20 15:36:36,043 - gui.controllers.data_controller - INFO - Sauvegarde de toutes les données...
+2025-06-20 15:36:36,062 - gui.controllers.data_controller - INFO - Toutes les données sauvegardées
+2025-06-20 15:36:36,088 - gui.utils.json_manager - INFO - Sauvegarde créée: data\backup_20250620_153636 (10 fichiers)
+2025-06-20 15:36:36,089 - gui.main_window - INFO - Application fermée proprement
+2025-06-20 15:36:36,165 - gui.main_window - INFO - Interface graphique fermée
+2025-06-20 15:36:36,165 - __main__ - INFO - Arrêt de l'application

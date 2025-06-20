@@ -1,0 +1,932 @@
+{
+  "cdg_paris": {
+    "nom": "Aéroport Paris-Charles de Gaulle",
+    "code_iata": "CDG",
+    "coordonnees": {
+      "longitude": 2.5479,
+      "latitude": 49.0097
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "08L/26R",
+        "longueur": 4215.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "08R/26L",
+        "longueur": 4200.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Tokyo",
+      "Los Angeles",
+      "Londres",
+      "Dubai",
+      "New York"
+    ]
+  },
+  "lhr_london": {
+    "nom": "London Heathrow Airport",
+    "code_iata": "LHR",
+    "coordonnees": {
+      "longitude": -0.4614,
+      "latitude": 51.47
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "09L/27R",
+        "longueur": 3902.0,
+        "largeur": 50.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "09R/27L",
+        "longueur": 3660.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Hong Kong",
+      "Paris",
+      "Frankfurt",
+      "Dubai",
+      "New York"
+    ]
+  },
+  "jfk_newyork": {
+    "nom": "John F. Kennedy International Airport",
+    "code_iata": "JFK",
+    "coordonnees": {
+      "longitude": -73.7781,
+      "latitude": 40.6413
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "04R/22L",
+        "longueur": 2560.0,
+        "largeur": 45.7,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "04L/22R",
+        "longueur": 3682.0,
+        "largeur": 45.7,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Tokyo",
+      "Miami",
+      "Los Angeles",
+      "Londres",
+      "Paris"
+    ]
+  },
+  "nrt_tokyo": {
+    "nom": "Tokyo Narita International Airport",
+    "code_iata": "NRT",
+    "coordonnees": {
+      "longitude": 140.3929,
+      "latitude": 35.772
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "16L/34R",
+        "longueur": 2500.0,
+        "largeur": 60.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "16R/34L",
+        "longueur": 4000.0,
+        "largeur": 60.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Seoul",
+      "Londres",
+      "Bangkok",
+      "Paris",
+      "New York"
+    ]
+  },
+  "dxb_dubai": {
+    "nom": "Dubai International Airport",
+    "code_iata": "DXB",
+    "coordonnees": {
+      "longitude": 55.3644,
+      "latitude": 25.2532
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "12L/30R",
+        "longueur": 4000.0,
+        "largeur": 60.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "12R/30L",
+        "longueur": 4000.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Mumbai",
+      "Londres",
+      "Bangkok",
+      "Paris",
+      "Singapore"
+    ]
+  },
+  "fra_frankfurt": {
+    "nom": "Frankfurt Airport",
+    "code_iata": "FRA",
+    "coordonnees": {
+      "longitude": 8.5622,
+      "latitude": 50.0379
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "07C/25C",
+        "longueur": 4000.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "07L/25R",
+        "longueur": 4000.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Mumbai",
+      "Tokyo",
+      "São Paulo",
+      "Dubai",
+      "New York"
+    ]
+  },
+  "lax_losangeles": {
+    "nom": "Los Angeles International Airport",
+    "code_iata": "LAX",
+    "coordonnees": {
+      "longitude": -118.4085,
+      "latitude": 33.9425
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "06R/24L",
+        "longueur": 3382.0,
+        "largeur": 45.7,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "06L/24R",
+        "longueur": 3685.0,
+        "largeur": 45.7,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Tokyo",
+      "Londres",
+      "Paris",
+      "Sydney",
+      "Mexico"
+    ]
+  },
+  "sin_singapore": {
+    "nom": "Singapore Changi Airport",
+    "code_iata": "SIN",
+    "coordonnees": {
+      "longitude": 103.9915,
+      "latitude": 1.3644
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "02C/20C",
+        "longueur": 4000.0,
+        "largeur": 60.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "02L/20R",
+        "longueur": 4000.0,
+        "largeur": 60.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Mumbai",
+      "Tokyo",
+      "Bangkok",
+      "Sydney",
+      "London"
+    ]
+  },
+  "ams_amsterdam": {
+    "nom": "Amsterdam Airport Schiphol",
+    "code_iata": "AMS",
+    "coordonnees": {
+      "longitude": 4.7683,
+      "latitude": 52.3105
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "06/24",
+        "longueur": 3500.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "09/27",
+        "longueur": 3453.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Tokyo",
+      "Bangkok",
+      "São Paulo",
+      "Dubai",
+      "New York"
+    ]
+  },
+  "syd_sydney": {
+    "nom": "Sydney Kingsford Smith Airport",
+    "code_iata": "SYD",
+    "coordonnees": {
+      "longitude": 151.1772,
+      "latitude": -33.9399
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "16R/34L",
+        "longueur": 4400.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "07/25",
+        "longueur": 2530.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Tokyo",
+      "Los Angeles",
+      "Singapore",
+      "Auckland",
+      "Dubai"
+    ]
+  },
+  "muc_munich": {
+    "nom": "Munich Airport",
+    "code_iata": "MUC",
+    "coordonnees": {
+      "longitude": 11.7861,
+      "latitude": 48.3538
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "08L/26R",
+        "longueur": 4000.0,
+        "largeur": 60.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "08R/26L",
+        "longueur": 4000.0,
+        "largeur": 60.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Tokyo",
+      "São Paulo",
+      "Delhi",
+      "Dubai",
+      "New York"
+    ]
+  },
+  "ord_chicago": {
+    "nom": "Chicago O'Hare International Airport",
+    "code_iata": "ORD",
+    "coordonnees": {
+      "longitude": -87.9073,
+      "latitude": 41.9742
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "04R/22L",
+        "longueur": 2438.0,
+        "largeur": 45.7,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "04L/22R",
+        "longueur": 3962.0,
+        "largeur": 45.7,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Tokyo",
+      "Paris",
+      "London",
+      "Frankfurt",
+      "Dubai"
+    ]
+  },
+  "iad_washington": {
+    "nom": "Washington Dulles International Airport",
+    "code_iata": "IAD",
+    "coordonnees": {
+      "longitude": -77.4565,
+      "latitude": 38.9531
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "01L/19R",
+        "longueur": 3505.0,
+        "largeur": 45.7,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "01C/19C",
+        "longueur": 3505.0,
+        "largeur": 45.7,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Tokyo",
+      "Paris",
+      "London",
+      "Frankfurt",
+      "Dubai"
+    ]
+  },
+  "yvr_vancouver": {
+    "nom": "Vancouver International Airport",
+    "code_iata": "YVR",
+    "coordonnees": {
+      "longitude": -123.1816,
+      "latitude": 49.1967
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "08L/26R",
+        "longueur": 3505.0,
+        "largeur": 61.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "08R/26L",
+        "longueur": 3029.0,
+        "largeur": 61.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Tokyo",
+      "Seoul",
+      "Paris",
+      "London",
+      "Amsterdam"
+    ]
+  },
+  "yyz_toronto": {
+    "nom": "Toronto Pearson International Airport",
+    "code_iata": "YYZ",
+    "coordonnees": {
+      "longitude": -79.6248,
+      "latitude": 43.6777
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "05/23",
+        "longueur": 3389.0,
+        "largeur": 61.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "06L/24R",
+        "longueur": 3659.0,
+        "largeur": 61.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Tokyo",
+      "Paris",
+      "London",
+      "Frankfurt",
+      "Dubai"
+    ]
+  },
+  "gru_saopaulo": {
+    "nom": "São Paulo/Guarulhos International Airport",
+    "code_iata": "GRU",
+    "coordonnees": {
+      "longitude": -46.4692,
+      "latitude": -23.4356
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "09L/27R",
+        "longueur": 3700.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "09R/27L",
+        "longueur": 3000.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Paris",
+      "London",
+      "Amsterdam",
+      "Frankfurt",
+      "Dubai"
+    ]
+  },
+  "icn_seoul": {
+    "nom": "Seoul Incheon International Airport",
+    "code_iata": "ICN",
+    "coordonnees": {
+      "longitude": 126.4407,
+      "latitude": 37.4602
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "15L/33R",
+        "longueur": 3750.0,
+        "largeur": 60.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "15R/33L",
+        "longueur": 4000.0,
+        "largeur": 60.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Tokyo",
+      "Los Angeles",
+      "Paris",
+      "London",
+      "Frankfurt"
+    ]
+  },
+  "bkk_bangkok": {
+    "nom": "Suvarnabhumi Airport",
+    "code_iata": "BKK",
+    "coordonnees": {
+      "longitude": 100.7501,
+      "latitude": 13.69
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "01L/19R",
+        "longueur": 4000.0,
+        "largeur": 60.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "01R/19L",
+        "longueur": 3700.0,
+        "largeur": 60.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Tokyo",
+      "Paris",
+      "Singapore",
+      "London",
+      "Dubai"
+    ]
+  },
+  "del_delhi": {
+    "nom": "Indira Gandhi International Airport",
+    "code_iata": "DEL",
+    "coordonnees": {
+      "longitude": 77.1025,
+      "latitude": 28.5562
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "09/27",
+        "longueur": 4430.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "10/28",
+        "longueur": 3810.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Paris",
+      "Singapore",
+      "London",
+      "Frankfurt",
+      "Dubai"
+    ]
+  },
+  "bom_mumbai": {
+    "nom": "Chhatrapati Shivaji Maharaj International Airport",
+    "code_iata": "BOM",
+    "coordonnees": {
+      "longitude": 72.8777,
+      "latitude": 19.0896
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "09/27",
+        "longueur": 3445.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "14/32",
+        "longueur": 2925.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Paris",
+      "Singapore",
+      "London",
+      "Frankfurt",
+      "Dubai"
+    ]
+  },
+  "mad_madrid": {
+    "nom": "Adolfo Suárez Madrid-Barajas Airport",
+    "code_iata": "MAD",
+    "coordonnees": {
+      "longitude": -3.5676,
+      "latitude": 40.4719
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "14R/32L",
+        "longueur": 3500.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "14L/32R",
+        "longueur": 4100.0,
+        "largeur": 60.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Paris",
+      "London",
+      "Mexico",
+      "Buenos Aires",
+      "New York"
+    ]
+  },
+  "bcn_barcelona": {
+    "nom": "Barcelona-El Prat Airport",
+    "code_iata": "BCN",
+    "coordonnees": {
+      "longitude": 2.0833,
+      "latitude": 41.2971
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "07L/25R",
+        "longueur": 3500.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "07R/25L",
+        "longueur": 2660.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Paris",
+      "Rome",
+      "London",
+      "Amsterdam",
+      "Frankfurt"
+    ]
+  },
+  "fco_rome": {
+    "nom": "Leonardo da Vinci-Fiumicino Airport",
+    "code_iata": "FCO",
+    "coordonnees": {
+      "longitude": 12.2389,
+      "latitude": 41.8003
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "16L/34R",
+        "longueur": 3300.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "07/25",
+        "longueur": 3900.0,
+        "largeur": 60.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Tokyo",
+      "Paris",
+      "London",
+      "Dubai",
+      "New York"
+    ]
+  },
+  "zur_zurich": {
+    "nom": "Zurich Airport",
+    "code_iata": "ZUR",
+    "coordonnees": {
+      "longitude": 8.5622,
+      "latitude": 47.4647
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "14/32",
+        "longueur": 3300.0,
+        "largeur": 60.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "10/28",
+        "longueur": 3700.0,
+        "largeur": 60.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Tokyo",
+      "Bangkok",
+      "Singapore",
+      "Dubai",
+      "New York"
+    ]
+  },
+  "vie_vienna": {
+    "nom": "Vienna International Airport",
+    "code_iata": "VIE",
+    "coordonnees": {
+      "longitude": 16.5697,
+      "latitude": 48.1103
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "16/34",
+        "longueur": 3600.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "11/29",
+        "longueur": 3500.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Tokyo",
+      "Bangkok",
+      "Delhi",
+      "Dubai",
+      "New York"
+    ]
+  },
+  "cph_copenhagen": {
+    "nom": "Copenhagen Airport",
+    "code_iata": "CPH",
+    "coordonnees": {
+      "longitude": 12.6561,
+      "latitude": 55.6181
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "04R/22L",
+        "longueur": 3070.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "04L/22R",
+        "longueur": 3600.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Tokyo",
+      "Bangkok",
+      "Singapore",
+      "Dubai",
+      "New York"
+    ]
+  },
+  "arn_stockholm": {
+    "nom": "Stockholm Arlanda Airport",
+    "code_iata": "ARN",
+    "coordonnees": {
+      "longitude": 17.9186,
+      "latitude": 59.6519
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "01L/19R",
+        "longueur": 3301.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "01R/19L",
+        "longueur": 2500.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Tokyo",
+      "Bangkok",
+      "Delhi",
+      "Dubai",
+      "New York"
+    ]
+  },
+  "hel_helsinki": {
+    "nom": "Helsinki Airport",
+    "code_iata": "HEL",
+    "coordonnees": {
+      "longitude": 24.9633,
+      "latitude": 60.3172
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "04R/22L",
+        "longueur": 2901.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "04L/22R",
+        "longueur": 3440.0,
+        "largeur": 60.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Tokyo",
+      "Bangkok",
+      "Singapore",
+      "Delhi",
+      "New York"
+    ]
+  },
+  "osl_oslo": {
+    "nom": "Oslo Airport",
+    "code_iata": "OSL",
+    "coordonnees": {
+      "longitude": 11.1004,
+      "latitude": 60.1939
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "01L/19R",
+        "longueur": 3600.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "01R/19L",
+        "longueur": 2950.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Tokyo",
+      "Bangkok",
+      "Singapore",
+      "Dubai",
+      "New York"
+    ]
+  },
+  "lis_lisbon": {
+    "nom": "Lisbon Airport",
+    "code_iata": "LIS",
+    "coordonnees": {
+      "longitude": -9.1354,
+      "latitude": 38.7813
+    },
+    "pistes": {
+      "piste_00": {
+        "numero": "03/21",
+        "longueur": 3805.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      },
+      "piste_01": {
+        "numero": "17/35",
+        "longueur": 2305.0,
+        "largeur": 45.0,
+        "surface": "Asphalte",
+        "statut": "disponible"
+      }
+    },
+    "villes_desservies": [
+      "Paris",
+      "São Paulo",
+      "London",
+      "Rio de Janeiro",
+      "New York"
+    ]
+  }
+}

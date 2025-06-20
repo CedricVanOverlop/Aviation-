@@ -1,0 +1,225 @@
+{
+  "app_info": {
+    "name": "Gestion Aéroportuaire",
+    "version": "1.0.0",
+    "description": "Système de gestion d'aéroport avec simulation temporelle",
+    "author": "Équipe Développement",
+    "created_date": "2024-01-01"
+  },
+  
+  "database": {
+    "default_folder": "data",
+    "auto_backup": true,
+    "backup_interval_hours": 24,
+    "max_backups": 10,
+    "auto_save": true,
+    "auto_save_interval_seconds": 300
+  },
+  
+  "simulation": {
+    "default_speed": 1.0,
+    "speed_options": [0.1, 0.5, 1, 2, 5, 10, 30, 60, 100],
+    "max_speed": 100.0,
+    "min_speed": 0.1,
+    "auto_start": false,
+    "real_time_mode": false,
+    "event_processing": {
+      "max_events_per_update": 10,
+      "batch_size": 100,
+      "cleanup_interval_hours": 24
+    }
+  },
+  
+  "ui": {
+    "window": {
+      "default_width": 1400,
+      "default_height": 900,
+      "min_width": 1200,
+      "min_height": 700,
+      "resizable": true,
+      "center_on_start": true
+    },
+    "theme": {
+      "style": "default",
+      "colors": {
+        "primary": "#2E3440",
+        "secondary": "#3B4252", 
+        "accent": "#5E81AC",
+        "success": "#A3BE8C",
+        "warning": "#EBCB8B",
+        "error": "#BF616A",
+        "background": "#ECEFF4",
+        "text": "#2E3440"
+      },
+      "fonts": {
+        "default": "Arial",
+        "monospace": "Courier New",
+        "size_small": 8,
+        "size_normal": 10,
+        "size_large": 12,
+        "size_title": 14
+      }
+    },
+    "refresh_rate_ms": 100,
+    "auto_refresh": true,
+    "show_tooltips": true,
+    "animation_duration_ms": 200
+  },
+  
+  "logging": {
+    "level": "INFO",
+    "file_path": "logs/airport_management.log",
+    "max_file_size_mb": 10,
+    "backup_count": 5,
+    "format": "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    "console_output": true,
+    "modules": {
+      "data_controller": "INFO",
+      "time_simulator": "INFO", 
+      "json_manager": "WARNING",
+      "gui": "INFO"
+    }
+  },
+  
+  "features": {
+    "advanced_mode": false,
+    "debug_mode": false,
+    "experimental_features": false,
+    "weather_simulation": true,
+    "economic_simulation": false,
+    "AI_optimization": false
+  },
+  
+  "data_validation": {
+    "strict_mode": false,
+    "auto_correct": true,
+    "validate_on_load": true,
+    "validate_on_save": true,
+    "backup_on_error": true
+  },
+  
+  "performance": {
+    "cache_size_mb": 50,
+    "max_cached_objects": 1000,
+    "garbage_collection_interval_minutes": 15,
+    "memory_monitoring": false,
+    "performance_logging": false
+  },
+  
+  "security": {
+    "encrypt_data": false,
+    "backup_encryption": false,
+    "user_authentication": false,
+    "session_timeout_minutes": 60,
+    "audit_trail": true
+  },
+  
+  "integrations": {
+    "external_weather_api": {
+      "enabled": false,
+      "api_key": "",
+      "update_interval_minutes": 30,
+      "provider": "openweather"
+    },
+    "airline_apis": {
+      "enabled": false,
+      "timeout_seconds": 30
+    },
+    "maintenance_systems": {
+      "enabled": false,
+      "sync_interval_hours": 6
+    }
+  },
+  
+  "defaults": {
+    "aircraft": {
+      "default_speed": 800,
+      "default_autonomy": 5000,
+      "default_capacity": 180,
+      "maintenance_interval_hours": 168
+    },
+    "flights": {
+      "default_duration_hours": 2,
+      "boarding_time_minutes": 30,
+      "turnaround_time_minutes": 45,
+      "delay_threshold_minutes": 15
+    },
+    "airports": {
+      "default_runway_length": 3000,
+      "default_runway_width": 45,
+      "runway_surface": "Asphalte",
+      "operating_hours": "24/7"
+    },
+    "personnel": {
+      "pilot_license_required": true,
+      "crew_rest_hours": 8,
+      "max_flight_hours_per_day": 8,
+      "languages": ["Français", "Anglais"]
+    }
+  },
+  
+  "alerts": {
+    "weather_warnings": true,
+    "maintenance_due": true,
+    "flight_delays": true,
+    "capacity_warnings": true,
+    "fuel_alerts": true,
+    "crew_availability": true,
+    "sound_notifications": false,
+    "email_notifications": false
+  },
+  
+  "reports": {
+    "auto_generate": false,
+    "generation_time": "06:00",
+    "formats": ["JSON", "CSV", "PDF"],
+    "include_charts": true,
+    "retention_days": 90
+  },
+  
+  "keyboard_shortcuts": {
+    "enable_shortcuts": true,
+    "shortcuts": {
+      "new_database": "Ctrl+N",
+      "open_database": "Ctrl+O", 
+      "save": "Ctrl+S",
+      "quit": "Ctrl+Q",
+      "start_simulation": "F5",
+      "pause_simulation": "F6",
+      "stop_simulation": "F7",
+      "new_flight": "Ctrl+F",
+      "new_aircraft": "Ctrl+A",
+      "show_stats": "Ctrl+T",
+      "fast_forward": "Ctrl+Shift+F"
+    }
+  },
+  
+  "data_formats": {
+    "date_format": "%Y-%m-%d",
+    "time_format": "%H:%M:%S",
+    "datetime_format": "%Y-%m-%d %H:%M:%S",
+    "currency": "EUR",
+    "distance_unit": "km",
+    "speed_unit": "km/h",
+    "fuel_unit": "L",
+    "weight_unit": "kg"
+  },
+  
+  "advanced_settings": {
+    "threading": {
+      "max_worker_threads": 4,
+      "simulation_thread_priority": "normal",
+      "ui_thread_priority": "high"
+    },
+    "memory_management": {
+      "auto_cleanup": true,
+      "cleanup_threshold_mb": 100,
+      "force_gc_interval_minutes": 30
+    },
+    "network": {
+      "timeout_seconds": 30,
+      "retry_attempts": 3,
+      "connection_pool_size": 10
+    }
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "21764cd0-7cc6-499d-82ed-9fb9cbc4785c": {
+    "num_id": "FZACK",
+    "modele": "Boing 7530",
+    "capacite": 240,
+    "compagnie_aerienne": "RayanAir",
+    "vitesse_croisiere": 600.0,
+    "autonomie": 7000.0,
+    "localisation": {
+      "longitude": 2.3522,
+      "latitude": 48.8566
+    },
+    "etat": "au_sol",
+    "derniere_maintenance": null
+  }
+}
