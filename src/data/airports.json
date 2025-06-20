@@ -1,0 +1,361 @@
+{
+  "airports": [
+    {
+      "nom": "Aéroport Charles de Gaulle",
+      "code_iata": "CDG",
+      "coordonnees": {"longitude": 2.5479, "latitude": 49.0097},
+      "ville": "Paris",
+      "pays": "France"
+    },
+    {
+      "nom": "Aéroport d'Orly",
+      "code_iata": "ORY",
+      "coordonnees": {"longitude": 2.3794, "latitude": 48.7233},
+      "ville": "Paris",
+      "pays": "France"
+    },
+    {
+      "nom": "London Heathrow Airport",
+      "code_iata": "LHR",
+      "coordonnees": {"longitude": -0.4543, "latitude": 51.4700},
+      "ville": "Londres",
+      "pays": "Royaume-Uni"
+    },
+    {
+      "nom": "London Gatwick Airport",
+      "code_iata": "LGW",
+      "coordonnees": {"longitude": -0.1900, "latitude": 51.1537},
+      "ville": "Londres",
+      "pays": "Royaume-Uni"
+    },
+    {
+      "nom": "Frankfurt Airport",
+      "code_iata": "FRA",
+      "coordonnees": {"longitude": 8.5622, "latitude": 50.0379},
+      "ville": "Francfort",
+      "pays": "Allemagne"
+    },
+    {
+      "nom": "Amsterdam Airport Schiphol",
+      "code_iata": "AMS",
+      "coordonnees": {"longitude": 4.7683, "latitude": 52.3086},
+      "ville": "Amsterdam",
+      "pays": "Pays-Bas"
+    },
+    {
+      "nom": "Madrid-Barajas Airport",
+      "code_iata": "MAD",
+      "coordonnees": {"longitude": -3.5676, "latitude": 40.4719},
+      "ville": "Madrid",
+      "pays": "Espagne"
+    },
+    {
+      "nom": "Barcelona-El Prat Airport",
+      "code_iata": "BCN",
+      "coordonnees": {"longitude": 2.0833, "latitude": 41.2974},
+      "ville": "Barcelone",
+      "pays": "Espagne"
+    },
+    {
+      "nom": "Leonardo da Vinci Airport",
+      "code_iata": "FCO",
+      "coordonnees": {"longitude": 12.2389, "latitude": 41.8003},
+      "ville": "Rome",
+      "pays": "Italie"
+    },
+    {
+      "nom": "Milan Malpensa Airport",
+      "code_iata": "MXP",
+      "coordonnees": {"longitude": 8.7231, "latitude": 45.6306},
+      "ville": "Milan",
+      "pays": "Italie"
+    },
+    {
+      "nom": "Zurich Airport",
+      "code_iata": "ZUR",
+      "coordonnees": {"longitude": 8.5622, "latitude": 47.4647},
+      "ville": "Zurich",
+      "pays": "Suisse"
+    },
+    {
+      "nom": "Vienna International Airport",
+      "code_iata": "VIE",
+      "coordonnees": {"longitude": 16.5697, "latitude": 48.1103},
+      "ville": "Vienne",
+      "pays": "Autriche"
+    },
+    {
+      "nom": "Brussels Airport",
+      "code_iata": "BRU",
+      "coordonnees": {"longitude": 4.4844, "latitude": 50.9014},
+      "ville": "Bruxelles",
+      "pays": "Belgique"
+    },
+    {
+      "nom": "Copenhagen Airport",
+      "code_iata": "CPH",
+      "coordonnees": {"longitude": 12.6561, "latitude": 55.6181},
+      "ville": "Copenhague",
+      "pays": "Danemark"
+    },
+    {
+      "nom": "Stockholm Arlanda Airport",
+      "code_iata": "ARN",
+      "coordonnees": {"longitude": 17.9186, "latitude": 59.6519},
+      "ville": "Stockholm",
+      "pays": "Suède"
+    },
+    {
+      "nom": "John F. Kennedy Airport",
+      "code_iata": "JFK",
+      "coordonnees": {"longitude": -73.7781, "latitude": 40.6413},
+      "ville": "New York",
+      "pays": "États-Unis"
+    },
+    {
+      "nom": "Los Angeles International Airport",
+      "code_iata": "LAX",
+      "coordonnees": {"longitude": -118.4081, "latitude": 33.9425},
+      "ville": "Los Angeles",
+      "pays": "États-Unis"
+    },
+    {
+      "nom": "Chicago O'Hare Airport",
+      "code_iata": "ORD",
+      "coordonnees": {"longitude": -87.9073, "latitude": 41.9742},
+      "ville": "Chicago",
+      "pays": "États-Unis"
+    },
+    {
+      "nom": "Miami International Airport",
+      "code_iata": "MIA",
+      "coordonnees": {"longitude": -80.2906, "latitude": 25.7933},
+      "ville": "Miami",
+      "pays": "États-Unis"
+    },
+    {
+      "nom": "San Francisco International Airport",
+      "code_iata": "SFO",
+      "coordonnees": {"longitude": -122.3748, "latitude": 37.6213},
+      "ville": "San Francisco",
+      "pays": "États-Unis"
+    },
+    {
+      "nom": "Toronto Pearson Airport",
+      "code_iata": "YYZ",
+      "coordonnees": {"longitude": -79.6248, "latitude": 43.6777},
+      "ville": "Toronto",
+      "pays": "Canada"
+    },
+    {
+      "nom": "Vancouver International Airport",
+      "code_iata": "YVR",
+      "coordonnees": {"longitude": -123.1840, "latitude": 49.1967},
+      "ville": "Vancouver",
+      "pays": "Canada"
+    },
+    {
+      "nom": "Tokyo Haneda Airport",
+      "code_iata": "HND",
+      "coordonnees": {"longitude": 139.7810, "latitude": 35.5494},
+      "ville": "Tokyo",
+      "pays": "Japon"
+    },
+    {
+      "nom": "Tokyo Narita Airport",
+      "code_iata": "NRT",
+      "coordonnees": {"longitude": 140.3929, "latitude": 35.7720},
+      "ville": "Tokyo",
+      "pays": "Japon"
+    },
+    {
+      "nom": "Seoul Incheon Airport",
+      "code_iata": "ICN",
+      "coordonnees": {"longitude": 126.4407, "latitude": 37.4691},
+      "ville": "Séoul",
+      "pays": "Corée du Sud"
+    },
+    {
+      "nom": "Beijing Capital Airport",
+      "code_iata": "PEK",
+      "coordonnees": {"longitude": 116.5975, "latitude": 40.0801},
+      "ville": "Pékin",
+      "pays": "Chine"
+    },
+    {
+      "nom": "Shanghai Pudong Airport",
+      "code_iata": "PVG",
+      "coordonnees": {"longitude": 121.8058, "latitude": 31.1443},
+      "ville": "Shanghai",
+      "pays": "Chine"
+    },
+    {
+      "nom": "Hong Kong International Airport",
+      "code_iata": "HKG",
+      "coordonnees": {"longitude": 113.9150, "latitude": 22.3080},
+      "ville": "Hong Kong",
+      "pays": "Hong Kong"
+    },
+    {
+      "nom": "Singapore Changi Airport",
+      "code_iata": "SIN",
+      "coordonnees": {"longitude": 103.9915, "latitude": 1.3644},
+      "ville": "Singapour",
+      "pays": "Singapour"
+    },
+    {
+      "nom": "Bangkok Suvarnabhumi Airport",
+      "code_iata": "BKK",
+      "coordonnees": {"longitude": 100.7501, "latitude": 13.6900},
+      "ville": "Bangkok",
+      "pays": "Thaïlande"
+    },
+    {
+      "nom": "Dubai International Airport",
+      "code_iata": "DXB",
+      "coordonnees": {"longitude": 55.3644, "latitude": 25.2532},
+      "ville": "Dubaï",
+      "pays": "Émirats arabes unis"
+    },
+    {
+      "nom": "Doha Hamad Airport",
+      "code_iata": "DOH",
+      "coordonnees": {"longitude": 51.6050, "latitude": 25.2731},
+      "ville": "Doha",
+      "pays": "Qatar"
+    },
+    {
+      "nom": "Istanbul Airport",
+      "code_iata": "IST",
+      "coordonnees": {"longitude": 28.7519, "latitude": 41.2753},
+      "ville": "Istanbul",
+      "pays": "Turquie"
+    },
+    {
+      "nom": "Moscow Sheremetyevo Airport",
+      "code_iata": "SVO",
+      "coordonnees": {"longitude": 37.4146, "latitude": 55.9736},
+      "ville": "Moscou",
+      "pays": "Russie"
+    },
+    {
+      "nom": "Sydney Kingsford Smith Airport",
+      "code_iata": "SYD",
+      "coordonnees": {"longitude": 151.1772, "latitude": -33.9399},
+      "ville": "Sydney",
+      "pays": "Australie"
+    },
+    {
+      "nom": "Melbourne Airport",
+      "code_iata": "MEL",
+      "coordonnees": {"longitude": 144.8430, "latitude": -37.6690},
+      "ville": "Melbourne",
+      "pays": "Australie"
+    },
+    {
+      "nom": "São Paulo Guarulhos Airport",
+      "code_iata": "GRU",
+      "coordonnees": {"longitude": -46.4730, "latitude": -23.4356},
+      "ville": "São Paulo",
+      "pays": "Brésil"
+    },
+    {
+      "nom": "Rio de Janeiro Galeão Airport",
+      "code_iata": "GIG",
+      "coordonnees": {"longitude": -43.2506, "latitude": -22.8099},
+      "ville": "Rio de Janeiro",
+      "pays": "Brésil"
+    },
+    {
+      "nom": "Mexico City Airport",
+      "code_iata": "MEX",
+      "coordonnees": {"longitude": -99.0721, "latitude": 19.4363},
+      "ville": "Mexico",
+      "pays": "Mexique"
+    },
+    {
+      "nom": "Cairo International Airport",
+      "code_iata": "CAI",
+      "coordonnees": {"longitude": 31.4056, "latitude": 30.1219},
+      "ville": "Le Caire",
+      "pays": "Égypte"
+    },
+    {
+      "nom": "Johannesburg OR Tambo Airport",
+      "code_iata": "JNB",
+      "coordonnees": {"longitude": 28.2460, "latitude": -26.1392},
+      "ville": "Johannesburg",
+      "pays": "Afrique du Sud"
+    },
+    {
+      "nom": "Cape Town International Airport",
+      "code_iata": "CPT",
+      "coordonnees": {"longitude": 18.6017, "latitude": -33.9715},
+      "ville": "Le Cap",
+      "pays": "Afrique du Sud"
+    },
+    {
+      "nom": "Mumbai Chhatrapati Shivaji Airport",
+      "code_iata": "BOM",
+      "coordonnees": {"longitude": 72.8777, "latitude": 19.0896},
+      "ville": "Mumbai",
+      "pays": "Inde"
+    },
+    {
+      "nom": "Delhi Indira Gandhi Airport",
+      "code_iata": "DEL",
+      "coordonnees": {"longitude": 77.1025, "latitude": 28.5562},
+      "ville": "New Delhi",
+      "pays": "Inde"
+    },
+    {
+      "nom": "Kuala Lumpur International Airport",
+      "code_iata": "KUL",
+      "coordonnees": {"longitude": 101.7097, "latitude": 2.7456},
+      "ville": "Kuala Lumpur",
+      "pays": "Malaisie"
+    },
+    {
+      "nom": "Jakarta Soekarno-Hatta Airport",
+      "code_iata": "CGK",
+      "coordonnees": {"longitude": 106.6558, "latitude": -6.1256},
+      "ville": "Jakarta",
+      "pays": "Indonésie"
+    },
+    {
+      "nom": "Oslo Gardermoen Airport",
+      "code_iata": "OSL",
+      "coordonnees": {"longitude": 11.1004, "latitude": 60.1939},
+      "ville": "Oslo",
+      "pays": "Norvège"
+    },
+    {
+      "nom": "Helsinki-Vantaa Airport",
+      "code_iata": "HEL",
+      "coordonnees": {"longitude": 24.9633, "latitude": 60.3172},
+      "ville": "Helsinki",
+      "pays": "Finlande"
+    },
+    {
+      "nom": "Athens International Airport",
+      "code_iata": "ATH",
+      "coordonnees": {"longitude": 23.9445, "latitude": 37.9364},
+      "ville": "Athènes",
+      "pays": "Grèce"
+    },
+    {
+      "nom": "Lisbon Portela Airport",
+      "code_iata": "LIS",
+      "coordonnees": {"longitude": -9.1353, "latitude": 38.7813},
+      "ville": "Lisbonne",
+      "pays": "Portugal"
+    },
+    {
+      "nom": "Dublin Airport",
+      "code_iata": "DUB",
+      "coordonnees": {"longitude": -6.2499, "latitude": 53.4264},
+      "ville": "Dublin",
+      "pays": "Irlande"
+    }
+  ]
+}

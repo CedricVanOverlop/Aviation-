@@ -1,0 +1,52 @@
+2025-06-20 21:17:33,071 - INFO - Application démarrée
+2025-06-20 21:17:33,072 - INFO - Répertoires créés/vérifiés
+2025-06-20 21:17:33,099 - INFO - Dépendances vérifiées avec succès
+2025-06-20 21:17:33,099 - INFO - Lancement de l'interface principale
+2025-06-20 21:17:33,310 - ERROR - Erreur critique: 'MainWindow' object has no attribute 'stat_vars'
+2025-06-20 21:17:33,310 - ERROR - Trace: Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Test\Final Boom\Aviation-\src\main.py", line 130, in main
+    app = MainWindow()
+          ^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Test\Final Boom\Aviation-\src\interfaces\main_window.py", line 37, in __init__
+    self.setup_ui()
+  File "C:\Users\User\Desktop\Test\Final Boom\Aviation-\src\interfaces\main_window.py", line 76, in setup_ui
+    self.create_tabs()
+  File "C:\Users\User\Desktop\Test\Final Boom\Aviation-\src\interfaces\main_window.py", line 143, in create_tabs
+    self.create_dashboard_tab()
+  File "C:\Users\User\Desktop\Test\Final Boom\Aviation-\src\interfaces\main_window.py", line 196, in create_dashboard_tab
+    self.create_stat_card(stats_frame, "Vols Aujourd'hui", "0", "🛫", 0, 0)
+  File "C:\Users\User\Desktop\Test\Final Boom\Aviation-\src\interfaces\main_window.py", line 277, in create_stat_card
+    self.stat_vars[title] = value_var
+    ^^^^^^^^^^^^^^
+AttributeError: 'MainWindow' object has no attribute 'stat_vars'
+
+2025-06-20 21:19:28,690 - INFO - Application démarrée
+2025-06-20 21:19:28,691 - INFO - Répertoires créés/vérifiés
+2025-06-20 21:19:28,717 - INFO - Dépendances vérifiées avec succès
+2025-06-20 21:19:28,717 - INFO - Lancement de l'interface principale
+2025-06-20 21:19:43,072 - INFO - Interface initialisée
+2025-06-20 21:20:45,558 - INFO - Application fermée normalement
+2025-06-20 21:21:10,625 - INFO - Application démarrée
+2025-06-20 21:21:10,625 - INFO - Répertoires créés/vérifiés
+2025-06-20 21:21:10,636 - INFO - Dépendances vérifiées avec succès
+2025-06-20 21:21:10,636 - INFO - Lancement de l'interface principale
+2025-06-20 21:21:10,901 - INFO - Interface initialisée
+2025-06-20 21:23:25,537 - INFO - Application fermée normalement
+2025-06-20 21:23:28,022 - INFO - Application démarrée
+2025-06-20 21:23:28,022 - INFO - Répertoires créés/vérifiés
+2025-06-20 21:23:28,026 - INFO - Dépendances vérifiées avec succès
+2025-06-20 21:23:28,026 - INFO - Lancement de l'interface principale
+2025-06-20 21:23:28,306 - INFO - Interface initialisée
+2025-06-20 21:23:44,342 - INFO - Application fermée normalement
+2025-06-20 21:24:32,725 - INFO - Application démarrée
+2025-06-20 21:24:32,726 - INFO - Répertoires créés/vérifiés
+2025-06-20 21:24:32,729 - INFO - Dépendances vérifiées avec succès
+2025-06-20 21:24:32,729 - INFO - Lancement de l'interface principale
+2025-06-20 21:24:32,991 - INFO - Interface initialisée
+2025-06-20 21:24:41,049 - INFO - Application fermée normalement
+2025-06-20 21:47:19,673 - INFO - Application démarrée
+2025-06-20 21:47:19,674 - INFO - Répertoires créés/vérifiés
+2025-06-20 21:47:19,691 - INFO - Dépendances vérifiées avec succès
+2025-06-20 21:47:19,691 - INFO - Lancement de l'interface principale
+2025-06-20 21:47:20,010 - INFO - Interface initialisée
+2025-06-20 22:39:18,532 - INFO - Application fermée normalement

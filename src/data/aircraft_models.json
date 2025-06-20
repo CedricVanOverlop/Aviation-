@@ -1,0 +1,108 @@
+{
+  "aircraft_models": [
+    {
+      "modele": "Airbus A320",
+      "capacite": 180,
+      "vitesse_croisiere": 850,
+      "autonomie": 6150,
+      "compagnie_type": "Court/Moyen-courrier",
+      "description": "Avion de ligne moyen-courrier très populaire"
+    },
+    {
+      "modele": "Airbus A321",
+      "capacite": 220,
+      "vitesse_croisiere": 850,
+      "autonomie": 7400,
+      "compagnie_type": "Court/Moyen-courrier",
+      "description": "Version allongée de l'A320"
+    },
+    {
+      "modele": "Airbus A330",
+      "capacite": 300,
+      "vitesse_croisiere": 880,
+      "autonomie": 13400,
+      "compagnie_type": "Long-courrier",
+      "description": "Gros porteur long-courrier"
+    },
+    {
+      "modele": "Airbus A350",
+      "capacite": 350,
+      "vitesse_croisiere": 900,
+      "autonomie": 15000,
+      "compagnie_type": "Long-courrier",
+      "description": "Avion nouvelle génération économe en carburant"
+    },
+    {
+      "modele": "Airbus A380",
+      "capacite": 550,
+      "vitesse_croisiere": 900,
+      "autonomie": 15200,
+      "compagnie_type": "Très long-courrier",
+      "description": "Plus gros avion de ligne au monde"
+    },
+    {
+      "modele": "Boeing 737-800",
+      "capacite": 189,
+      "vitesse_croisiere": 840,
+      "autonomie": 5765,
+      "compagnie_type": "Court/Moyen-courrier",
+      "description": "Avion court-courrier très répandu"
+    },
+    {
+      "modele": "Boeing 737 MAX",
+      "capacite": 210,
+      "vitesse_croisiere": 840,
+      "autonomie": 6570,
+      "compagnie_type": "Court/Moyen-courrier",
+      "description": "Version modernisée du 737"
+    },
+    {
+      "modele": "Boeing 767",
+      "capacite": 290,
+      "vitesse_croisiere": 850,
+      "autonomie": 11070,
+      "compagnie_type": "Moyen/Long-courrier",
+      "description": "Avion bi-couloir polyvalent"
+    },
+    {
+      "modele": "Boeing 777",
+      "capacite": 396,
+      "vitesse_croisiere": 890,
+      "autonomie": 17370,
+      "compagnie_type": "Long-courrier",
+      "description": "Gros porteur très performant"
+    },
+    {
+      "modele": "Boeing 787 Dreamliner",
+      "capacite": 330,
+      "vitesse_croisiere": 900,
+      "autonomie": 15750,
+      "compagnie_type": "Long-courrier",
+      "description": "Avion composite nouvelle génération"
+    },
+    {
+      "modele": "Embraer E190",
+      "capacite": 114,
+      "vitesse_croisiere": 830,
+      "autonomie": 4537,
+      "compagnie_type": "Régional",
+      "description": "Avion régional confortable"
+    },
+    {
+      "modele": "Bombardier CRJ-900",
+      "capacite": 90,
+      "vitesse_croisiere": 810,
+      "autonomie": 2956,
+      "compagnie_type": "Régional",
+      "description": "Jet régional compact"
+    },
+    {
+      "modele": "ATR 72",
+      "capacite": 78,
+      "vitesse_croisiere": 510,
+      "autonomie": 1665,
+      "compagnie_type": "Régional turbopropulseur",
+      "description": "Turbopropulseur pour liaisons courtes"
+    }
+  ]
+}
