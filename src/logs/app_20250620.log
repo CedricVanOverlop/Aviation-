@@ -50,3 +50,33 @@ AttributeError: 'MainWindow' object has no attribute 'stat_vars'
 2025-06-20 21:47:19,691 - INFO - Lancement de l'interface principale
 2025-06-20 21:47:20,010 - INFO - Interface initialisée
 2025-06-20 22:39:18,532 - INFO - Application fermée normalement
+2025-06-20 22:50:27,852 - INFO - Application démarrée
+2025-06-20 22:50:27,853 - INFO - Répertoires créés/vérifiés
+2025-06-20 22:50:27,857 - INFO - Dépendances vérifiées avec succès
+2025-06-20 22:50:27,857 - INFO - Lancement de l'interface principale
+2025-06-20 22:50:28,173 - INFO - Interface initialisée
+2025-06-20 22:58:01,986 - INFO - Application fermée normalement
+2025-06-20 23:12:57,553 - INFO - Application démarrée
+2025-06-20 23:12:57,553 - INFO - Répertoires créés/vérifiés
+2025-06-20 23:12:57,570 - INFO - Dépendances vérifiées avec succès
+2025-06-20 23:12:57,570 - INFO - Lancement de l'interface principale
+2025-06-20 23:12:57,904 - INFO - Interface initialisée
+2025-06-20 23:13:50,432 - INFO - Application fermée normalement
+2025-06-20 23:23:05,159 - INFO - Application démarrée
+2025-06-20 23:23:05,160 - INFO - Répertoires créés/vérifiés
+2025-06-20 23:23:05,183 - INFO - Dépendances vérifiées avec succès
+2025-06-20 23:23:05,183 - INFO - Lancement de l'interface principale
+2025-06-20 23:23:05,546 - INFO - Interface initialisée
+2025-06-20 23:27:32,936 - INFO - Application fermée normalement
+2025-06-20 23:27:36,053 - INFO - Application démarrée
+2025-06-20 23:27:36,053 - INFO - Répertoires créés/vérifiés
+2025-06-20 23:27:36,063 - INFO - Dépendances vérifiées avec succès
+2025-06-20 23:27:36,063 - INFO - Lancement de l'interface principale
+2025-06-20 23:27:36,413 - INFO - Interface initialisée
+2025-06-20 23:29:09,661 - INFO - Application fermée normalement
+2025-06-20 23:29:11,712 - INFO - Application démarrée
+2025-06-20 23:29:11,713 - INFO - Répertoires créés/vérifiés
+2025-06-20 23:29:11,716 - INFO - Dépendances vérifiées avec succès
+2025-06-20 23:29:11,716 - INFO - Lancement de l'interface principale
+2025-06-20 23:29:12,016 - INFO - Interface initialisée
+2025-06-20 23:30:23,539 - INFO - Application fermée normalement

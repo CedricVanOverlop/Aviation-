@@ -5,13 +5,12 @@
       "passager_id": "0f054701-f830-4ef9-9ffa-7ac8fb2e87fb",
       "vol_numero": "1",
       "siege_assigne": "12A",
-      "checkin_effectue": true,
+      "checkin_effectue": false,
       "statut": "active",
       "date_creation": "2025-06-20T23:29:27.579128",
       "validite": "2025-06-21T23:29:27.579128",
-      "created_at": "2025-06-20T23:29:27.579128",
-      "updated_at": "2025-06-20T23:30:07.297940"
+      "created_at": "2025-06-20T23:29:27.579128"
     }
   ],
-  "last_modified": "2025-06-20T23:30:07.298936"
+  "last_modified": "2025-06-20T23:29:27.582119"
 }

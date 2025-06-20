@@ -1,1 +1,19 @@
-[ ] 
+{
+  "passengers": [
+    {
+      "id_passager": "0f054701-f830-4ef9-9ffa-7ac8fb2e87fb",
+      "nom": "Van Overlop",
+      "prenom": "Cédric",
+      "sexe": "masculin",
+      "adresse": "charleroi",
+      "numero_telephone": "12324332",
+      "email": "ced@gmail.com",
+      "numero_passeport": "1daffv",
+      "date_naissance": "2002-08-20T00:00:00",
+      "checkin_effectue": false,
+      "reservations_count": 0,
+      "created_at": "2025-06-20T23:25:40.300856"
+    }
+  ],
+  "last_modified": "2025-06-20T23:25:40.301852"
+}

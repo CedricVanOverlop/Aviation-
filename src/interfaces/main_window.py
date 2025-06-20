@@ -333,28 +333,89 @@ class MainWindow:
     
     def create_personnel_tab(self):
         """Crée l'onglet de gestion du personnel"""
-        # Placeholder pour maintenant
-        ttk.Label(self.personnel_frame, text="Gestion du Personnel - À implémenter", 
-                 font=('Arial', 14), foreground='gray').pack(expand=True)
+        try:
+            # Import local pour éviter les imports circulaires
+            from interfaces.tabs.personnel_tab import create_personnel_tab_content
+            
+            # Créer le contenu de l'onglet
+            self.personnel_tree = create_personnel_tab_content(self.personnel_frame, self.data_manager)
+            
+            print("✓ Onglet Personnel créé avec succès")
+        except ImportError as e:
+            print(f"❌ Erreur import personnel_tab: {e}")
+            # Fallback en cas d'erreur
+            ttk.Label(self.personnel_frame, text="Erreur: Module personnel_tab non trouvé", 
+                    font=('Arial', 14), foreground='red').pack(expand=True)
+        except Exception as e:
+            print(f"❌ Erreur création onglet personnel: {e}")
+            # Fallback en cas d'erreur
+            ttk.Label(self.personnel_frame, text=f"Erreur: {str(e)}", 
+                    font=('Arial', 14), foreground='red').pack(expand=True)
     
     def create_flights_tab(self):
         """Crée l'onglet de gestion des vols"""
-        # Placeholder pour maintenant
-        ttk.Label(self.flights_frame, text="Gestion des Vols - À implémenter", 
-                 font=('Arial', 14), foreground='gray').pack(expand=True)
+        try:
+            # Import local pour éviter les imports circulaires
+            from interfaces.tabs.flights_tab import create_flights_tab_content
+            
+            # Créer le contenu de l'onglet
+            self.flights_tree = create_flights_tab_content(self.flights_frame, self.data_manager)
+            
+            print("✓ Onglet Vols créé avec succès")
+        except ImportError as e:
+            print(f"❌ Erreur import flights_tab: {e}")
+            # Fallback en cas d'erreur
+            ttk.Label(self.flights_frame, text="Erreur: Module flights_tab non trouvé", 
+                    font=('Arial', 14), foreground='red').pack(expand=True)
+        except Exception as e:
+            print(f"❌ Erreur création onglet vols: {e}")
+            # Fallback en cas d'erreur
+            ttk.Label(self.flights_frame, text=f"Erreur: {str(e)}", 
+                    font=('Arial', 14), foreground='red').pack(expand=True)
+        
     
     def create_passengers_tab(self):
         """Crée l'onglet de gestion des passagers"""
-        # Placeholder pour maintenant
-        ttk.Label(self.passengers_frame, text="Gestion des Passagers - À implémenter", 
-                 font=('Arial', 14), foreground='gray').pack(expand=True)
+        try:
+            # Import local pour éviter les imports circulaires
+            from interfaces.tabs.passengers_tab import create_passengers_tab_content
+            
+            # Créer le contenu de l'onglet
+            self.passengers_tree = create_passengers_tab_content(self.passengers_frame, self.data_manager)
+            
+            print("✓ Onglet Passagers créé avec succès")
+        except ImportError as e:
+            print(f"❌ Erreur import passengers_tab: {e}")
+            # Fallback en cas d'erreur
+            ttk.Label(self.passengers_frame, text="Erreur: Module passengers_tab non trouvé", 
+                    font=('Arial', 14), foreground='red').pack(expand=True)
+        except Exception as e:
+            print(f"❌ Erreur création onglet passagers: {e}")
+            # Fallback en cas d'erreur
+            ttk.Label(self.passengers_frame, text=f"Erreur: {str(e)}", 
+                    font=('Arial', 14), foreground='red').pack(expand=True)
     
     def create_reservations_tab(self):
         """Crée l'onglet de gestion des réservations"""
-        # Placeholder pour maintenant
-        ttk.Label(self.reservations_frame, text="Gestion des Réservations - À implémenter", 
-                 font=('Arial', 14), foreground='gray').pack(expand=True)
-    
+        try:
+            # Import local pour éviter les imports circulaires
+            from interfaces.tabs.reservations_tab import create_reservations_tab_content
+            
+            # Créer le contenu de l'onglet
+            self.reservations_tree = create_reservations_tab_content(self.reservations_frame, self.data_manager)
+            
+            print("✓ Onglet Réservations créé avec succès")
+        except ImportError as e:
+            print(f"❌ Erreur import reservations_tab: {e}")
+            # Fallback en cas d'erreur
+            ttk.Label(self.reservations_frame, text="Erreur: Module reservations_tab non trouvé", 
+                    font=('Arial', 14), foreground='red').pack(expand=True)
+        except Exception as e:
+            print(f"❌ Erreur création onglet réservations: {e}")
+            # Fallback en cas d'erreur
+            ttk.Label(self.reservations_frame, text=f"Erreur: {str(e)}", 
+                    font=('Arial', 14), foreground='red').pack(expand=True)
+
     def create_status_bar(self, parent):
         """Crée la barre de statut"""
         status_frame = ttk.Frame(parent)
@@ -574,8 +635,11 @@ class MainWindow:
     def refresh_all_data(self):
         """Rafraîchit toutes les données"""
         self.refresh_aircraft_data()
-        self.refresh_statistics()
+        self.refresh_personnel_data()
         self.refresh_flight_data()
+        self.refresh_passengers_data()
+        self.refresh_reservations_data()
+        self.refresh_statistics()
     
     def load_initial_data(self):
         """Charge les données initiales"""
@@ -626,7 +690,42 @@ class MainWindow:
         except Exception as e:
             print(f"❌ Erreur lors de la fermeture: {e}")
             self.root.destroy()
+    
+    def refresh_flight_data(self, flight_data=None):
+        """Rafraîchit les données des vols (appelé par la simulation)"""
+        if hasattr(self, 'flights_tree') and self.flights_tree:
+            try:
+                from interfaces.tabs.flights_tab import refresh_flights_data
+                refresh_flights_data(self.flights_tree, self.data_manager)
+            except Exception as e:
+                print(f"❌ Erreur refresh vols: {e}")
 
+    def refresh_personnel_data(self):
+        """Rafraîchit les données du personnel"""
+        if hasattr(self, 'personnel_tree') and self.personnel_tree:
+            try:
+                from interfaces.tabs.personnel_tab import refresh_personnel_data
+                refresh_personnel_data(self.personnel_tree, self.data_manager)
+            except Exception as e:
+                print(f"❌ Erreur refresh personnel: {e}")
+                
+    def refresh_passengers_data(self):
+        """Rafraîchit les données des passagers"""
+        if hasattr(self, 'passengers_tree') and self.passengers_tree:
+            try:
+                from interfaces.tabs.passengers_tab import refresh_passengers_data
+                refresh_passengers_data(self.passengers_tree, self.data_manager)
+            except Exception as e:
+                print(f"❌ Erreur refresh passagers: {e}")
+
+    def refresh_reservations_data(self):
+        """Rafraîchit les données des réservations"""
+        if hasattr(self, 'reservations_tree') and self.reservations_tree:
+            try:
+                from interfaces.tabs.reservations_tab import refresh_reservations_data
+                refresh_reservations_data(self.reservations_tree, self.data_manager)
+            except Exception as e:
+                print(f"❌ Erreur refresh réservations: {e}")
 if __name__ == "__main__":
     app = MainWindow()
     app.run()

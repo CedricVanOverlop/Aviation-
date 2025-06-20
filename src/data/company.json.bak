@@ -2,16 +2,18 @@
   "nom": "Ma Compagnie Aérienne",
   "created_at": "2025-06-20T21:16:17.224943",
   "statistics": {
-    "total_flights": 0,
-    "total_passengers": 0,
+    "total_flights": 1,
+    "total_passengers": 1,
     "total_aircraft": 1,
-    "total_personnel": 0,
+    "total_personnel": 1,
     "total_reservations": 0,
     "total_airports": 51,
-    "flight_statuses": {},
+    "flight_statuses": {
+      "programme": 1
+    },
     "aircraft_states": {
       "operationnel": 1
     }
   },
-  "last_modified": "2025-06-20T21:52:02.772739"
+  "last_modified": "2025-06-20T23:29:12.015595"
 }

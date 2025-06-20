@@ -1,1 +1,25 @@
-[ ] 
+{
+  "personnels": [],
+  "personnel": [
+    {
+      "id_employe": "2514d069-7d7e-4da0-89a9-164ace4c7793",
+      "nom": "Dupont",
+      "prenom": "Sabrina",
+      "sexe": "feminin",
+      "adresse": "zfg",
+      "numero_telephone": "123123123",
+      "email": "",
+      "type_personnel": "pilote",
+      "horaire": "Temps plein",
+      "specialisation": "cegtez",
+      "disponible": true,
+      "numero_licence": "AEF",
+      "heures_vol": 123.0,
+      "departement": "",
+      "tour_controle": "",
+      "langues_parlees": [],
+      "created_at": "2025-06-20T23:23:50.617964"
+    }
+  ],
+  "last_modified": "2025-06-20T23:23:50.617964"
+}
