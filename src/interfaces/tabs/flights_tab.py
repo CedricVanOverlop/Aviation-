@@ -5,7 +5,6 @@ import sys
 import os
 from datetime import datetime, timedelta
 import math
-import traceback
 
 # Ajouter le chemin du module Core
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
@@ -86,7 +85,6 @@ class FlightDialog:
         self.distance_var = tk.StringVar(value="0 km")
         self.duree_var = tk.StringVar(value="0h00")
         self.autonomie_ok_var = tk.StringVar(value="N/A")
-        self.autonomie_color_var = tk.StringVar(value="gray")
         
         # Dates par défaut
         tomorrow = datetime.now() + timedelta(days=1)
@@ -614,7 +612,7 @@ class FlightDialog:
         return errors
     
     def save_flight(self):
-        """Sauvegarde le vol avec correction des bugs de mise à jour"""
+        """Sauvegarde le vol"""
         # Validation
         errors = self.validate_fields()
         if errors:
@@ -668,13 +666,11 @@ class FlightDialog:
                 'autonomie_suffisante': self.autonomie_ok_var.get() == "✓ OK"
             }
             
-            # Sauvegarder avec corrections de bugs
+            # Sauvegarder
             if self.is_editing:
-                # CORRECTION BUG: Mise à jour correcte en mode édition
                 success = self.data_manager.update_flight(flight_data['numero_vol'], flight_data)
                 action = "modifié"
             else:
-                # CORRECTION BUG: Ajout correct avec nouveau vol
                 success = self.data_manager.add_flight(flight_data)
                 action = "créé"
             
@@ -792,7 +788,7 @@ def new_flight_dialog(parent, data_manager, flights_tree):
 
 
 def edit_flight(parent, data_manager, flights_tree):
-    """CORRECTION: Modifie le vol sélectionné avec recherche d'ID améliorée"""
+    """Modifie le vol sélectionné"""
     selection = flights_tree.selection()
     if not selection:
         messagebox.showwarning("Sélection", "Veuillez sélectionner un vol à modifier.")
@@ -804,35 +800,20 @@ def edit_flight(parent, data_manager, flights_tree):
         
         print(f"🔧 Recherche vol pour modification: {flight_number}")
         
-        # CORRECTION: Forcer le rechargement des données sans cache
-        data_manager.clear_cache()
+        # Recherche du vol
         all_flights = data_manager.get_flights()
-        
         flight_data = None
         
-        # CORRECTION: Recherche plus robuste
         for flight in all_flights:
             vol_number = flight.get('numero_vol', '')
-            print(f"  Comparaison: '{flight_number}' vs '{vol_number}'")
-            
-            # Recherche exacte d'abord
             if vol_number == flight_number:
                 flight_data = flight
                 print(f"  ✓ Vol trouvé par correspondance exacte")
                 break
-            
-            # Recherche partielle si ID tronqué dans l'affichage
-            if flight_number in vol_number or vol_number in flight_number:
-                flight_data = flight
-                print(f"  ✓ Vol trouvé par correspondance partielle")
-                break
         
         if not flight_data:
             print(f"❌ Aucun vol trouvé pour: {flight_number}")
-            print(f"  Vols disponibles: {[f.get('numero_vol') for f in all_flights]}")
-            messagebox.showerror("Erreur", 
-                               f"Vol '{flight_number}' non trouvé.\n\n"
-                               f"Vols disponibles: {len(all_flights)}")
+            messagebox.showerror("Erreur", f"Vol '{flight_number}' non trouvé.")
             return
         
         print(f"✓ Vol trouvé: {flight_data.get('numero_vol')}")
@@ -848,20 +829,7 @@ def edit_flight(parent, data_manager, flights_tree):
         dialog = FlightDialog(parent, data_manager, flight_data)
         if dialog.result:
             print(f"✅ Vol {flight_number} modifié avec succès")
-            
-            # CORRECTION: Rafraîchissement immédiat et forcé
-            data_manager.clear_cache()
             refresh_flights_data(flights_tree, data_manager)
-            
-            # AJOUT: Déclencher aussi la mise à jour des statistiques
-            try:
-                if hasattr(parent, 'refresh_statistics'):
-                    parent.refresh_statistics()
-                elif hasattr(parent, 'parent') and hasattr(parent.parent, 'refresh_statistics'):
-                    parent.parent.refresh_statistics()
-            except:
-                pass
-            
             messagebox.showinfo("Succès", f"Vol {flight_number} modifié avec succès!")
         else:
             print(f"🚫 Modification du vol {flight_number} annulée")
@@ -869,7 +837,6 @@ def edit_flight(parent, data_manager, flights_tree):
     except Exception as e:
         error_msg = f"Erreur lors de la modification du vol: {e}"
         print(f"❌ {error_msg}")
-        traceback.print_exc()
         messagebox.showerror("Erreur", error_msg)
 
 
@@ -898,7 +865,7 @@ Statut: {values[7]}"""
 
 
 def delete_flight(data_manager, flights_tree):
-    """CORRECTION: Supprime ou annule le vol avec méthode DataManager corrigée"""
+    """Supprime ou annule le vol"""
     selection = flights_tree.selection()
     if not selection:
         messagebox.showwarning("Sélection", "Veuillez sélectionner un vol à supprimer.")
@@ -921,28 +888,17 @@ def delete_flight(data_manager, flights_tree):
         
         if messagebox.askyesno("Confirmation", message):
             if current_status in ['Programmé', 'En attente', 'Retardé']:
-                # CORRECTION: Annuler (changer statut) au lieu de supprimer
+                # Annuler (changer statut)
                 success = data_manager.update_flight(flight_number, {'statut': 'annule'})
                 message_success = f"Vol {flight_number} annulé avec succès."
             else:
-                # CORRECTION: Utiliser la méthode corrigée du DataManager
+                # Supprimer définitivement
                 success = data_manager.delete_flight(flight_number)
                 message_success = f"Vol {flight_number} supprimé définitivement."
             
             if success:
                 print(f"✅ {message_success}")
-                
-                # CORRECTION: Rafraîchissement immédiat forcé
-                data_manager.clear_cache()
                 refresh_flights_data(flights_tree, data_manager)
-                
-                # AJOUT: Mise à jour des statistiques
-                try:
-                    if hasattr(flights_tree, 'master') and hasattr(flights_tree.master, 'refresh_statistics'):
-                        flights_tree.master.refresh_statistics()
-                except:
-                    pass
-                
                 messagebox.showinfo("Succès", message_success)
             else:
                 messagebox.showerror("Erreur", f"Impossible de {action} le vol.")
@@ -950,12 +906,11 @@ def delete_flight(data_manager, flights_tree):
     except Exception as e:
         error_msg = f"Erreur lors de la suppression: {e}"
         print(f"❌ {error_msg}")
-        traceback.print_exc()
         messagebox.showerror("Erreur", error_msg)
 
 
 def filter_flights(flights_tree, data_manager, search_var, filter_var):
-    """Filtre la liste des vols - AMÉLIORATION"""
+    """Filtre la liste des vols"""
     search_text = search_var.get().lower()
     filter_status = filter_var.get()
     
@@ -1039,16 +994,14 @@ def filter_flights(flights_tree, data_manager, search_var, filter_var):
 
 
 def refresh_flights_data(flights_tree, data_manager):
-    """CORRECTION: Rafraîchissement robuste avec gestion d'erreurs"""
+    """Rafraîchit les données des vols"""
     try:
         print("🔄 Rafraîchissement des données vols...")
         
-        # CORRECTION: Vider le tableau
+        # Vider le tableau
         for item in flights_tree.get_children():
             flights_tree.delete(item)
         
-        # CORRECTION: Forcer le rechargement sans cache
-        data_manager.clear_cache()
         all_flights = data_manager.get_flights()
         
         print(f"  📊 {len(all_flights)} vols chargés")
@@ -1124,4 +1077,3 @@ def refresh_flights_data(flights_tree, data_manager):
         
     except Exception as e:
         print(f"❌ Erreur refresh vols: {e}")
-        traceback.print_exc()

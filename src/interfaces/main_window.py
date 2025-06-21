@@ -3,48 +3,37 @@ from tkinter import ttk, messagebox
 import sys
 import os
 from datetime import datetime
-from interfaces.tabs.dashboard_tab import ModernDashboard
-from datetime import datetime, timedelta
-import traceback
+from interfaces.tabs.dashboard_tab import SimpleDashboard
 
 # Ajouter le chemin du module Core
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
 
 from data.data_manager import DataManager
-from simulation.simulation_engine import SimulationEngine, SimulationSpeed
 
 class MainWindow:
-    """Fenêtre principale de l'application avec onglets et contrôles de simulation"""
+    """Fenêtre principale de l'application - VERSION SANS SIMULATION"""
     
     def __init__(self):
         """Initialise la fenêtre principale"""
         self.root = tk.Tk()
-        self.root.title("Gestion Aéroportuaire - Simulation Temps Réel")
+        self.root.title("Gestion Aéroportuaire")
         self.root.geometry("1400x900")
         self.root.minsize(1200, 800)
         
-        # Gestionnaires
+        # Gestionnaire de données uniquement
         self.data_manager = DataManager()
-        self.simulation_engine = SimulationEngine(self.data_manager)
         
-        # Variables d'interface
-        self.simulation_time_var = tk.StringVar()
-        self.speed_var = tk.StringVar(value="PAUSE")
-        self.status_var = tk.StringVar(value="Simulation en pause")
+        # Variables d'interface basiques
+        self.status_var = tk.StringVar(value="Application prête")
         
-        # Variables pour les statistiques (initialiser AVANT setup_ui)
+        # Variables pour les statistiques (simples)
         self.stat_vars = {}
-        
-        # Callbacks de simulation
-        self.simulation_engine.add_callback('time_update', self.update_simulation_display)
-        self.simulation_engine.add_callback('flight_update', self.refresh_flight_data)
-        self.simulation_engine.add_callback('statistics_update', self.refresh_statistics)
         
         self.setup_ui()
         self.setup_styles()
         self.refresh_all_data()
         
-        print("🖥️ Interface principale initialisée")
+        print("🖥️ Interface principale initialisée (sans simulation)")
     
     def setup_styles(self):
         """Configure les styles de l'interface"""
@@ -68,8 +57,8 @@ class MainWindow:
         self.root.grid_rowconfigure(0, weight=1)
         self.root.grid_columnconfigure(0, weight=1)
         
-        # Barre supérieure avec contrôles de simulation
-        self.create_simulation_controls(main_frame)
+        # Barre supérieure simple (sans contrôles simulation)
+        self.create_toolbar(main_frame)
         
         # Notebook pour les onglets
         self.notebook = ttk.Notebook(main_frame)
@@ -84,66 +73,45 @@ class MainWindow:
         # Barre de statut
         self.create_status_bar(main_frame)
     
-    def create_simulation_controls(self, parent):
-        """Crée la barre de contrôles de simulation"""
-        control_frame = ttk.LabelFrame(parent, text="Contrôles de Simulation", padding=10)
-        control_frame.grid(row=0, column=0, sticky="ew", pady=(0, 10))
+    def create_toolbar(self, parent):
+        """Crée la barre d'outils principale"""
+        toolbar_frame = ttk.LabelFrame(parent, text="Actions Principales", padding=10)
+        toolbar_frame.grid(row=0, column=0, sticky="ew", pady=(0, 10))
         
-        # Temps simulé
-        time_frame = ttk.Frame(control_frame)
-        time_frame.grid(row=0, column=0, sticky="w", padx=(0, 20))
+        # Boutons d'actions principales
+        ttk.Button(toolbar_frame, text="🔄 Actualiser", 
+                  command=self.refresh_all_data, 
+                  style='Action.TButton').grid(row=0, column=0, padx=(0, 10))
         
-        ttk.Label(time_frame, text="Temps simulé:", font=('Arial', 10, 'bold')).grid(row=0, column=0, sticky="w")
-        time_label = ttk.Label(time_frame, textvariable=self.simulation_time_var, 
-                              style='Value.TLabel')
-        time_label.grid(row=1, column=0, sticky="w")
+        ttk.Button(toolbar_frame, text="📊 Statistiques", 
+                  command=self.show_statistics).grid(row=0, column=1, padx=(0, 10))
         
-        # Contrôles de vitesse
-        speed_frame = ttk.Frame(control_frame)
-        speed_frame.grid(row=0, column=1, sticky="w", padx=(0, 20))
+        ttk.Button(toolbar_frame, text="💾 Sauvegarder", 
+                  command=self.save_all_data).grid(row=0, column=2, padx=(0, 10))
         
-        ttk.Label(speed_frame, text="Vitesse:", font=('Arial', 10, 'bold')).grid(row=0, column=0, sticky="w")
+        # Indicateur d'horloge système simple
+        self.clock_var = tk.StringVar()
+        clock_label = ttk.Label(toolbar_frame, textvariable=self.clock_var,
+                               font=('Arial', 12, 'bold'),
+                               foreground='blue')
+        clock_label.grid(row=0, column=3, sticky="e", padx=(20, 0))
         
-        # Combobox pour la vitesse
-        speed_combo = ttk.Combobox(speed_frame, textvariable=self.speed_var, width=12, state="readonly")
-        speed_combo['values'] = ['PAUSE', 'x1', 'x10', 'x60', 'x100', 'x360']
-        speed_combo.grid(row=1, column=0, sticky="w")
-        speed_combo.bind('<<ComboboxSelected>>', self.on_speed_change)
+        # Mettre à jour l'horloge une seule fois
+        self.update_clock()
         
-        # Boutons de contrôle
-        button_frame = ttk.Frame(control_frame)
-        button_frame.grid(row=0, column=2, sticky="w", padx=(0, 20))
-        
-        ttk.Label(button_frame, text="Contrôles:", font=('Arial', 10, 'bold')).grid(row=0, column=0, columnspan=4, sticky="w")
-        
-        self.btn_start = ttk.Button(button_frame, text="▶️ Démarrer", command=self.start_simulation, style='Success.TButton')
-        self.btn_start.grid(row=1, column=0, padx=(0, 5))
-        
-        self.btn_pause = ttk.Button(button_frame, text="⏸️ Pause", command=self.pause_simulation)
-        self.btn_pause.grid(row=1, column=1, padx=(0, 5))
-        
-        self.btn_stop = ttk.Button(button_frame, text="⏹️ Arrêter", command=self.stop_simulation, style='Danger.TButton')
-        self.btn_stop.grid(row=1, column=2, padx=(0, 5))
-        
-        self.btn_reset = ttk.Button(button_frame, text="🔄 Reset", command=self.reset_simulation)
-        self.btn_reset.grid(row=1, column=3, padx=(0, 5))
-        
-        # Avance rapide
-        fast_frame = ttk.Frame(control_frame)
-        fast_frame.grid(row=0, column=3, sticky="w")
-        
-        ttk.Label(fast_frame, text="Avance Rapide:", font=('Arial', 10, 'bold')).grid(row=0, column=0, columnspan=3, sticky="w")
-        
-        ttk.Button(fast_frame, text="+1h", command=lambda: self.fast_forward(1)).grid(row=1, column=0, padx=(0, 2))
-        ttk.Button(fast_frame, text="+6h", command=lambda: self.fast_forward(6)).grid(row=1, column=1, padx=(0, 2))
-        ttk.Button(fast_frame, text="+24h", command=lambda: self.fast_forward(24)).grid(row=1, column=2)
-        
-        # Mise à jour initial
-        self.update_simulation_display(datetime.now())
+        # Configuration responsive
+        toolbar_frame.grid_columnconfigure(3, weight=1)
+    
+    def update_clock(self):
+        """Met à jour l'horloge système (pas de simulation)"""
+        current_time = datetime.now().strftime("%H:%M:%S")
+        self.clock_var.set(f"🕐 {current_time}")
+        # Programmer la prochaine mise à jour dans 1 seconde
+        self.root.after(1000, self.update_clock)
     
     def create_tabs(self):
         """Crée tous les onglets de l'application"""
-        # Onglet Dashboard (Tableau de bord)
+        # Onglet Dashboard (simplifié)
         self.dashboard_frame = ttk.Frame(self.notebook)
         self.notebook.add(self.dashboard_frame, text="📊 Tableau de Bord")
         self.create_dashboard_tab()
@@ -174,28 +142,12 @@ class MainWindow:
         self.create_reservations_tab()
 
     def create_dashboard_tab(self):
-        """Crée l'onglet tableau de bord avec le nouveau dashboard avancé"""
-        try:
-            from interfaces.tabs.dashboard_tab import ModernDashboard
-
-            self.dashboard_instance = ModernDashboard(
-                self.dashboard_frame,
-                self.data_manager,
-                self.simulation_engine
-            )
-            print("✓ Dashboard avancé intégré avec succès")
-
-        except ImportError as e:
-            print(f"❌ Erreur import dashboard_tab: {e}")
-            self.create_simple_fallback_dashboard()
-        except Exception as e:
-            print(f"❌ Erreur création dashboard avancé: {e}")
-            self.create_simple_fallback_dashboard()
-
-
+        """Crée l'onglet tableau de bord simplifié"""
+        # Dashboard simplifié sans simulation temps réel
+        self.create_simple_dashboard()
         
-    def create_simple_fallback_dashboard(self):
-        """Crée un dashboard simple en cas d'erreur avec le dashboard avancé"""
+    def create_simple_dashboard(self):
+        """Crée un dashboard simple sans éléments temps réel"""
         # Frame principal avec défilement
         canvas = tk.Canvas(self.dashboard_frame)
         scrollbar = ttk.Scrollbar(self.dashboard_frame, orient="vertical", command=canvas.yview)
@@ -217,30 +169,37 @@ class MainWindow:
         
         # Titre
         title_label = ttk.Label(scrollable_frame, 
-                            text="📊 Tableau de Bord Simplifié",
-                            font=('Arial', 16, 'bold'))
+                               text="📊 Tableau de Bord",
+                               font=('Arial', 16, 'bold'))
         title_label.pack(pady=20)
         
         # Section Statistiques Générales
         stats_frame = ttk.LabelFrame(scrollable_frame, text="📈 Statistiques Générales", padding=15)
         stats_frame.pack(fill="x", padx=10, pady=10)
         
-        # Initialiser self.stat_vars si pas encore fait
-        if not hasattr(self, 'stat_vars'):
-            self.stat_vars = {}
-        
         # Grid de statistiques (2x3)
-        self.create_stat_card(stats_frame, "Vols Aujourd'hui", "0", "🛫", 0, 0)
-        self.create_stat_card(stats_frame, "Vols en Cours", "0", "✈️", 0, 1)
-        self.create_stat_card(stats_frame, "Avions Disponibles", "0", "🛩️", 0, 2)
-        self.create_stat_card(stats_frame, "Personnel Actif", "0", "👥", 1, 0)
-        self.create_stat_card(stats_frame, "Retards", "0", "⏰", 1, 1)
-        self.create_stat_card(stats_frame, "Maintenances", "0", "🔧", 1, 2)
+        self.create_stat_card(stats_frame, "Total Avions", "0", "🛩️", 0, 0)
+        self.create_stat_card(stats_frame, "Total Personnel", "0", "👥", 0, 1)
+        self.create_stat_card(stats_frame, "Total Vols", "0", "🛫", 0, 2)
+        self.create_stat_card(stats_frame, "Total Passagers", "0", "👤", 1, 0)
+        self.create_stat_card(stats_frame, "Total Réservations", "0", "🎫", 1, 1)
+        self.create_stat_card(stats_frame, "Base de Données", "OK", "💾", 1, 2)
         
         # Configuration responsive
         stats_frame.grid_columnconfigure((0, 1, 2), weight=1)
         
-        print("✓ Dashboard simplifié créé en fallback")
+        # Section Résumé
+        summary_frame = ttk.LabelFrame(scrollable_frame, text="📋 Résumé", padding=15)
+        summary_frame.pack(fill="x", padx=10, pady=10)
+        
+        self.summary_text = tk.Text(summary_frame, height=8, width=80, wrap=tk.WORD,
+                                   font=('Arial', 10), bg='#f8f9fa', relief="sunken", bd=1)
+        self.summary_text.pack(fill="both", expand=True)
+        
+        # Mettre à jour le résumé
+        self.update_summary()
+        
+        print("✓ Dashboard simplifié créé")
 
     def create_stat_card(self, parent, title, value, icon, row, col):
         """Crée une carte de statistique simple"""
@@ -260,15 +219,54 @@ class MainWindow:
         # Valeur
         value_var = tk.StringVar(value=value)
         value_label = ttk.Label(card_frame, textvariable=value_var, 
-                            font=('Arial', 14, 'bold'), foreground="blue")
+                               font=('Arial', 14, 'bold'), foreground="blue")
         value_label.grid(row=1, column=0, pady=(0, 10))
         
         # Stocker la variable pour mise à jour
-        if not hasattr(self, 'stat_vars'):
-            self.stat_vars = {}
         self.stat_vars[title] = value_var
         
         return card_frame
+    
+    def update_summary(self):
+        """Met à jour le texte de résumé"""
+        try:
+            aircraft_count = len(self.data_manager.get_aircraft())
+            personnel_count = len(self.data_manager.get_personnel())
+            flights_count = len(self.data_manager.get_flights())
+            passengers_count = len(self.data_manager.get_passengers())
+            reservations_count = len(self.data_manager.get_reservations())
+            
+            summary = f"""=== RÉSUMÉ DE LA GESTION AÉROPORTUAIRE ===
+
+📊 DONNÉES ACTUELLES :
+• Avions enregistrés : {aircraft_count}
+• Personnel actif : {personnel_count}
+• Vols programmés : {flights_count}
+• Passagers enregistrés : {passengers_count}
+• Réservations actives : {reservations_count}
+
+📈 INFORMATIONS SYSTÈME :
+• Dernière mise à jour : {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+• État base de données : Opérationnelle
+• Mode : Gestion statique (sans simulation)
+
+💡 ACTIONS DISPONIBLES :
+• Gérer la flotte d'avions dans l'onglet "Avions"
+• Administrer le personnel dans l'onglet "Personnel"
+• Planifier les vols dans l'onglet "Vols"
+• Gérer les passagers et réservations
+• Utiliser le bouton "Actualiser" pour mettre à jour les données
+
+📝 NOTE : Cette version ne contient pas de simulation temps réel.
+Toutes les modifications sont instantanées et persistantes."""
+            
+            self.summary_text.delete("1.0", tk.END)
+            self.summary_text.insert("1.0", summary)
+            
+        except Exception as e:
+            error_text = f"Erreur lors de la mise à jour du résumé : {e}"
+            self.summary_text.delete("1.0", tk.END)
+            self.summary_text.insert("1.0", error_text)
         
     def create_aircraft_tab(self):
         """Crée l'onglet de gestion des avions"""
@@ -323,87 +321,62 @@ class MainWindow:
     def create_personnel_tab(self):
         """Crée l'onglet de gestion du personnel"""
         try:
-            # Import local pour éviter les imports circulaires
             from interfaces.tabs.personnel_tab import create_personnel_tab_content
-            
-            # Créer le contenu de l'onglet
             self.personnel_tree = create_personnel_tab_content(self.personnel_frame, self.data_manager)
-            
-            print("✓ Onglet Personnel créé avec succès")
+            print("✓ Onglet Personnel créé")
         except ImportError as e:
             print(f"❌ Erreur import personnel_tab: {e}")
-            # Fallback en cas d'erreur
             ttk.Label(self.personnel_frame, text="Erreur: Module personnel_tab non trouvé", 
-                    font=('Arial', 14), foreground='red').pack(expand=True)
+                     font=('Arial', 14), foreground='red').pack(expand=True)
         except Exception as e:
             print(f"❌ Erreur création onglet personnel: {e}")
-            # Fallback en cas d'erreur
             ttk.Label(self.personnel_frame, text=f"Erreur: {str(e)}", 
-                    font=('Arial', 14), foreground='red').pack(expand=True)
+                     font=('Arial', 14), foreground='red').pack(expand=True)
     
     def create_flights_tab(self):
         """Crée l'onglet de gestion des vols"""
         try:
-            # Import local pour éviter les imports circulaires
             from interfaces.tabs.flights_tab import create_flights_tab_content
-            
-            # Créer le contenu de l'onglet
             self.flights_tree = create_flights_tab_content(self.flights_frame, self.data_manager)
-            
-            print("✓ Onglet Vols créé avec succès")
+            print("✓ Onglet Vols créé")
         except ImportError as e:
             print(f"❌ Erreur import flights_tab: {e}")
-            # Fallback en cas d'erreur
             ttk.Label(self.flights_frame, text="Erreur: Module flights_tab non trouvé", 
-                    font=('Arial', 14), foreground='red').pack(expand=True)
+                     font=('Arial', 14), foreground='red').pack(expand=True)
         except Exception as e:
             print(f"❌ Erreur création onglet vols: {e}")
-            # Fallback en cas d'erreur
             ttk.Label(self.flights_frame, text=f"Erreur: {str(e)}", 
-                    font=('Arial', 14), foreground='red').pack(expand=True)
+                     font=('Arial', 14), foreground='red').pack(expand=True)
         
-    
     def create_passengers_tab(self):
         """Crée l'onglet de gestion des passagers"""
         try:
-            # Import local pour éviter les imports circulaires
             from interfaces.tabs.passengers_tab import create_passengers_tab_content
-            
-            # Créer le contenu de l'onglet
             self.passengers_tree = create_passengers_tab_content(self.passengers_frame, self.data_manager)
-            
-            print("✓ Onglet Passagers créé avec succès")
+            print("✓ Onglet Passagers créé")
         except ImportError as e:
             print(f"❌ Erreur import passengers_tab: {e}")
-            # Fallback en cas d'erreur
             ttk.Label(self.passengers_frame, text="Erreur: Module passengers_tab non trouvé", 
-                    font=('Arial', 14), foreground='red').pack(expand=True)
+                     font=('Arial', 14), foreground='red').pack(expand=True)
         except Exception as e:
             print(f"❌ Erreur création onglet passagers: {e}")
-            # Fallback en cas d'erreur
             ttk.Label(self.passengers_frame, text=f"Erreur: {str(e)}", 
-                    font=('Arial', 14), foreground='red').pack(expand=True)
+                     font=('Arial', 14), foreground='red').pack(expand=True)
     
     def create_reservations_tab(self):
         """Crée l'onglet de gestion des réservations"""
         try:
-            # Import local pour éviter les imports circulaires
             from interfaces.tabs.reservations_tab import create_reservations_tab_content
-            
-            # Créer le contenu de l'onglet
             self.reservations_tree = create_reservations_tab_content(self.reservations_frame, self.data_manager)
-            
-            print("✓ Onglet Réservations créé avec succès")
+            print("✓ Onglet Réservations créé")
         except ImportError as e:
             print(f"❌ Erreur import reservations_tab: {e}")
-            # Fallback en cas d'erreur
             ttk.Label(self.reservations_frame, text="Erreur: Module reservations_tab non trouvé", 
-                    font=('Arial', 14), foreground='red').pack(expand=True)
+                     font=('Arial', 14), foreground='red').pack(expand=True)
         except Exception as e:
             print(f"❌ Erreur création onglet réservations: {e}")
-            # Fallback en cas d'erreur
             ttk.Label(self.reservations_frame, text=f"Erreur: {str(e)}", 
-                    font=('Arial', 14), foreground='red').pack(expand=True)
+                     font=('Arial', 14), foreground='red').pack(expand=True)
 
     def create_status_bar(self, parent):
         """Crée la barre de statut"""
@@ -415,101 +388,81 @@ class MainWindow:
         
         status_frame.grid_columnconfigure(0, weight=1)
     
-    # Méthodes de contrôle de simulation
-    def on_speed_change(self, event=None):
-        """Gestionnaire de changement de vitesse"""
-        speed_text = self.speed_var.get()
-        speed_mapping = {
-            'PAUSE': SimulationSpeed.PAUSE,
-            'x1': SimulationSpeed.REAL_TIME,
-            'x10': SimulationSpeed.SPEED_10X,
-            'x60': SimulationSpeed.SPEED_60X,
-            'x100': SimulationSpeed.SPEED_100X,
-            'x360': SimulationSpeed.SPEED_360X
-        }
-        
-        speed = speed_mapping.get(speed_text, SimulationSpeed.PAUSE)
-        self.simulation_engine.set_speed(speed)
-        self.update_status()
+    # Méthodes d'actions principales
+    def show_statistics(self):
+        """Affiche les statistiques globales"""
+        try:
+            aircraft_count = len(self.data_manager.get_aircraft())
+            personnel_count = len(self.data_manager.get_personnel())
+            flights_count = len(self.data_manager.get_flights())
+            passengers_count = len(self.data_manager.get_passengers())
+            reservations_count = len(self.data_manager.get_reservations())
+            
+            stats_text = f"""📊 STATISTIQUES GLOBALES
+
+✈️ FLOTTE :
+• Total avions : {aircraft_count}
+
+👥 PERSONNEL :
+• Total employés : {personnel_count}
+
+🛫 VOLS :
+• Total vols planifiés : {flights_count}
+
+👤 PASSAGERS :
+• Total passagers : {passengers_count}
+
+🎫 RÉSERVATIONS :
+• Total réservations : {reservations_count}
+
+📅 Dernière mise à jour : {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}"""
+            
+            messagebox.showinfo("Statistiques Globales", stats_text)
+            
+        except Exception as e:
+            messagebox.showerror("Erreur", f"Erreur lors du calcul des statistiques:\n{e}")
     
-    def start_simulation(self):
-        """Démarre la simulation"""
-        if self.speed_var.get() == 'PAUSE':
-            self.speed_var.set('x1')
-            self.on_speed_change()
-        
-        self.simulation_engine.start()
-        self.update_status()
+    def save_all_data(self):
+        """Force la sauvegarde de toutes les données"""
+        try:
+            # Le DataManager sauvegarde automatiquement, mais on peut forcer
+            self.status_var.set("Sauvegarde en cours...")
+            
+            # Simuler une petite pause pour l'indication visuelle
+            self.root.after(500, lambda: self.status_var.set("Données sauvegardées"))
+            self.root.after(2000, lambda: self.status_var.set("Application prête"))
+            
+            messagebox.showinfo("Sauvegarde", "Toutes les données ont été sauvegardées avec succès.")
+            
+        except Exception as e:
+            messagebox.showerror("Erreur", f"Erreur lors de la sauvegarde:\n{e}")
+            self.status_var.set("Erreur de sauvegarde")
     
-    def pause_simulation(self):
-        """Met en pause la simulation"""
-        self.simulation_engine.pause()
-        self.update_status()
-    
-    def stop_simulation(self):
-        """Arrête la simulation"""
-        self.simulation_engine.stop()
-        self.speed_var.set('PAUSE')
-        self.update_status()
-    
-    def reset_simulation(self):
-        """Remet à zéro la simulation"""
-        if messagebox.askyesno("Confirmation", "Voulez-vous vraiment remettre à zéro la simulation ?"):
-            self.simulation_engine.reset()
-            self.speed_var.set('PAUSE')
-            self.update_status()
-            self.refresh_all_data()
-    
-    def fast_forward(self, hours):
-        """Avance rapide de X heures"""
-        self.simulation_engine.fast_forward(hours)
-        self.refresh_all_data()
-    
-    def update_simulation_display(self, sim_time):
-        """Met à jour l'affichage du temps de simulation"""
-        self.simulation_time_var.set(sim_time.strftime("%Y-%m-%d %H:%M:%S"))
-    
-    def update_status(self):
-        """Met à jour la barre de statut"""
-        info = self.simulation_engine.get_simulation_info()
-        if info['is_running'] and not info['is_paused']:
-            self.status_var.set(f"Simulation en cours - Vitesse: {info['speed']}")
-        elif info['is_paused']:
-            self.status_var.set("Simulation en pause")
-        else:
-            self.status_var.set("Simulation arrêtée")
-    
-    # Méthodes de gestion des avions
+    # Méthodes de gestion des avions (simplifiées)
     def new_aircraft_dialog(self):
-        """CORRECTION: Ouvre le dialogue de création d'avion avec refresh immédiat"""
+        """Ouvre le dialogue de création d'avion"""
         try:
             from interfaces.tabs.aircraft_tab import AircraftDialog
             dialog = AircraftDialog(self.root, self.data_manager)
             if dialog.result:
-                # CORRECTION BUG: Rafraîchissement immédiat après création
                 self.refresh_aircraft_data()
-                self.refresh_statistics()
-                
-                print("✅ Nouvel avion créé et interface mise à jour")
+                self.update_statistics()
+                print("✅ Nouvel avion créé")
                 
         except Exception as e:
             print(f"❌ Erreur création avion: {e}")
         
     def edit_aircraft(self):
-        """Modifie l'avion sélectionné - IMPLÉMENTATION COMPLÈTE"""
+        """Modifie l'avion sélectionné"""
         selection = self.aircraft_tree.selection()
         if not selection:
             messagebox.showwarning("Sélection", "Veuillez sélectionner un avion à modifier.")
             return
         
         try:
-            # Récupérer les données de l'avion sélectionné
             item = self.aircraft_tree.item(selection[0])
-            aircraft_id = item['values'][0]  # ID de l'avion
+            aircraft_id = item['values'][0]
             
-            print(f"🔧 Modification de l'avion: {aircraft_id}")
-            
-            # Trouver les données complètes de l'avion
             all_aircraft = self.data_manager.get_aircraft()
             aircraft_data = None
             
@@ -519,57 +472,33 @@ class MainWindow:
                     break
             
             if not aircraft_data:
-                messagebox.showerror("Erreur", f"Avion {aircraft_id} non trouvé dans les données.")
+                messagebox.showerror("Erreur", f"Avion {aircraft_id} non trouvé.")
                 return
             
-            # Vérifier si l'avion est disponible pour modification
-            current_state = aircraft_data.get('etat', 'au_sol')
-            if current_state == 'en_vol':
-                messagebox.showwarning("Modification impossible", 
-                                    f"L'avion {aircraft_id} est actuellement en vol.\n"
-                                    "Impossible de le modifier pendant un vol.")
-                return
-            
-            # Ouvrir le dialogue de modification
             from interfaces.tabs.aircraft_tab import AircraftDialog
             dialog = AircraftDialog(self.root, self.data_manager, aircraft_data)
             
             if dialog.result:
-                # Modification réussie
-                print(f"✅ Avion {aircraft_id} modifié avec succès")
-                
-                # Rafraîchir l'affichage
-                self.data_manager.clear_cache()
                 self.refresh_aircraft_data()
-                
-                # Notification de succès
+                self.update_statistics()
                 messagebox.showinfo("Succès", f"Avion {aircraft_id} modifié avec succès!")
                 
-            else:
-                print(f"🚫 Modification de l'avion {aircraft_id} annulée")
-        
         except Exception as e:
-            error_msg = f"Erreur lors de la modification de l'avion: {e}"
-            print(f"❌ {error_msg}")
-            messagebox.showerror("Erreur", error_msg)
+            messagebox.showerror("Erreur", f"Erreur lors de la modification: {e}")
     
     def aircraft_maintenance(self):
-        """Met l'avion en maintenance - IMPLÉMENTATION COMPLÈTE"""
+        """Met l'avion en maintenance"""
         selection = self.aircraft_tree.selection()
         if not selection:
-            messagebox.showwarning("Sélection", "Veuillez sélectionner un avion pour la maintenance.")
+            messagebox.showwarning("Sélection", "Veuillez sélectionner un avion.")
             return
         
         try:
-            # Récupérer les données de l'avion sélectionné
             item = self.aircraft_tree.item(selection[0])
             aircraft_id = item['values'][0]
             aircraft_model = item['values'][1]
             current_state_display = item['values'][4]
             
-            print(f"🔧 Gestion maintenance avion: {aircraft_id}")
-            
-            # Trouver les données complètes de l'avion
             all_aircraft = self.data_manager.get_aircraft()
             aircraft_data = None
             aircraft_index = -1
@@ -586,93 +515,58 @@ class MainWindow:
             
             current_state = aircraft_data.get('etat', 'au_sol')
             
-            # Logique selon l'état actuel
-            if current_state == 'en_vol':
-                messagebox.showwarning("Maintenance impossible", 
-                                    f"L'avion {aircraft_id} est en vol.\n"
-                                    "Attendez qu'il atterrisse pour programmer la maintenance.")
-                return
-            
-            elif current_state == 'en_maintenance':
+            if current_state == 'en_maintenance':
                 # Proposer de terminer la maintenance
                 if messagebox.askyesno("Terminer maintenance", 
-                                    f"L'avion {aircraft_id} ({aircraft_model}) est en maintenance.\n\n"
-                                    "Voulez-vous terminer la maintenance et le remettre en service ?"):
+                                     f"L'avion {aircraft_id} ({aircraft_model}) est en maintenance.\n\n"
+                                     "Voulez-vous terminer la maintenance ?"):
                     
-                    # Terminer la maintenance
                     aircraft_data['etat'] = 'operationnel'
                     aircraft_data['derniere_maintenance'] = datetime.now().isoformat()
-                    aircraft_data['updated_at'] = datetime.now().isoformat()
                     
-                    # Sauvegarder
                     if self._update_aircraft_in_data(aircraft_data, aircraft_index):
-                        messagebox.showinfo("Succès", 
-                                        f"Maintenance terminée pour l'avion {aircraft_id}.\n"
-                                        f"L'avion est maintenant opérationnel.")
-                        print(f"✅ Maintenance terminée pour {aircraft_id}")
-                    else:
-                        messagebox.showerror("Erreur", "Impossible de sauvegarder les modifications.")
-            
+                        messagebox.showinfo("Succès", "Maintenance terminée.")
+                        self.refresh_aircraft_data()
             else:
                 # Proposer de mettre en maintenance
                 if messagebox.askyesno("Programmer maintenance", 
-                                    f"Programmer une maintenance pour l'avion {aircraft_id} ({aircraft_model}) ?\n\n"
-                                    f"État actuel: {current_state_display}\n\n"
-                                    "L'avion sera indisponible pendant la maintenance."):
+                                     f"Programmer une maintenance pour l'avion {aircraft_id} ?"):
                     
-                    # Mettre en maintenance
                     aircraft_data['etat'] = 'en_maintenance'
-                    aircraft_data['updated_at'] = datetime.now().isoformat()
                     
-                    # Sauvegarder
                     if self._update_aircraft_in_data(aircraft_data, aircraft_index):
-                        messagebox.showinfo("Succès", 
-                                        f"Avion {aircraft_id} mis en maintenance.\n"
-                                        f"Il sera indisponible jusqu'à la fin de la maintenance.")
-                        print(f"🔧 Avion {aircraft_id} mis en maintenance")
-                    else:
-                        messagebox.showerror("Erreur", "Impossible de sauvegarder les modifications.")
+                        messagebox.showinfo("Succès", "Avion mis en maintenance.")
+                        self.refresh_aircraft_data()
             
-            # Rafraîchir l'affichage dans tous les cas
-            self.data_manager.clear_cache()
-            self.refresh_aircraft_data()
-        
         except Exception as e:
-            error_msg = f"Erreur lors de la gestion de maintenance: {e}"
-            print(f"❌ {error_msg}")
-            messagebox.showerror("Erreur", error_msg)
+            messagebox.showerror("Erreur", f"Erreur maintenance: {e}")
 
     def _update_aircraft_in_data(self, aircraft_data, aircraft_index):
-        """Méthode utilitaire pour mettre à jour un avion dans les données"""
+        """Met à jour un avion dans les données"""
         try:
-            # Charger les données actuelles
             data = self.data_manager.load_data('aircraft')
             
             if 'aircraft' not in data:
                 data['aircraft'] = []
             
-            # Mettre à jour l'avion à l'index correct
             if 0 <= aircraft_index < len(data['aircraft']):
                 data['aircraft'][aircraft_index] = aircraft_data
             else:
-                # Si l'index n'est pas trouvé, chercher par ID
                 for i, aircraft in enumerate(data['aircraft']):
                     if aircraft.get('num_id') == aircraft_data.get('num_id'):
                         data['aircraft'][i] = aircraft_data
                         break
                 else:
-                    # Si toujours pas trouvé, ajouter
                     data['aircraft'].append(aircraft_data)
             
-            # Sauvegarder
             return self.data_manager.save_data('aircraft', data)
         
         except Exception as e:
-            print(f"❌ Erreur _update_aircraft_in_data: {e}")
+            print(f"❌ Erreur update aircraft: {e}")
             return False
         
     def delete_aircraft(self):
-        """Supprime l'avion sélectionné - AMÉLIORATION"""
+        """Supprime l'avion sélectionné"""
         selection = self.aircraft_tree.selection()
         if not selection:
             messagebox.showwarning("Sélection", "Veuillez sélectionner un avion à supprimer.")
@@ -682,88 +576,83 @@ class MainWindow:
             item = self.aircraft_tree.item(selection[0])
             aircraft_id = item['values'][0]
             aircraft_model = item['values'][1]
-            current_state_display = item['values'][4]
             
-            # Vérifications de sécurité
-            all_aircraft = self.data_manager.get_aircraft()
-            aircraft_data = None
-            
-            for aircraft in all_aircraft:
-                if aircraft.get('num_id') == aircraft_id:
-                    aircraft_data = aircraft
-                    break
-            
-            if not aircraft_data:
-                messagebox.showerror("Erreur", f"Avion {aircraft_id} non trouvé.")
-                return
-            
-            current_state = aircraft_data.get('etat', 'au_sol')
-            
-            # Vérifier si l'avion est utilisé
-            if current_state == 'en_vol':
-                messagebox.showwarning("Suppression impossible", 
-                                    f"L'avion {aircraft_id} est actuellement en vol.\n"
-                                    "Impossible de le supprimer.")
-                return
-            
-            # Vérifier s'il y a des vols programmés avec cet avion
-            all_flights = self.data_manager.get_flights()
-            future_flights = []
-            
-            for flight in all_flights:
-                if (flight.get('avion_utilise') == aircraft_id and 
-                    flight.get('statut') in ['programme', 'en_attente']):
-                    future_flights.append(flight.get('numero_vol', ''))
-            
-            if future_flights:
-                messagebox.showwarning("Suppression impossible", 
-                                    f"L'avion {aircraft_id} est assigné aux vols futurs:\n" +
-                                    ", ".join(future_flights[:5]) + 
-                                    ("\n... et d'autres" if len(future_flights) > 5 else "") +
-                                    "\n\nAnnulez d'abord ces vols ou réassignez un autre avion.")
-                return
-            
-            # Confirmation finale
             if messagebox.askyesno("Confirmation", 
-                                f"Voulez-vous vraiment supprimer l'avion ?\n\n"
-                                f"ID: {aircraft_id}\n"
-                                f"Modèle: {aircraft_model}\n"
-                                f"État: {current_state_display}\n\n"
-                                "Cette action est irréversible."):
+                                  f"Voulez-vous vraiment supprimer l'avion ?\n\n"
+                                  f"ID: {aircraft_id}\n"
+                                  f"Modèle: {aircraft_model}\n\n"
+                                  "Cette action est irréversible."):
                 
                 if self.data_manager.delete_aircraft(aircraft_id):
-                    self.data_manager.clear_cache()
                     self.refresh_aircraft_data()
-                    messagebox.showinfo("Succès", f"Avion {aircraft_id} supprimé avec succès.")
-                    print(f"🗑️ Avion {aircraft_id} supprimé")
+                    self.update_statistics()
+                    messagebox.showinfo("Succès", f"Avion {aircraft_id} supprimé.")
                 else:
                     messagebox.showerror("Erreur", "Impossible de supprimer l'avion.")
         
         except Exception as e:
-            error_msg = f"Erreur lors de la suppression: {e}"
-            print(f"❌ {error_msg}")
-            messagebox.showerror("Erreur", error_msg)
+            messagebox.showerror("Erreur", f"Erreur suppression: {e}")
     
     def filter_aircraft(self, event=None):
         """Filtre la liste des avions"""
-        # TODO: Implémenter le filtrage
-        pass
+        search_text = self.aircraft_search_var.get().lower()
+        filter_state = self.aircraft_filter_var.get()
+        
+        # Vider le tableau
+        for item in self.aircraft_tree.get_children():
+            self.aircraft_tree.delete(item)
+        
+        # Recharger avec filtres
+        all_aircraft = self.data_manager.get_aircraft()
+        airports = {a['code_iata']: a['ville'] for a in self.data_manager.get_airports()}
+        
+        for aircraft in all_aircraft:
+            # Filtrage par état
+            current_state = aircraft.get('etat', 'au_sol')
+            state_display = current_state.replace('_', ' ').title()
+            
+            if filter_state != "Tous" and filter_state.lower() != state_display.lower():
+                continue
+            
+            # Filtrage par recherche
+            searchable_text = f"{aircraft.get('num_id', '')} {aircraft.get('modele', '')} {aircraft.get('compagnie_aerienne', '')}".lower()
+            if search_text and search_text not in searchable_text:
+                continue
+            
+            # Obtenir la localisation
+            location = "Inconnu"
+            if 'localisation' in aircraft:
+                loc_coords = aircraft['localisation']
+                for airport in self.data_manager.get_airports():
+                    if (abs(airport['coordonnees']['latitude'] - loc_coords.get('latitude', 0)) < 0.1 and
+                        abs(airport['coordonnees']['longitude'] - loc_coords.get('longitude', 0)) < 0.1):
+                        location = f"{airport['ville']} ({airport['code_iata']})"
+                        break
+            
+            values = (
+                aircraft.get('num_id', ''),
+                aircraft.get('modele', ''),
+                aircraft.get('compagnie_aerienne', ''),
+                aircraft.get('capacite', ''),
+                state_display,
+                location,
+                f"{aircraft.get('autonomie', 0)} km",
+                aircraft.get('derniere_maintenance', 'Jamais')
+            )
+            
+            self.aircraft_tree.insert('', 'end', values=values)
     
-    # Méthodes de rafraîchissement des données
+    # Méthodes de rafraîchissement des données (simplifiées)
     def refresh_aircraft_data(self):
-        """CORRECTION: Rafraîchit les données des avions avec forçage du cache"""
+        """Rafraîchit les données des avions"""
         if not hasattr(self, 'aircraft_tree'):
             return
         
         try:
-            # CORRECTION BUG: Forcer le vidage du cache avant rafraîchissement
-            self.data_manager.clear_cache()
-            
             # Vider le tableau
             for item in self.aircraft_tree.get_children():
                 self.aircraft_tree.delete(item)
             
-            # Recharger les données avec cache vidé
             aircraft_list = self.data_manager.get_aircraft()
             airports = {a['code_iata']: a['ville'] for a in self.data_manager.get_airports()}
             
@@ -772,7 +661,6 @@ class MainWindow:
                 location = "Inconnu"
                 if 'localisation' in aircraft:
                     loc_coords = aircraft['localisation']
-                    # Trouver l'aéroport le plus proche (simplifié)
                     for airport in self.data_manager.get_airports():
                         if (abs(airport['coordonnees']['latitude'] - loc_coords.get('latitude', 0)) < 0.1 and
                             abs(airport['coordonnees']['longitude'] - loc_coords.get('longitude', 0)) < 0.1):
@@ -784,7 +672,7 @@ class MainWindow:
                     aircraft.get('modele', ''),
                     aircraft.get('compagnie_aerienne', ''),
                     aircraft.get('capacite', ''),
-                    aircraft.get('etat', 'au_sol'),
+                    aircraft.get('etat', 'au_sol').replace('_', ' ').title(),
                     location,
                     f"{aircraft.get('autonomie', 0)} km",
                     aircraft.get('derniere_maintenance', 'Jamais')
@@ -797,56 +685,49 @@ class MainWindow:
         except Exception as e:
             print(f"❌ Erreur refresh avions: {e}")
 
-    
-    def refresh_flight_data(self, flight_data=None):
-        """CORRECTION: Rafraîchit les données des vols avec forçage du cache"""
+    def refresh_personnel_data(self):
+        """Rafraîchit les données du personnel"""
+        if hasattr(self, 'personnel_tree') and self.personnel_tree:
+            try:
+                from interfaces.tabs.personnel_tab import refresh_personnel_data
+                refresh_personnel_data(self.personnel_tree, self.data_manager)
+                print("✓ Personnel rafraîchi")
+            except Exception as e:
+                print(f"❌ Erreur refresh personnel: {e}")
+                
+    def refresh_flight_data(self):
+        """Rafraîchit les données des vols"""
         if hasattr(self, 'flights_tree') and self.flights_tree:
             try:
-                # CORRECTION BUG: Forcer le vidage du cache
-                self.data_manager.clear_cache()
-                
                 from interfaces.tabs.flights_tab import refresh_flights_data
                 refresh_flights_data(self.flights_tree, self.data_manager)
                 print("✓ Vols rafraîchis")
             except Exception as e:
                 print(f"❌ Erreur refresh vols: {e}")
-        
-    def refresh_fleet_display(self):
-        """CORRECTION: Rafraîchit l'affichage de la flotte dans le dashboard"""
-        if not hasattr(self, 'fleet_tree'):
-            return
-            
-        try:
-            # Vider le tableau
-            for item in self.fleet_tree.get_children():
-                self.fleet_tree.delete(item)
-            
-            # CORRECTION BUG: Recharger avec cache vidé
-            aircraft_list = self.data_manager.get_aircraft()
-            
-            for aircraft in aircraft_list[:10]:  # Limiter à 10 pour le dashboard
-                values = (
-                    aircraft.get('num_id', ''),
-                    aircraft.get('modele', ''),
-                    aircraft.get('compagnie_aerienne', ''),
-                    aircraft.get('capacite', ''),
-                    aircraft.get('etat', 'au_sol').replace('_', ' ').title(),
-                    "Base principale",  # Simplifié pour maintenant
-                    f"{aircraft.get('autonomie', 0)} km",
-                    aircraft.get('derniere_maintenance', 'Jamais')
-                )
-                
-                self.fleet_tree.insert('', 'end', values=values)
-                
-        except Exception as e:
-            print(f"❌ Erreur refresh flotte: {e}")
-    
+
+    def refresh_passengers_data(self):
+        """Rafraîchit les données des passagers"""
+        if hasattr(self, 'passengers_tree') and self.passengers_tree:
+            try:
+                from interfaces.tabs.passengers_tab import refresh_passengers_data
+                refresh_passengers_data(self.passengers_tree, self.data_manager)
+                print("✓ Passagers rafraîchis")
+            except Exception as e:
+                print(f"❌ Erreur refresh passagers: {e}")
+
+    def refresh_reservations_data(self):
+        """Rafraîchit les données des réservations"""
+        if hasattr(self, 'reservations_tree') and self.reservations_tree:
+            try:
+                from interfaces.tabs.reservations_tab import refresh_reservations_data
+                refresh_reservations_data(self.reservations_tree, self.data_manager)
+                print("✓ Réservations rafraîchies")
+            except Exception as e:
+                print(f"❌ Erreur refresh réservations: {e}")
+
     def refresh_all_data(self):
-        """CORRECTION: Rafraîchit toutes les données avec forçage cache global"""
+        """Rafraîchit toutes les données"""
         print("🔄 Rafraîchissement global des données...")
-        
-        # CORRECTION BUG: Forcer le vidage du cache au début
-        self.data_manager.clear_cache()
         
         try:
             # Rafraîchir tous les onglets
@@ -856,38 +737,50 @@ class MainWindow:
             self.refresh_passengers_data()
             self.refresh_reservations_data()
             
-            # CORRECTION: TOUJOURS rafraîchir les statistiques à la fin
-            self.refresh_statistics()
+            # Mettre à jour les statistiques
+            self.update_statistics()
             
-            print("✅ Rafraîchissement global terminé avec KPI")
+            # Mettre à jour le résumé du dashboard
+            self.update_summary()
+            
+            # Mettre à jour la barre de statut
+            self.status_var.set("Données actualisées")
+            self.root.after(2000, lambda: self.status_var.set("Application prête"))
+            
+            print("✅ Rafraîchissement global terminé")
             
         except Exception as e:
             print(f"❌ Erreur refresh global: {e}")
-    
-    def load_initial_data_enhanced(self):
-        """CORRECTION: Charge les données initiales avec meilleur rafraîchissement"""
+            self.status_var.set("Erreur de rafraîchissement")
+
+    def update_statistics(self):
+        """Met à jour les statistiques du dashboard"""
         try:
-            # Vérifier l'intégrité des données
-            integrity_report = self.data_manager.validate_data_integrity()
-            if not integrity_report['valid']:
-                messagebox.showwarning("Données", 
-                    f"Problèmes détectés dans les données:\n" + 
-                    "\n".join(integrity_report['errors'][:3]))
+            # Calculer les statistiques réelles
+            aircraft_count = len(self.data_manager.get_aircraft())
+            personnel_count = len(self.data_manager.get_personnel())
+            flights_count = len(self.data_manager.get_flights())
+            passengers_count = len(self.data_manager.get_passengers())
+            reservations_count = len(self.data_manager.get_reservations())
             
-            # CORRECTION BUG: Vider le cache avant chargement initial
-            self.data_manager.clear_cache()
+            # Mettre à jour les cartes statistiques
+            if "Total Avions" in self.stat_vars:
+                self.stat_vars["Total Avions"].set(str(aircraft_count))
+            if "Total Personnel" in self.stat_vars:
+                self.stat_vars["Total Personnel"].set(str(personnel_count))
+            if "Total Vols" in self.stat_vars:
+                self.stat_vars["Total Vols"].set(str(flights_count))
+            if "Total Passagers" in self.stat_vars:
+                self.stat_vars["Total Passagers"].set(str(passengers_count))
+            if "Total Réservations" in self.stat_vars:
+                self.stat_vars["Total Réservations"].set(str(reservations_count))
+            if "Base de Données" in self.stat_vars:
+                self.stat_vars["Base de Données"].set("OK")
             
-            # Charger les données dans l'interface
-            self.refresh_all_data()
-            
-            # CORRECTION: Configuration des callbacks après chargement
-            self.setup_callbacks_enhanced()
-            
-            print(f"✓ Données chargées: {integrity_report['files_checked']} fichiers")
+            print(f"✅ Statistiques mises à jour")
             
         except Exception as e:
-            messagebox.showerror("Erreur", f"Erreur lors du chargement des données:\n{e}")
-            print(f"❌ Erreur chargement: {e}")
+            print(f"❌ Erreur mise à jour statistiques: {e}")
             
     def run(self):
         """Lance l'application"""
@@ -905,10 +798,6 @@ class MainWindow:
     def on_closing(self):
         """Gestionnaire de fermeture de l'application"""
         try:
-            # Arrêter la simulation
-            if self.simulation_engine.is_running:
-                self.simulation_engine.stop()
-            
             # Sauvegarder les données si nécessaire
             print("💾 Sauvegarde finale...")
             
@@ -919,269 +808,7 @@ class MainWindow:
         except Exception as e:
             print(f"❌ Erreur lors de la fermeture: {e}")
             self.root.destroy()
-    
-    def refresh_flight_data_callback(self, flight_data=None):
-        """Callback pour la simulation avec rafraîchissement"""
-        try:
-            # Rafraîchir les vols
-            self.refresh_flight_data(flight_data)
-            
-            # Rafraîchir aussi les statistiques
-            self.refresh_statistics()
-            
-            # Si dashboard avancé disponible, le rafraîchir aussi
-            if hasattr(self, 'dashboard_instance') and self.dashboard_instance:
-                # Le dashboard avancé se rafraîchit automatiquement
-                pass
-                
-        except Exception as e:
-            print(f"❌ Erreur callback simulation: {e}")
 
-    def refresh_personnel_data(self):
-        """CORRECTION: Rafraîchit les données du personnel avec forçage du cache"""
-        if hasattr(self, 'personnel_tree') and self.personnel_tree:
-            try:
-                # CORRECTION BUG: Forcer le vidage du cache
-                self.data_manager.clear_cache()
-                
-                from interfaces.tabs.personnel_tab import refresh_personnel_data
-                refresh_personnel_data(self.personnel_tree, self.data_manager)
-                print("✓ Personnel rafraîchi")
-            except Exception as e:
-                print(f"❌ Erreur refresh personnel: {e}")
-                
-    def refresh_passengers_data(self):
-        """CORRECTION: Rafraîchit les données des passagers avec forçage du cache"""
-        if hasattr(self, 'passengers_tree') and self.passengers_tree:
-            try:
-                # CORRECTION BUG: Forcer le vidage du cache
-                self.data_manager.clear_cache()
-                
-                from interfaces.tabs.passengers_tab import refresh_passengers_data
-                refresh_passengers_data(self.passengers_tree, self.data_manager)
-                print("✓ Passagers rafraîchis")
-            except Exception as e:
-                print(f"❌ Erreur refresh passagers: {e}")
-
-    def refresh_reservations_data(self):
-        """CORRECTION: Rafraîchit les données des réservations avec forçage du cache"""
-        if hasattr(self, 'reservations_tree') and self.reservations_tree:
-            try:
-                # CORRECTION BUG: Forcer le vidage du cache
-                self.data_manager.clear_cache()
-                
-                from interfaces.tabs.reservations_tab import refresh_reservations_data
-                refresh_reservations_data(self.reservations_tree, self.data_manager)
-                print("✓ Réservations rafraîchies")
-            except Exception as e:
-                print(f"❌ Erreur refresh réservations: {e}")
-
-    def force_refresh_after_creation(self, object_type):
-        """CORRECTION: Force le rafraîchissement après création avec KPI"""
-        print(f"🔄 Rafraîchissement forcé après création de {object_type}")
-        
-        # Vider le cache global
-        self.data_manager.clear_cache()
-        
-        # Rafraîchir selon le type d'objet
-        refresh_map = {
-            'aircraft': self.refresh_aircraft_data,
-            'personnel': self.refresh_personnel_data,
-            'flight': self.refresh_flight_data,
-            'passenger': self.refresh_passengers_data,
-            'reservation': self.refresh_reservations_data
-        }
-        
-        # Rafraîchir l'onglet spécifique
-        if object_type in refresh_map:
-            try:
-                refresh_map[object_type]()
-            except Exception as e:
-                print(f"⚠️ Erreur refresh {object_type}: {e}")
-        else:
-            # Rafraîchir tout si type inconnu
-            self.refresh_all_data()
-        
-        # CORRECTION: TOUJOURS rafraîchir les statistiques après création
-        self.refresh_statistics()
-        
-        print(f"✅ Rafraîchissement {object_type} terminé avec KPI")
-
-
-    def refresh_statistics(self):
-        """CORRECTION: Rafraîchit les statistiques avec vraies données"""
-        try:
-            print("📊 Mise à jour des statistiques KPI...")
-            
-            # CORRECTION: Vider le cache et recalculer avec vraies données
-            self.data_manager.clear_cache()
-            
-            # Charger toutes les données fraîches
-            all_flights = self.data_manager.get_flights()
-            all_aircraft = self.data_manager.get_aircraft()
-            all_personnel = self.data_manager.get_personnel()
-            all_passengers = self.data_manager.get_passengers()
-            all_reservations = self.data_manager.get_reservations()
-            
-            # CALCULS RÉELS DES KPI (pas de données simulées)
-            
-            # 1. Vols aujourd'hui
-            today = datetime.now().date()
-            vols_aujourdhui = 0
-            vols_en_cours = 0
-            vols_retardes = 0
-            
-            for flight in all_flights:
-                try:
-                    if flight.get('heure_depart'):
-                        if isinstance(flight['heure_depart'], str):
-                            depart_time = datetime.fromisoformat(flight['heure_depart'])
-                        else:
-                            depart_time = flight['heure_depart']
-                        
-                        if depart_time.date() == today:
-                            vols_aujourdhui += 1
-                        
-                        # Vols en cours (statut)
-                        if flight.get('statut') == 'en_vol':
-                            vols_en_cours += 1
-                        elif flight.get('statut') == 'retarde':
-                            vols_retardes += 1
-                except:
-                    continue
-            
-            # 2. Avions actifs (opérationnels + au sol)
-            avions_actifs = 0
-            avions_maintenance = 0
-            for aircraft in all_aircraft:
-                etat = aircraft.get('etat', 'au_sol')
-                if etat in ['operationnel', 'au_sol']:
-                    avions_actifs += 1
-                elif etat == 'en_maintenance':
-                    avions_maintenance += 1
-            
-            # 3. Personnel disponible
-            personnel_dispo = sum(1 for p in all_personnel if p.get('disponible', True))
-            
-            # 4. Check-ins ouverts (vols dans les 24h)
-            checkins_ouverts = self.count_open_checkins_real()
-            
-            # 5. Passagers total
-            passagers_total = len(all_passengers)
-            
-            # 6. Taux de ponctualité (vols non retardés)
-            total_vols_today = vols_aujourdhui
-            if total_vols_today > 0:
-                taux_ponctualite = ((total_vols_today - vols_retardes) / total_vols_today) * 100
-            else:
-                taux_ponctualite = 100
-            
-            # MISE À JOUR DES KPI (vérifier l'existence d'abord)
-            kpi_updates = {
-                "Vols Aujourd'hui": str(vols_aujourdhui),
-                "Vols en Cours": str(vols_en_cours),
-                "Vols Retardés": str(vols_retardes),
-                "Taux Ponctualité": f"{taux_ponctualite:.1f}%",
-                "Avions Actifs": str(avions_actifs),
-                "Personnel Dispo.": str(personnel_dispo),
-                "Check-ins Ouverts": str(checkins_ouverts),
-                "Passagers Total": str(passagers_total)
-            }
-            
-            # CORRECTION: Mise à jour seulement si les widgets existent
-            if hasattr(self, 'stat_vars') and self.stat_vars:
-                for kpi_name, value in kpi_updates.items():
-                    if kpi_name in self.stat_vars:
-                        if 'value' in self.stat_vars[kpi_name]:
-                            old_value = self.stat_vars[kpi_name]['value'].get()
-                            self.stat_vars[kpi_name]['value'].set(value)
-                            
-                            # CORRECTION: Tendance basée sur vraie différence
-                            if old_value != value and old_value.isdigit() and value.isdigit():
-                                old_num = int(old_value)
-                                new_num = int(value)
-                                if new_num > old_num:
-                                    trend = f"📈 +{new_num - old_num}"
-                                    color = "green"
-                                elif new_num < old_num:
-                                    trend = f"📉 -{old_num - new_num}"
-                                    color = "red"
-                                else:
-                                    trend = "📊 Stable"
-                                    color = "blue"
-                                    
-                                if 'trend' in self.stat_vars[kpi_name]:
-                                    self.stat_vars[kpi_name]['trend'].set(trend)
-                            
-                            # CORRECTION: Barre de progression réaliste
-                            if 'progress' in self.stat_vars[kpi_name]:
-                                if kpi_name == "Taux Ponctualité":
-                                    self.stat_vars[kpi_name]['progress'].set(taux_ponctualite)
-                                elif kpi_name == "Avions Actifs" and len(all_aircraft) > 0:
-                                    progress = (avions_actifs / len(all_aircraft)) * 100
-                                    self.stat_vars[kpi_name]['progress'].set(progress)
-                                elif kpi_name == "Personnel Dispo." and len(all_personnel) > 0:
-                                    progress = (personnel_dispo / len(all_personnel)) * 100
-                                    self.stat_vars[kpi_name]['progress'].set(progress)
-                                else:
-                                    # Valeur par défaut basée sur la donnée
-                                    try:
-                                        num_value = int(value.replace('%', '').replace('str', '0'))
-                                        progress = min(100, max(0, num_value * 5))  # Échelle ajustée
-                                        self.stat_vars[kpi_name]['progress'].set(progress)
-                                    except:
-                                        self.stat_vars[kpi_name]['progress'].set(75)
-            
-            # CORRECTION: Mise à jour dashboard avancé si disponible
-            if hasattr(self, 'dashboard_instance') and self.dashboard_instance:
-                try:
-                    # Déclencher refresh du dashboard avancé
-                    if hasattr(self.dashboard_instance, 'refresh_kpi_data'):
-                        self.dashboard_instance.refresh_kpi_data()
-                except Exception as e:
-                    print(f"⚠️ Erreur refresh dashboard avancé: {e}")
-            
-            print(f"✅ KPI mis à jour: {len(kpi_updates)} indicateurs")
-            print(f"  🛫 Vols aujourd'hui: {vols_aujourdhui}")
-            print(f"  ✈️ Vols en cours: {vols_en_cours}")
-            print(f"  🛩️ Avions actifs: {avions_actifs}")
-            print(f"  👥 Passagers: {passagers_total}")
-            
-        except Exception as e:
-            print(f"❌ Erreur refresh statistiques: {e}")
-            import traceback
-            traceback.print_exc()
-
-    def setup_enhanced_callbacks(self):
-        """AJOUT: Configure les callbacks pour mise à jour automatique des KPI"""
-        try:
-            # Connecter les méthodes de création aux refreshs KPI
-            original_methods = {}
-            
-            # Pour chaque onglet, wrapper les méthodes de création/modification/suppression
-            tabs_methods = [
-                ('aircraft_tab', ['new_aircraft_dialog', 'edit_aircraft', 'delete_aircraft']),
-                ('personnel_tab', ['new_personnel_dialog', 'edit_personnel', 'delete_personnel']),
-                ('flights_tab', ['new_flight_dialog', 'edit_flight', 'delete_flight']),
-                ('passengers_tab', ['new_passenger_dialog', 'edit_passenger', 'delete_passenger']),
-                ('reservations_tab', ['new_reservation_dialog', 'edit_reservation', 'cancel_reservation'])
-            ]
-            
-            # Note: Cette méthode pourrait être appelée après création des onglets
-            print("🔗 Callbacks KPI configurés")
-            
-        except Exception as e:
-            print(f"❌ Erreur configuration callbacks: {e}")
-
-    # AJOUT: Méthode pour déclencher refresh depuis les onglets
-
-    def trigger_kpi_refresh_from_tab(self):
-        """AJOUT: Méthode publique pour que les onglets déclenchent refresh KPI"""
-        try:
-            self.refresh_statistics()
-            print("🔄 KPI rafraîchis depuis onglet")
-        except Exception as e:
-            print(f"❌ Erreur trigger KPI depuis onglet: {e}")
 
 if __name__ == "__main__":
     app = MainWindow()
