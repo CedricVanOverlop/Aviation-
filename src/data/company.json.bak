@@ -6,14 +6,14 @@
     "total_passengers": 1,
     "total_aircraft": 1,
     "total_personnel": 1,
-    "total_reservations": 0,
+    "total_reservations": 1,
     "total_airports": 51,
     "flight_statuses": {
-      "programme": 1
+      "termine": 1
     },
     "aircraft_states": {
       "operationnel": 1
     }
   },
-  "last_modified": "2025-06-20T23:29:12.015595"
+  "last_modified": "2025-06-21T18:05:51.457335"
 }

@@ -7,15 +7,17 @@
       "avion_utilise": "AIR-F392",
       "heure_depart": "2025-06-21T08:00:00",
       "heure_arrivee_prevue": "2025-06-21T09:22:00",
-      "statut": "programme",
+      "statut": "termine",
       "pilote": "Sabrina Dupont (ID: 2514d069)",
       "copilote": null,
       "personnel_navigant": [],
       "distance_km": 1094.0,
       "duree_estimee": "1h22",
       "autonomie_suffisante": true,
-      "created_at": "2025-06-20T23:24:34.861056"
+      "created_at": "2025-06-20T23:24:34.861056",
+      "heure_depart_reelle": "2025-06-21T17:43:04.681501",
+      "heure_arrivee_reelle": "2025-06-21T17:43:04.786241"
     }
   ],
-  "last_modified": "2025-06-20T23:29:58.143240"
+  "last_modified": "2025-06-21T18:08:15.176422"
 }
