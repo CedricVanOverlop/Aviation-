@@ -1,10 +1,10 @@
+import tkinter as tk
 from tkinter import ttk, messagebox
 import uuid
 import sys
 import os
 from datetime import datetime, timedelta
 import math
-import tkinter as tk
 
 # Ajouter le chemin du module Core
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
@@ -613,7 +613,7 @@ class FlightDialog:
         return errors
     
     def save_flight(self):
-        """Sauvegarde le vol"""
+        """Sauvegarde le vol avec correction des bugs de mise à jour"""
         # Validation
         errors = self.validate_fields()
         if errors:
@@ -667,27 +667,14 @@ class FlightDialog:
                 'autonomie_suffisante': self.autonomie_ok_var.get() == "✓ OK"
             }
             
-            # Sauvegarder
+            # Sauvegarder avec corrections de bugs
             if self.is_editing:
-                # Pour la modification
-                all_flights = self.data_manager.get_flights()
-                for i, flight in enumerate(all_flights):
-                    if flight.get('numero_vol') == flight_data['numero_vol']:
-                        flight_data['updated_at'] = datetime.now().isoformat()
-                        all_flights[i] = {**flight, **flight_data}
-                        break
-                
-                data = self.data_manager.load_data('flights')
-                data['flights'] = all_flights
-                success = self.data_manager.save_data('flights', data)
+                # CORRECTION BUG: Mise à jour correcte en mode édition
+                success = self.data_manager.update_flight(flight_data['numero_vol'], flight_data)
                 action = "modifié"
             else:
-                flight_data['created_at'] = datetime.now().isoformat()
-                data = self.data_manager.load_data('flights')
-                if 'flights' not in data:
-                    data['flights'] = []
-                data['flights'].append(flight_data)
-                success = self.data_manager.save_data('flights', data)
+                # CORRECTION BUG: Ajout correct avec nouveau vol
+                success = self.data_manager.add_flight(flight_data)
                 action = "créé"
             
             if success:
@@ -743,7 +730,7 @@ def create_flights_tab_content(parent_frame, data_manager):
               command=edit_flight_callback).grid(row=0, column=1, padx=(0, 5))
     ttk.Button(toolbar, text="👁️ Voir Détails", 
               command=view_flight_callback).grid(row=0, column=2, padx=(0, 5))
-    ttk.Button(toolbar, text="🗑️ Annuler Vol", 
+    ttk.Button(toolbar, text="🗑️ Supprimer Vol", 
               command=delete_flight_callback, 
               style='Danger.TButton').grid(row=0, column=3, padx=(0, 20))
     
@@ -804,7 +791,7 @@ def new_flight_dialog(parent, data_manager, flights_tree):
 
 
 def edit_flight(parent, data_manager, flights_tree):
-    """Modifie le vol sélectionné"""
+    """Modifie le vol sélectionné - CORRECTION BUG"""
     selection = flights_tree.selection()
     if not selection:
         messagebox.showwarning("Sélection", "Veuillez sélectionner un vol à modifier.")
@@ -813,7 +800,7 @@ def edit_flight(parent, data_manager, flights_tree):
     item = flights_tree.item(selection[0])
     flight_number = item['values'][0]
     
-    # Trouver les données complètes du vol
+    # CORRECTION: Meilleure recherche des données complètes du vol
     all_flights = data_manager.get_flights()
     flight_data = None
     for flight in all_flights:
@@ -827,7 +814,9 @@ def edit_flight(parent, data_manager, flights_tree):
     
     dialog = FlightDialog(parent, data_manager, flight_data)
     if dialog.result:
+        # CORRECTION: Rafraîchissement immédiat forcé
         refresh_flights_data(flights_tree, data_manager)
+        messagebox.showinfo("Succès", "Vol modifié avec succès!")
 
 
 def view_flight_details(flights_tree):
@@ -855,39 +844,57 @@ Statut: {values[7]}"""
 
 
 def delete_flight(data_manager, flights_tree):
-    """Annule le vol sélectionné"""
+    """CORRECTION BUG: Supprime ou annule le vol sélectionné avec confirmation"""
     selection = flights_tree.selection()
     if not selection:
-        messagebox.showwarning("Sélection", "Veuillez sélectionner un vol à annuler.")
+        messagebox.showwarning("Sélection", "Veuillez sélectionner un vol à supprimer.")
         return
     
     item = flights_tree.item(selection[0])
     flight_number = item['values'][0]
+    current_status = item['values'][7]
     
-    if messagebox.askyesno("Confirmation", 
-                          f"Voulez-vous vraiment annuler le vol {flight_number} ?"):
-        
-        # Marquer comme annulé plutôt que supprimer
+    # Déterminer l'action selon le statut
+    if current_status in ['Programmé', 'En attente', 'Retardé']:
+        action = "annuler"
+        new_status = 'annule'
+        message = f"Voulez-vous vraiment annuler le vol {flight_number} ?"
+    else:
+        action = "supprimer définitivement"
+        new_status = None
+        message = f"Voulez-vous vraiment supprimer définitivement le vol {flight_number} ?\n\nCette action est irréversible."
+    
+    if messagebox.askyesno("Confirmation", message):
         all_flights = data_manager.get_flights()
-        for flight in all_flights:
-            if flight.get('numero_vol') == flight_number:
-                flight['statut'] = 'annule'
-                flight['updated_at'] = datetime.now().isoformat()
-                break
         
-        # Sauvegarder
-        data = data_manager.load_data('flights')
-        data['flights'] = all_flights
-        
-        if data_manager.save_data('flights', data):
-            refresh_flights_data(flights_tree, data_manager)
-            messagebox.showinfo("Succès", "Vol annulé avec succès.")
+        if new_status:
+            # Annuler le vol (garder en mémoire mais statut annulé)
+            for flight in all_flights:
+                if flight.get('numero_vol') == flight_number:
+                    flight['statut'] = new_status
+                    flight['updated_at'] = datetime.now().isoformat()
+                    break
+            
+            # Sauvegarder la modification
+            data = data_manager.load_data('flights')
+            data['flights'] = all_flights
+            success = data_manager.save_data('flights', data)
+            message_success = f"Vol {flight_number} annulé avec succès."
         else:
-            messagebox.showerror("Erreur", "Impossible d'annuler le vol.")
+            # Supprimer définitivement
+            success = data_manager.delete_flight(flight_number)
+            message_success = f"Vol {flight_number} supprimé définitivement."
+        
+        if success:
+            # CORRECTION: Rafraîchissement immédiat forcé
+            refresh_flights_data(flights_tree, data_manager)
+            messagebox.showinfo("Succès", message_success)
+        else:
+            messagebox.showerror("Erreur", f"Impossible de {action} le vol.")
 
 
 def filter_flights(flights_tree, data_manager, search_var, filter_var):
-    """Filtre la liste des vols"""
+    """Filtre la liste des vols - AMÉLIORATION"""
     search_text = search_var.get().lower()
     filter_status = filter_var.get()
     
@@ -971,12 +978,13 @@ def filter_flights(flights_tree, data_manager, search_var, filter_var):
 
 
 def refresh_flights_data(flights_tree, data_manager):
-    """Rafraîchit les données des vols"""
+    """CORRECTION: Rafraîchit les données des vols avec meilleure gestion"""
     # Vider le tableau
     for item in flights_tree.get_children():
         flights_tree.delete(item)
     
-    # Recharger les données
+    # Forcer le rechargement des données
+    data_manager.clear_cache()
     all_flights = data_manager.get_flights()
     
     # Mapping des statuts pour l'affichage
@@ -1039,3 +1047,5 @@ def refresh_flights_data(flights_tree, data_manager):
             flights_tree.set(item_id, 'Statut', '⏰ Retardé')
         elif flight_status == 'En vol':
             flights_tree.set(item_id, 'Statut', '✈️ En vol')
+    
+    print(f"✓ Données vols rafraîchies: {len(all_flights)} vols chargés")

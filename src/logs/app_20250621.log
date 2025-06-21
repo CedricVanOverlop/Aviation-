@@ -10,3 +10,61 @@
 2025-06-21 17:55:57,427 - INFO - Lancement de l'interface principale
 2025-06-21 17:55:57,725 - INFO - Interface initialisée
 2025-06-21 18:08:15,484 - INFO - Application fermée normalement
+2025-06-21 18:12:55,537 - INFO - Application démarrée
+2025-06-21 18:12:55,538 - INFO - Répertoires créés/vérifiés
+2025-06-21 18:12:55,547 - INFO - Dépendances vérifiées avec succès
+2025-06-21 18:12:55,547 - INFO - Lancement de l'interface principale
+2025-06-21 18:12:55,919 - INFO - Interface initialisée
+2025-06-21 18:17:51,739 - INFO - Application fermée normalement
+2025-06-21 18:20:43,065 - INFO - Application démarrée
+2025-06-21 18:20:43,065 - INFO - Répertoires créés/vérifiés
+2025-06-21 18:20:43,079 - INFO - Dépendances vérifiées avec succès
+2025-06-21 18:20:43,079 - INFO - Lancement de l'interface principale
+2025-06-21 18:20:43,441 - INFO - Interface initialisée
+2025-06-21 18:20:50,897 - INFO - Application fermée normalement
+2025-06-21 18:26:01,288 - INFO - Application démarrée
+2025-06-21 18:26:01,288 - INFO - Répertoires créés/vérifiés
+2025-06-21 18:26:01,307 - INFO - Dépendances vérifiées avec succès
+2025-06-21 18:26:01,307 - INFO - Lancement de l'interface principale
+2025-06-21 18:26:01,727 - INFO - Interface initialisée
+2025-06-21 19:13:31,556 - INFO - Application fermée normalement
+2025-06-21 19:13:33,677 - INFO - Application démarrée
+2025-06-21 19:13:33,677 - INFO - Répertoires créés/vérifiés
+2025-06-21 19:13:33,702 - INFO - Dépendances vérifiées avec succès
+2025-06-21 19:13:33,702 - INFO - Lancement de l'interface principale
+2025-06-21 19:13:33,751 - ERROR - Erreur critique: 'MainWindow' object has no attribute 'refresh_statistics'
+2025-06-21 19:13:33,751 - ERROR - Trace: Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Test\Final Boom\Aviation-\src\main.py", line 130, in main
+    app = MainWindow()
+          ^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Test\Final Boom\Aviation-\src\interfaces\main_window.py", line 38, in __init__
+    self.simulation_engine.add_callback('statistics_update', self.refresh_statistics)
+                                                             ^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'MainWindow' object has no attribute 'refresh_statistics'
+
+2025-06-21 19:15:55,314 - INFO - Application démarrée
+2025-06-21 19:15:55,314 - INFO - Répertoires créés/vérifiés
+2025-06-21 19:15:55,337 - INFO - Dépendances vérifiées avec succès
+2025-06-21 19:15:55,337 - INFO - Lancement de l'interface principale
+2025-06-21 19:15:55,756 - ERROR - Erreur critique: 'MainWindow' object has no attribute 'load_initial_data'
+2025-06-21 19:15:55,757 - ERROR - Trace: Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Test\Final Boom\Aviation-\src\main.py", line 130, in main
+    app = MainWindow()
+          ^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Test\Final Boom\Aviation-\src\interfaces\main_window.py", line 42, in __init__
+    self.load_initial_data()
+    ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'MainWindow' object has no attribute 'load_initial_data'
+
+2025-06-21 19:17:14,579 - INFO - Application démarrée
+2025-06-21 19:17:14,580 - INFO - Répertoires créés/vérifiés
+2025-06-21 19:17:14,602 - INFO - Dépendances vérifiées avec succès
+2025-06-21 19:17:14,603 - INFO - Lancement de l'interface principale
+2025-06-21 19:17:15,013 - INFO - Interface initialisée
+2025-06-21 19:17:49,045 - INFO - Application fermée normalement
+2025-06-21 19:22:35,277 - INFO - Application démarrée
+2025-06-21 19:22:35,277 - INFO - Répertoires créés/vérifiés
+2025-06-21 19:22:35,300 - INFO - Dépendances vérifiées avec succès
+2025-06-21 19:22:35,301 - INFO - Lancement de l'interface principale
+2025-06-21 19:22:35,697 - INFO - Interface initialisée
+2025-06-21 19:23:11,564 - INFO - Application fermée normalement
