@@ -3,6 +3,7 @@ from tkinter import ttk, messagebox
 import sys
 import os
 from datetime import datetime
+from interfaces.tabs.dashboard_tab import ModernDashboard
 
 # Ajouter le chemin du module Core
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..'))
@@ -173,28 +174,26 @@ class MainWindow:
     def create_dashboard_tab(self):
         """Crée l'onglet tableau de bord avec le nouveau dashboard avancé"""
         try:
-            # Import local pour éviter les imports circulaires
-            from interfaces.tabs.dashboard_tab import create_dashboard_tab_content
-            
-            # Créer le contenu avec le nouveau dashboard
-            self.dashboard_instance = create_dashboard_tab_content(
-                self.dashboard_frame, 
+            from interfaces.tabs.dashboard_tab import ModernDashboard
+
+            self.dashboard_instance = ModernDashboard(
+                self.dashboard_frame,
                 self.data_manager,
-                self.simulation_engine if hasattr(self, 'simulation_engine') else None
+                self.simulation_engine
             )
-            
             print("✓ Dashboard avancé intégré avec succès")
+
         except ImportError as e:
             print(f"❌ Erreur import dashboard_tab: {e}")
-            # Fallback - garder l'ancien dashboard
-            self.create_old_dashboard()
+            self.create_simple_fallback_dashboard()
         except Exception as e:
             print(f"❌ Erreur création dashboard avancé: {e}")
-            # Fallback
-            self.create_old_dashboard()
+            self.create_simple_fallback_dashboard()
+
+
         
-    def create_old_dashboard_tab(self):
-        """Crée l'onglet tableau de bord"""
+    def create_simple_fallback_dashboard(self):
+        """Crée un dashboard simple en cas d'erreur avec le dashboard avancé"""
         # Frame principal avec défilement
         canvas = tk.Canvas(self.dashboard_frame)
         scrollbar = ttk.Scrollbar(self.dashboard_frame, orient="vertical", command=canvas.yview)
@@ -214,9 +213,19 @@ class MainWindow:
         self.dashboard_frame.grid_rowconfigure(0, weight=1)
         self.dashboard_frame.grid_columnconfigure(0, weight=1)
         
+        # Titre
+        title_label = ttk.Label(scrollable_frame, 
+                            text="📊 Tableau de Bord Simplifié",
+                            font=('Arial', 16, 'bold'))
+        title_label.pack(pady=20)
+        
         # Section Statistiques Générales
         stats_frame = ttk.LabelFrame(scrollable_frame, text="📈 Statistiques Générales", padding=15)
-        stats_frame.grid(row=0, column=0, sticky="ew", padx=10, pady=10)
+        stats_frame.pack(fill="x", padx=10, pady=10)
+        
+        # Initialiser self.stat_vars si pas encore fait
+        if not hasattr(self, 'stat_vars'):
+            self.stat_vars = {}
         
         # Grid de statistiques (2x3)
         self.create_stat_card(stats_frame, "Vols Aujourd'hui", "0", "🛫", 0, 0)
@@ -226,61 +235,13 @@ class MainWindow:
         self.create_stat_card(stats_frame, "Retards", "0", "⏰", 1, 1)
         self.create_stat_card(stats_frame, "Maintenances", "0", "🔧", 1, 2)
         
-        # Section État des Vols
-        flights_frame = ttk.LabelFrame(scrollable_frame, text="📊 État des Vols", padding=15)
-        flights_frame.grid(row=1, column=0, sticky="ew", padx=10, pady=10)
-        
-        # Grid état des vols (1x4)
-        self.create_stat_card(flights_frame, "Programmés", "0", "📅", 0, 0)
-        self.create_stat_card(flights_frame, "En Vol", "0", "🛫", 0, 1)
-        self.create_stat_card(flights_frame, "Retardés", "0", "⏰", 0, 2)
-        self.create_stat_card(flights_frame, "Annulés", "0", "❌", 0, 3)
-        
-        # Section Prochains Départs
-        departures_frame = ttk.LabelFrame(scrollable_frame, text="🕐 Prochains Départs", padding=10)
-        departures_frame.grid(row=2, column=0, sticky="ew", padx=10, pady=10)
-        
-        # Tableau des prochains vols
-        columns = ('Vol', 'Destination', 'Heure', 'Statut')
-        self.departures_tree = ttk.Treeview(departures_frame, columns=columns, show='headings', height=8)
-        
-        for col in columns:
-            self.departures_tree.heading(col, text=col)
-            self.departures_tree.column(col, width=120)
-        
-        self.departures_tree.grid(row=0, column=0, sticky="ew")
-        
-        # Section État de la Flotte
-        fleet_frame = ttk.LabelFrame(scrollable_frame, text="🛩️ État de la Flotte", padding=10)
-        fleet_frame.grid(row=3, column=0, sticky="ew", padx=10, pady=10)
-        
-        # Tableau de la flotte
-        fleet_columns = ('Avion', 'Type', 'Compagnie', 'Capacité', 'État', 'Localisation', 'Autonomie', 'Dernière Maintenance')
-        self.fleet_tree = ttk.Treeview(fleet_frame, columns=fleet_columns, show='headings', height=6)
-        
-        for col in fleet_columns:
-            self.fleet_tree.heading(col, text=col)
-            self.fleet_tree.column(col, width=100)
-        
-        self.fleet_tree.grid(row=0, column=0, sticky="ew")
-        
-        # Scrollbar pour les tableaux
-        fleet_scrollbar = ttk.Scrollbar(fleet_frame, orient="vertical", command=self.fleet_tree.yview)
-        fleet_scrollbar.grid(row=0, column=1, sticky="ns")
-        self.fleet_tree.configure(yscrollcommand=fleet_scrollbar.set)
-        
         # Configuration responsive
-        scrollable_frame.grid_columnconfigure(0, weight=1)
         stats_frame.grid_columnconfigure((0, 1, 2), weight=1)
-        flights_frame.grid_columnconfigure((0, 1, 2, 3), weight=1)
-        departures_frame.grid_columnconfigure(0, weight=1)
-        fleet_frame.grid_columnconfigure(0, weight=1)
         
-        # Variables pour les statistiques
-        self.stat_vars = {}
-    
+        print("✓ Dashboard simplifié créé en fallback")
+
     def create_stat_card(self, parent, title, value, icon, row, col):
-        """Crée une carte de statistique"""
+        """Crée une carte de statistique simple"""
         card_frame = ttk.Frame(parent, relief="solid", borderwidth=1)
         card_frame.grid(row=row, column=col, padx=5, pady=5, sticky="ew")
         
@@ -296,14 +257,17 @@ class MainWindow:
         
         # Valeur
         value_var = tk.StringVar(value=value)
-        value_label = ttk.Label(card_frame, textvariable=value_var, style='Value.TLabel')
+        value_label = ttk.Label(card_frame, textvariable=value_var, 
+                            font=('Arial', 14, 'bold'), foreground="blue")
         value_label.grid(row=1, column=0, pady=(0, 10))
         
         # Stocker la variable pour mise à jour
+        if not hasattr(self, 'stat_vars'):
+            self.stat_vars = {}
         self.stat_vars[title] = value_var
         
         return card_frame
-    
+        
     def create_aircraft_tab(self):
         """Crée l'onglet de gestion des avions"""
         # Barre d'outils
@@ -953,17 +917,19 @@ class MainWindow:
             self.root.destroy()
     
     def refresh_flight_data_callback(self, flight_data=None):
-        """CORRECTION: Callback pour la simulation avec rafraîchissement immédiat"""
+        """Callback pour la simulation avec rafraîchissement"""
         try:
             # Rafraîchir les vols
             self.refresh_flight_data(flight_data)
             
-            # CORRECTION BUG: Rafraîchir aussi les statistiques après mise à jour des vols
+            # Rafraîchir aussi les statistiques
             self.refresh_statistics()
             
-            # Planifier le prochain rafraîchissement automatique dans 5 secondes
-            self.root.after(5000, lambda: self.refresh_statistics())
-            
+            # Si dashboard avancé disponible, le rafraîchir aussi
+            if hasattr(self, 'dashboard_instance') and self.dashboard_instance:
+                # Le dashboard avancé se rafraîchit automatiquement
+                pass
+                
         except Exception as e:
             print(f"❌ Erreur callback simulation: {e}")
 
@@ -1035,9 +1001,9 @@ class MainWindow:
 
 
     def refresh_statistics(self):
-        """CORRECTION: Rafraîchit les statistiques avec données à jour"""
+        """Rafraîchit les statistiques du dashboard"""
         try:
-            # CORRECTION BUG: Forcer le recalcul des statistiques
+            # Vider le cache et recalculer
             self.data_manager.clear_cache()
             stats = self.data_manager.get_statistics()
             
@@ -1060,19 +1026,10 @@ class MainWindow:
                     maintenance = stats.get('aircraft_states', {}).get('en_maintenance', 0)
                     self.stat_vars["Maintenances"].set(str(maintenance))
             
-            # Rafraîchir le tableau de la flotte
-            if hasattr(self, 'fleet_tree'):
-                self.refresh_fleet_display()
-                
-            # CORRECTION: Rafraîchir le tableau des prochains départs
-            if hasattr(self, 'departures_tree'):
-                self.refresh_departures_display()
-            
             print("✓ Statistiques rafraîchies")
             
         except Exception as e:
             print(f"❌ Erreur refresh statistiques: {e}")
-
 
 if __name__ == "__main__":
     app = MainWindow()

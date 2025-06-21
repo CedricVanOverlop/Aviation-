@@ -68,3 +68,159 @@ AttributeError: 'MainWindow' object has no attribute 'load_initial_data'
 2025-06-21 19:22:35,301 - INFO - Lancement de l'interface principale
 2025-06-21 19:22:35,697 - INFO - Interface initialisée
 2025-06-21 19:23:11,564 - INFO - Application fermée normalement
+2025-06-21 19:31:42,328 - INFO - Application démarrée
+2025-06-21 19:31:42,328 - INFO - Répertoires créés/vérifiés
+2025-06-21 19:31:42,340 - INFO - Dépendances vérifiées avec succès
+2025-06-21 19:31:42,340 - INFO - Lancement de l'interface principale
+2025-06-21 19:31:42,623 - ERROR - Erreur critique: 'MainWindow' object has no attribute 'create_old_dashboard'
+2025-06-21 19:31:42,623 - ERROR - Trace: Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Test\Final Boom\Aviation-\src\interfaces\tabs\dashboard_tab.py", line 1069, in create_dashboard_tab_content
+    dashboard = ModernDashboard(parent_frame, data_manager, simulation_engine)
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Test\Final Boom\Aviation-\src\interfaces\tabs\dashboard_tab.py", line 72, in __init__
+    self.setup_dashboard()
+  File "C:\Users\User\Desktop\Test\Final Boom\Aviation-\src\interfaces\tabs\dashboard_tab.py", line 86, in setup_dashboard
+    self.create_header_section()           # En-tête avec horloge et météo
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Test\Final Boom\Aviation-\src\interfaces\tabs\dashboard_tab.py", line 202, in create_header_section
+    self.update_header_info()
+  File "C:\Users\User\Desktop\Test\Final Boom\Aviation-\src\interfaces\tabs\dashboard_tab.py", line 612, in update_header_info
+    self.update_weather_display()
+  File "C:\Users\User\Desktop\Test\Final Boom\Aviation-\src\interfaces\tabs\dashboard_tab.py", line 632, in update_weather_display
+    self.detailed_temp_var.set(f"{self.current_weather.temperature:.1f}°C")
+    ^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'ModernDashboard' object has no attribute 'detailed_temp_var'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Test\Final Boom\Aviation-\src\interfaces\main_window.py", line 180, in create_dashboard_tab
+    self.dashboard_instance = create_dashboard_tab_content(
+                              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Test\Final Boom\Aviation-\src\interfaces\tabs\dashboard_tab.py", line 1080, in create_dashboard_tab_content
+    error_label.pack(expand=True)
+  File "C:\Program Files\WindowsApps\PythonSoftwareFoundation.Python.3.11_3.11.2544.0_x64__qbz5n2kfra8p0\Lib\tkinter\__init__.py", line 2471, in pack_configure
+    self.tk.call(
+_tkinter.TclError: cannot use geometry manager pack inside .!frame.!notebook.!frame which already has slaves managed by grid
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\User\Desktop\Test\Final Boom\Aviation-\src\main.py", line 130, in main
+    app = MainWindow()
+          ^^^^^^^^^^^^
+  File "C:\Users\User\Desktop\Test\Final Boom\Aviation-\src\interfaces\main_window.py", line 40, in __init__
+    self.setup_ui()
+  File "C:\Users\User\Desktop\Test\Final Boom\Aviation-\src\interfaces\main_window.py", line 79, in setup_ui
+    self.create_tabs()
+  File "C:\Users\User\Desktop\Test\Final Boom\Aviation-\src\interfaces\main_window.py", line 146, in create_tabs
+    self.create_dashboard_tab()
+  File "C:\Users\User\Desktop\Test\Final Boom\Aviation-\src\interfaces\main_window.py", line 194, in create_dashboard_tab
+    self.create_old_dashboard()
+    ^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'MainWindow' object has no attribute 'create_old_dashboard'
+
+2025-06-21 19:36:52,615 - INFO - Application démarrée
+2025-06-21 19:36:52,616 - INFO - Répertoires créés/vérifiés
+2025-06-21 19:36:52,642 - INFO - Dépendances vérifiées avec succès
+2025-06-21 19:36:52,642 - INFO - Lancement de l'interface principale
+2025-06-21 19:36:53,020 - INFO - Interface initialisée
+2025-06-21 19:37:33,710 - INFO - Application fermée normalement
+2025-06-21 19:38:34,993 - INFO - Application démarrée
+2025-06-21 19:38:34,993 - INFO - Répertoires créés/vérifiés
+2025-06-21 19:38:35,003 - INFO - Dépendances vérifiées avec succès
+2025-06-21 19:38:35,003 - INFO - Lancement de l'interface principale
+2025-06-21 19:38:35,340 - INFO - Interface initialisée
+2025-06-21 19:38:37,702 - INFO - Application fermée normalement
+2025-06-21 19:39:45,837 - INFO - Application démarrée
+2025-06-21 19:39:45,838 - INFO - Répertoires créés/vérifiés
+2025-06-21 19:39:45,841 - INFO - Dépendances vérifiées avec succès
+2025-06-21 19:39:45,842 - INFO - Lancement de l'interface principale
+2025-06-21 19:39:46,138 - INFO - Interface initialisée
+2025-06-21 19:39:49,068 - INFO - Application fermée normalement
+2025-06-21 19:43:35,954 - INFO - Application démarrée
+2025-06-21 19:43:35,954 - INFO - Répertoires créés/vérifiés
+2025-06-21 19:43:35,974 - INFO - Dépendances vérifiées avec succès
+2025-06-21 19:43:35,974 - INFO - Lancement de l'interface principale
+2025-06-21 19:43:36,340 - INFO - Interface initialisée
+2025-06-21 19:43:40,471 - INFO - Application fermée normalement
+2025-06-21 20:04:50,740 - INFO - Application démarrée
+2025-06-21 20:04:50,740 - INFO - Répertoires créés/vérifiés
+2025-06-21 20:04:50,762 - INFO - Dépendances vérifiées avec succès
+2025-06-21 20:04:50,762 - INFO - Lancement de l'interface principale
+2025-06-21 20:04:51,087 - INFO - Interface initialisée
+2025-06-21 20:04:53,614 - INFO - Application fermée normalement
+2025-06-21 20:06:56,076 - INFO - Application démarrée
+2025-06-21 20:06:56,077 - INFO - Répertoires créés/vérifiés
+2025-06-21 20:06:56,086 - INFO - Dépendances vérifiées avec succès
+2025-06-21 20:06:56,087 - INFO - Lancement de l'interface principale
+2025-06-21 20:06:56,421 - INFO - Interface initialisée
+2025-06-21 20:06:59,179 - INFO - Application fermée normalement
+2025-06-21 20:07:35,969 - INFO - Application démarrée
+2025-06-21 20:07:35,970 - INFO - Répertoires créés/vérifiés
+2025-06-21 20:07:35,987 - INFO - Dépendances vérifiées avec succès
+2025-06-21 20:07:35,987 - INFO - Lancement de l'interface principale
+2025-06-21 20:07:36,283 - INFO - Interface initialisée
+2025-06-21 20:07:38,035 - INFO - Application fermée normalement
+2025-06-21 20:08:15,193 - INFO - Application démarrée
+2025-06-21 20:08:15,194 - INFO - Répertoires créés/vérifiés
+2025-06-21 20:08:15,216 - INFO - Dépendances vérifiées avec succès
+2025-06-21 20:08:15,216 - INFO - Lancement de l'interface principale
+2025-06-21 20:08:15,484 - INFO - Interface initialisée
+2025-06-21 20:08:17,509 - INFO - Application fermée normalement
+2025-06-21 20:09:48,973 - INFO - Application démarrée
+2025-06-21 20:09:48,974 - INFO - Répertoires créés/vérifiés
+2025-06-21 20:09:52,558 - ERROR - Vérification des dépendances échouée
+2025-06-21 20:09:54,297 - INFO - Application démarrée
+2025-06-21 20:09:54,297 - INFO - Répertoires créés/vérifiés
+2025-06-21 20:09:59,958 - ERROR - Vérification des dépendances échouée
+2025-06-21 20:10:25,082 - INFO - Application démarrée
+2025-06-21 20:10:25,082 - INFO - Répertoires créés/vérifiés
+2025-06-21 20:10:44,617 - ERROR - Vérification des dépendances échouée
+2025-06-21 20:11:02,433 - INFO - Application démarrée
+2025-06-21 20:11:02,434 - INFO - Répertoires créés/vérifiés
+2025-06-21 20:11:02,477 - INFO - Dépendances vérifiées avec succès
+2025-06-21 20:11:02,477 - INFO - Lancement de l'interface principale
+2025-06-21 20:11:02,758 - INFO - Interface initialisée
+2025-06-21 20:11:48,321 - INFO - Application fermée normalement
+2025-06-21 20:15:51,752 - INFO - Application démarrée
+2025-06-21 20:15:51,752 - INFO - Répertoires créés/vérifiés
+2025-06-21 20:15:51,787 - INFO - Dépendances vérifiées avec succès
+2025-06-21 20:15:51,787 - INFO - Lancement de l'interface principale
+2025-06-21 20:15:52,116 - INFO - Interface initialisée
+2025-06-21 20:17:40,462 - INFO - Application démarrée
+2025-06-21 20:17:40,462 - INFO - Répertoires créés/vérifiés
+2025-06-21 20:17:40,490 - INFO - Dépendances vérifiées avec succès
+2025-06-21 20:17:40,490 - INFO - Lancement de l'interface principale
+2025-06-21 20:17:40,910 - INFO - Interface initialisée
+2025-06-21 20:29:06,920 - INFO - Application fermée normalement
+2025-06-21 20:29:16,384 - INFO - Application démarrée
+2025-06-21 20:29:16,385 - INFO - Répertoires créés/vérifiés
+2025-06-21 20:29:16,415 - INFO - Dépendances vérifiées avec succès
+2025-06-21 20:29:16,416 - INFO - Lancement de l'interface principale
+2025-06-21 20:29:16,843 - INFO - Interface initialisée
+2025-06-21 20:29:27,134 - INFO - Application fermée normalement
+2025-06-21 20:29:39,628 - INFO - Application démarrée
+2025-06-21 20:29:39,629 - INFO - Répertoires créés/vérifiés
+2025-06-21 20:29:39,659 - INFO - Dépendances vérifiées avec succès
+2025-06-21 20:29:39,659 - INFO - Lancement de l'interface principale
+2025-06-21 20:29:40,062 - INFO - Interface initialisée
+2025-06-21 20:30:24,572 - INFO - Application fermée normalement
+2025-06-21 20:30:26,312 - INFO - Application démarrée
+2025-06-21 20:30:26,313 - INFO - Répertoires créés/vérifiés
+2025-06-21 20:30:26,342 - INFO - Dépendances vérifiées avec succès
+2025-06-21 20:30:26,342 - INFO - Lancement de l'interface principale
+2025-06-21 20:30:26,711 - INFO - Interface initialisée
+2025-06-21 20:30:30,689 - INFO - Application fermée normalement
+2025-06-21 20:31:51,965 - INFO - Application démarrée
+2025-06-21 20:31:51,965 - INFO - Répertoires créés/vérifiés
+2025-06-21 20:31:51,996 - INFO - Dépendances vérifiées avec succès
+2025-06-21 20:31:51,996 - INFO - Lancement de l'interface principale
+2025-06-21 20:31:52,373 - INFO - Interface initialisée
+2025-06-21 20:32:57,043 - INFO - Application fermée normalement
+2025-06-21 20:33:25,992 - INFO - Application démarrée
+2025-06-21 20:33:25,993 - INFO - Répertoires créés/vérifiés
+2025-06-21 20:33:26,022 - INFO - Dépendances vérifiées avec succès
+2025-06-21 20:33:26,023 - INFO - Lancement de l'interface principale
+2025-06-21 20:33:26,440 - INFO - Interface initialisée
+2025-06-21 20:47:16,846 - INFO - Application fermée normalement

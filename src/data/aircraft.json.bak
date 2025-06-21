@@ -2,21 +2,22 @@
   "aircrafts": [],
   "aircraft": [
     {
-      "num_id": "AIR-F392",
-      "modele": "Airbus A330",
-      "compagnie_aerienne": "Air France",
-      "capacite": 300,
-      "vitesse_croisiere": 880.0,
-      "autonomie": 13400.0,
+      "num_id": "BOE-7362",
+      "modele": "Boeing 737 MAX",
+      "compagnie_aerienne": "Air Python",
+      "capacite": 210,
+      "vitesse_croisiere": 840.0,
+      "autonomie": 6570.0,
       "localisation": {
-        "latitude": 25.2532,
-        "longitude": 55.3644
+        "latitude": 51.1537,
+        "longitude": -0.19
       },
       "etat": "operationnel",
       "vol_actuel": null,
-      "derniere_maintenance": null,
-      "created_at": "2025-06-20T21:50:38.736992"
+      "derniere_maintenance": "2025-06-21T20:38:52.652087",
+      "created_at": "2025-06-21T20:33:58.032351",
+      "updated_at": "2025-06-21T20:38:52.652087"
     }
   ],
-  "last_modified": "2025-06-20T21:50:38.737988"
+  "last_modified": "2025-06-21T20:38:52.655077"
 }
