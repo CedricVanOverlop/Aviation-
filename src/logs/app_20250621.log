@@ -224,3 +224,20 @@ AttributeError: 'MainWindow' object has no attribute 'create_old_dashboard'
 2025-06-21 20:33:26,023 - INFO - Lancement de l'interface principale
 2025-06-21 20:33:26,440 - INFO - Interface initialisée
 2025-06-21 20:47:16,846 - INFO - Application fermée normalement
+2025-06-21 23:41:23,308 - INFO - Application démarrée
+2025-06-21 23:41:23,309 - INFO - Répertoires créés/vérifiés
+2025-06-21 23:41:23,356 - INFO - Dépendances vérifiées avec succès
+2025-06-21 23:41:23,356 - INFO - Lancement de l'interface principale
+2025-06-21 23:41:23,827 - INFO - Interface initialisée
+2025-06-21 23:43:48,873 - INFO - Application fermée normalement
+2025-06-21 23:48:03,369 - INFO - Application démarrée
+2025-06-21 23:48:03,369 - INFO - Répertoires créés/vérifiés
+2025-06-21 23:48:03,437 - INFO - Dépendances vérifiées avec succès
+2025-06-21 23:48:03,437 - INFO - Lancement de l'interface principale
+2025-06-21 23:48:03,871 - INFO - Interface initialisée
+2025-06-21 23:50:46,989 - INFO - Application démarrée
+2025-06-21 23:50:46,990 - INFO - Répertoires créés/vérifiés
+2025-06-21 23:50:47,014 - INFO - Dépendances vérifiées avec succès
+2025-06-21 23:50:47,015 - INFO - Lancement de l'interface principale
+2025-06-21 23:50:47,417 - INFO - Interface initialisée
+2025-06-21 23:52:16,573 - INFO - Application fermée normalement

@@ -2,45 +2,24 @@
   "personnels": [],
   "personnel": [
     {
-      "id_employe": "804b7011-5d34-4619-89d1-2e3b3dc7f723",
-      "nom": "Van Overlop",
-      "prenom": "Cédric",
+      "id_employe": "7cf621b3-a5da-4cb8-8e7e-cbebf37a7c4e",
+      "nom": "ced",
+      "prenom": "sf",
       "sexe": "masculin",
-      "adresse": "Charleori",
-      "numero_telephone": "0471636",
-      "email": "p@p.com",
-      "type_personnel": "steward",
-      "horaire": "Temps plein",
-      "specialisation": "",
-      "disponible": true,
-      "numero_licence": "",
-      "heures_vol": 0.0,
-      "departement": "",
-      "tour_controle": "",
-      "langues_parlees": [
-        "Français"
-      ],
-      "created_at": "2025-06-21T20:34:38.089167"
-    },
-    {
-      "id_employe": "36aa18fe-2bf3-41be-b28c-7abbbe33a133",
-      "nom": "KLJ",
-      "prenom": "qsd",
-      "sexe": "masculin",
-      "adresse": "QDSA",
-      "numero_telephone": "23543",
-      "email": "C@c.com",
+      "adresse": "zdzdf",
+      "numero_telephone": "34564",
+      "email": "cd@gmai.com",
       "type_personnel": "pilote",
       "horaire": "Temps plein",
       "specialisation": "",
-      "disponible": false,
-      "numero_licence": "ADFE",
-      "heures_vol": 1245.0,
+      "disponible": true,
+      "numero_licence": "123432",
+      "heures_vol": 1234.0,
       "departement": "",
       "tour_controle": "",
       "langues_parlees": [],
-      "created_at": "2025-06-21T20:36:15.300078"
+      "created_at": "2025-06-21T23:49:01.006188"
     }
   ],
-  "last_modified": "2025-06-21T20:36:15.301074"
+  "last_modified": "2025-06-21T23:49:01.007185"
 }

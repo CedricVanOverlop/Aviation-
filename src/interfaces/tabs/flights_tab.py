@@ -5,6 +5,7 @@ import sys
 import os
 from datetime import datetime, timedelta
 import math
+import traceback
 
 # Ajouter le chemin du module Core
 sys.path.append(os.path.join(os.path.dirname(__file__), '..', '..', '..'))
@@ -791,32 +792,85 @@ def new_flight_dialog(parent, data_manager, flights_tree):
 
 
 def edit_flight(parent, data_manager, flights_tree):
-    """Modifie le vol sélectionné - CORRECTION BUG"""
+    """CORRECTION: Modifie le vol sélectionné avec recherche d'ID améliorée"""
     selection = flights_tree.selection()
     if not selection:
         messagebox.showwarning("Sélection", "Veuillez sélectionner un vol à modifier.")
         return
     
-    item = flights_tree.item(selection[0])
-    flight_number = item['values'][0]
+    try:
+        item = flights_tree.item(selection[0])
+        flight_number = item['values'][0]  # Numéro de vol depuis le tableau
+        
+        print(f"🔧 Recherche vol pour modification: {flight_number}")
+        
+        # CORRECTION: Forcer le rechargement des données sans cache
+        data_manager.clear_cache()
+        all_flights = data_manager.get_flights()
+        
+        flight_data = None
+        
+        # CORRECTION: Recherche plus robuste
+        for flight in all_flights:
+            vol_number = flight.get('numero_vol', '')
+            print(f"  Comparaison: '{flight_number}' vs '{vol_number}'")
+            
+            # Recherche exacte d'abord
+            if vol_number == flight_number:
+                flight_data = flight
+                print(f"  ✓ Vol trouvé par correspondance exacte")
+                break
+            
+            # Recherche partielle si ID tronqué dans l'affichage
+            if flight_number in vol_number or vol_number in flight_number:
+                flight_data = flight
+                print(f"  ✓ Vol trouvé par correspondance partielle")
+                break
+        
+        if not flight_data:
+            print(f"❌ Aucun vol trouvé pour: {flight_number}")
+            print(f"  Vols disponibles: {[f.get('numero_vol') for f in all_flights]}")
+            messagebox.showerror("Erreur", 
+                               f"Vol '{flight_number}' non trouvé.\n\n"
+                               f"Vols disponibles: {len(all_flights)}")
+            return
+        
+        print(f"✓ Vol trouvé: {flight_data.get('numero_vol')}")
+        
+        # Vérifier si le vol peut être modifié
+        current_status = flight_data.get('statut', 'programme')
+        if current_status in ['en_vol', 'atterri', 'termine']:
+            messagebox.showwarning("Modification impossible", 
+                                  f"Impossible de modifier un vol {current_status}.")
+            return
+        
+        # Ouvrir le dialogue de modification
+        dialog = FlightDialog(parent, data_manager, flight_data)
+        if dialog.result:
+            print(f"✅ Vol {flight_number} modifié avec succès")
+            
+            # CORRECTION: Rafraîchissement immédiat et forcé
+            data_manager.clear_cache()
+            refresh_flights_data(flights_tree, data_manager)
+            
+            # AJOUT: Déclencher aussi la mise à jour des statistiques
+            try:
+                if hasattr(parent, 'refresh_statistics'):
+                    parent.refresh_statistics()
+                elif hasattr(parent, 'parent') and hasattr(parent.parent, 'refresh_statistics'):
+                    parent.parent.refresh_statistics()
+            except:
+                pass
+            
+            messagebox.showinfo("Succès", f"Vol {flight_number} modifié avec succès!")
+        else:
+            print(f"🚫 Modification du vol {flight_number} annulée")
     
-    # CORRECTION: Meilleure recherche des données complètes du vol
-    all_flights = data_manager.get_flights()
-    flight_data = None
-    for flight in all_flights:
-        if flight.get('numero_vol') == flight_number:
-            flight_data = flight
-            break
-    
-    if not flight_data:
-        messagebox.showerror("Erreur", "Vol non trouvé.")
-        return
-    
-    dialog = FlightDialog(parent, data_manager, flight_data)
-    if dialog.result:
-        # CORRECTION: Rafraîchissement immédiat forcé
-        refresh_flights_data(flights_tree, data_manager)
-        messagebox.showinfo("Succès", "Vol modifié avec succès!")
+    except Exception as e:
+        error_msg = f"Erreur lors de la modification du vol: {e}"
+        print(f"❌ {error_msg}")
+        traceback.print_exc()
+        messagebox.showerror("Erreur", error_msg)
 
 
 def view_flight_details(flights_tree):
@@ -844,53 +898,60 @@ Statut: {values[7]}"""
 
 
 def delete_flight(data_manager, flights_tree):
-    """CORRECTION BUG: Supprime ou annule le vol sélectionné avec confirmation"""
+    """CORRECTION: Supprime ou annule le vol avec méthode DataManager corrigée"""
     selection = flights_tree.selection()
     if not selection:
         messagebox.showwarning("Sélection", "Veuillez sélectionner un vol à supprimer.")
         return
     
-    item = flights_tree.item(selection[0])
-    flight_number = item['values'][0]
-    current_status = item['values'][7]
-    
-    # Déterminer l'action selon le statut
-    if current_status in ['Programmé', 'En attente', 'Retardé']:
-        action = "annuler"
-        new_status = 'annule'
-        message = f"Voulez-vous vraiment annuler le vol {flight_number} ?"
-    else:
-        action = "supprimer définitivement"
-        new_status = None
-        message = f"Voulez-vous vraiment supprimer définitivement le vol {flight_number} ?\n\nCette action est irréversible."
-    
-    if messagebox.askyesno("Confirmation", message):
-        all_flights = data_manager.get_flights()
+    try:
+        item = flights_tree.item(selection[0])
+        flight_number = item['values'][0]
+        current_status = item['values'][7]
         
-        if new_status:
-            # Annuler le vol (garder en mémoire mais statut annulé)
-            for flight in all_flights:
-                if flight.get('numero_vol') == flight_number:
-                    flight['statut'] = new_status
-                    flight['updated_at'] = datetime.now().isoformat()
-                    break
+        print(f"🗑️ Demande suppression vol: {flight_number} (statut: {current_status})")
+        
+        # Déterminer l'action selon le statut
+        if current_status in ['Programmé', 'En attente', 'Retardé']:
+            action = "annuler"
+            message = f"Voulez-vous vraiment annuler le vol {flight_number} ?"
+        else:
+            action = "supprimer définitivement"
+            message = f"Voulez-vous vraiment supprimer définitivement le vol {flight_number} ?\n\nCette action est irréversible."
+        
+        if messagebox.askyesno("Confirmation", message):
+            if current_status in ['Programmé', 'En attente', 'Retardé']:
+                # CORRECTION: Annuler (changer statut) au lieu de supprimer
+                success = data_manager.update_flight(flight_number, {'statut': 'annule'})
+                message_success = f"Vol {flight_number} annulé avec succès."
+            else:
+                # CORRECTION: Utiliser la méthode corrigée du DataManager
+                success = data_manager.delete_flight(flight_number)
+                message_success = f"Vol {flight_number} supprimé définitivement."
             
-            # Sauvegarder la modification
-            data = data_manager.load_data('flights')
-            data['flights'] = all_flights
-            success = data_manager.save_data('flights', data)
-            message_success = f"Vol {flight_number} annulé avec succès."
-        else:
-            # Supprimer définitivement
-            success = data_manager.delete_flight(flight_number)
-            message_success = f"Vol {flight_number} supprimé définitivement."
+            if success:
+                print(f"✅ {message_success}")
+                
+                # CORRECTION: Rafraîchissement immédiat forcé
+                data_manager.clear_cache()
+                refresh_flights_data(flights_tree, data_manager)
+                
+                # AJOUT: Mise à jour des statistiques
+                try:
+                    if hasattr(flights_tree, 'master') and hasattr(flights_tree.master, 'refresh_statistics'):
+                        flights_tree.master.refresh_statistics()
+                except:
+                    pass
+                
+                messagebox.showinfo("Succès", message_success)
+            else:
+                messagebox.showerror("Erreur", f"Impossible de {action} le vol.")
         
-        if success:
-            # CORRECTION: Rafraîchissement immédiat forcé
-            refresh_flights_data(flights_tree, data_manager)
-            messagebox.showinfo("Succès", message_success)
-        else:
-            messagebox.showerror("Erreur", f"Impossible de {action} le vol.")
+    except Exception as e:
+        error_msg = f"Erreur lors de la suppression: {e}"
+        print(f"❌ {error_msg}")
+        traceback.print_exc()
+        messagebox.showerror("Erreur", error_msg)
 
 
 def filter_flights(flights_tree, data_manager, search_var, filter_var):
@@ -978,74 +1039,89 @@ def filter_flights(flights_tree, data_manager, search_var, filter_var):
 
 
 def refresh_flights_data(flights_tree, data_manager):
-    """CORRECTION: Rafraîchit les données des vols avec meilleure gestion"""
-    # Vider le tableau
-    for item in flights_tree.get_children():
-        flights_tree.delete(item)
-    
-    # Forcer le rechargement des données
-    data_manager.clear_cache()
-    all_flights = data_manager.get_flights()
-    
-    # Mapping des statuts pour l'affichage
-    status_mapping = {
-        'programme': 'Programmé',
-        'en_attente': 'En attente',
-        'en_vol': 'En vol',
-        'atterri': 'Atterri',
-        'retarde': 'Retardé',
-        'annule': 'Annulé',
-        'termine': 'Terminé'
-    }
-    
-    for flight in all_flights:
-        flight_status = status_mapping.get(flight.get('statut', ''), 'Inconnu')
+    """CORRECTION: Rafraîchissement robuste avec gestion d'erreurs"""
+    try:
+        print("🔄 Rafraîchissement des données vols...")
         
-        try:
-            if flight.get('heure_depart'):
-                if isinstance(flight['heure_depart'], str):
-                    depart_time = datetime.fromisoformat(flight['heure_depart'])
+        # CORRECTION: Vider le tableau
+        for item in flights_tree.get_children():
+            flights_tree.delete(item)
+        
+        # CORRECTION: Forcer le rechargement sans cache
+        data_manager.clear_cache()
+        all_flights = data_manager.get_flights()
+        
+        print(f"  📊 {len(all_flights)} vols chargés")
+        
+        # Mapping des statuts pour l'affichage
+        status_mapping = {
+            'programme': 'Programmé',
+            'en_attente': 'En attente',
+            'en_vol': 'En vol',
+            'atterri': 'Atterri',
+            'retarde': 'Retardé',
+            'annule': 'Annulé',
+            'termine': 'Terminé'
+        }
+        
+        for flight in all_flights:
+            flight_status = status_mapping.get(flight.get('statut', ''), 'Inconnu')
+            
+            try:
+                # Gestion robuste des dates
+                if flight.get('heure_depart'):
+                    if isinstance(flight['heure_depart'], str):
+                        depart_time = datetime.fromisoformat(flight['heure_depart'])
+                    else:
+                        depart_time = flight['heure_depart']
+                    
+                    date_str = depart_time.strftime("%Y-%m-%d")
+                    heure_depart_str = depart_time.strftime("%H:%M")
                 else:
-                    depart_time = flight['heure_depart']
+                    date_str = "N/A"
+                    heure_depart_str = "N/A"
                 
-                date_str = depart_time.strftime("%Y-%m-%d")
-                heure_depart_str = depart_time.strftime("%H:%M")
-            else:
+                if flight.get('heure_arrivee_prevue'):
+                    if isinstance(flight['heure_arrivee_prevue'], str):
+                        arrivee_time = datetime.fromisoformat(flight['heure_arrivee_prevue'])
+                    else:
+                        arrivee_time = flight['heure_arrivee_prevue']
+                    
+                    heure_arrivee_str = arrivee_time.strftime("%H:%M")
+                else:
+                    heure_arrivee_str = "N/A"
+                    
+            except Exception as e:
+                print(f"  ⚠️ Erreur parsing dates vol {flight.get('numero_vol')}: {e}")
                 date_str = "N/A"
                 heure_depart_str = "N/A"
-            
-            if flight.get('heure_arrivee_prevue'):
-                if isinstance(flight['heure_arrivee_prevue'], str):
-                    arrivee_time = datetime.fromisoformat(flight['heure_arrivee_prevue'])
-                else:
-                    arrivee_time = flight['heure_arrivee_prevue']
-                
-                heure_arrivee_str = arrivee_time.strftime("%H:%M")
-            else:
                 heure_arrivee_str = "N/A"
-        except:
-            date_str = "N/A"
-            heure_depart_str = "N/A"
-            heure_arrivee_str = "N/A"
+            
+            values = (
+                flight.get('numero_vol', ''),
+                flight.get('aeroport_depart', ''),
+                flight.get('aeroport_arrivee', ''),
+                date_str,
+                heure_depart_str,
+                heure_arrivee_str,
+                flight.get('avion_utilise', ''),
+                flight_status
+            )
+            
+            # Coloration selon le statut
+            try:
+                item_id = flights_tree.insert('', 'end', values=values)
+                if flight_status == 'Annulé':
+                    flights_tree.set(item_id, 'Statut', '❌ Annulé')
+                elif flight_status == 'Retardé':
+                    flights_tree.set(item_id, 'Statut', '⏰ Retardé')
+                elif flight_status == 'En vol':
+                    flights_tree.set(item_id, 'Statut', '✈️ En vol')
+            except Exception as e:
+                print(f"  ⚠️ Erreur ajout vol à l'interface: {e}")
         
-        values = (
-            flight.get('numero_vol', ''),
-            flight.get('aeroport_depart', ''),
-            flight.get('aeroport_arrivee', ''),
-            date_str,
-            heure_depart_str,
-            heure_arrivee_str,
-            flight.get('avion_utilise', ''),
-            flight_status
-        )
+        print(f"✅ Vols rafraîchis: {len(all_flights)} vols affichés")
         
-        # Coloration selon le statut
-        item_id = flights_tree.insert('', 'end', values=values)
-        if flight_status == 'Annulé':
-            flights_tree.set(item_id, 'Statut', '❌ Annulé')
-        elif flight_status == 'Retardé':
-            flights_tree.set(item_id, 'Statut', '⏰ Retardé')
-        elif flight_status == 'En vol':
-            flights_tree.set(item_id, 'Statut', '✈️ En vol')
-    
-    print(f"✓ Données vols rafraîchies: {len(all_flights)} vols chargés")
+    except Exception as e:
+        print(f"❌ Erreur refresh vols: {e}")
+        traceback.print_exc()

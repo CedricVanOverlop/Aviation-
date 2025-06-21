@@ -209,21 +209,30 @@ class DataManager:
         return data.get('aircraft', [])
     
     def add_aircraft(self, aircraft_data: Dict[str, Any]) -> bool:
-        """Ajoute un avion à la flotte"""
-        data = self.load_data('aircraft')
-        aircraft_list = data.get('aircraft', [])
-        
-        # Vérification unicité ID
-        aircraft_id = aircraft_data.get('num_id')
-        if any(a.get('num_id') == aircraft_id for a in aircraft_list):
-            print(f"❌ Avion {aircraft_id} existe déjà")
+        """CORRECTION: Ajoute un avion avec rafraîchissement forcé"""
+        try:
+            data = self.load_data('aircraft', use_cache=False)  # Force rechargement
+            aircraft_list = data.get('aircraft', [])
+            
+            # Vérification unicité ID
+            aircraft_id = aircraft_data.get('num_id')
+            if any(a.get('num_id') == aircraft_id for a in aircraft_list):
+                print(f"❌ Avion {aircraft_id} existe déjà")
+                return False
+            
+            aircraft_data['created_at'] = datetime.now().isoformat()
+            aircraft_list.append(aircraft_data)
+            data['aircraft'] = aircraft_list
+            
+            success = self.save_data('aircraft', data)
+            if success:
+                self.clear_cache()  # AJOUT: Force le rafraîchissement
+                print(f"✓ Avion {aircraft_id} ajouté")
+            return success
+            
+        except Exception as e:
+            print(f"❌ Erreur ajout avion: {e}")
             return False
-        
-        aircraft_data['created_at'] = datetime.now().isoformat()
-        aircraft_list.append(aircraft_data)
-        data['aircraft'] = aircraft_list
-        
-        return self.save_data('aircraft', data)
     
     def update_aircraft(self, aircraft_id: str, aircraft_data: Dict[str, Any]) -> bool:
         """Met à jour un avion existant"""
@@ -241,19 +250,55 @@ class DataManager:
         return False
     
     def delete_aircraft(self, aircraft_id: str) -> bool:
-        """Supprime un avion de la flotte"""
-        data = self.load_data('aircraft')
-        aircraft_list = data.get('aircraft', [])
+        """CORRECTION: Supprime un avion de la flotte"""
+        try:
+            data = self.load_data('aircraft', use_cache=False)  # Force rechargement
+            aircraft_list = data.get('aircraft', [])
+            
+            original_length = len(aircraft_list)
+            # CORRECTION: Filtrage correct
+            updated_aircraft = [a for a in aircraft_list if a.get('num_id') != aircraft_id]
+            
+            if len(updated_aircraft) < original_length:
+                data['aircraft'] = updated_aircraft
+                success = self.save_data('aircraft', data)
+                if success:
+                    self.clear_cache()  # AJOUT: Vider le cache après suppression
+                    print(f"✓ Avion {aircraft_id} supprimé")
+                    return True
+            
+            print(f"❌ Avion {aircraft_id} non trouvé pour suppression")
+            return False
+            
+        except Exception as e:
+            print(f"❌ Erreur suppression avion {aircraft_id}: {e}")
+            return False
         
-        original_length = len(aircraft_list)
-        aircraft_list = [a for a in aircraft_list if a.get('num_id') != aircraft_id]
-        
-        if len(aircraft_list) < original_length:
-            data['aircraft'] = aircraft_list
-            return self.save_data('aircraft', data)
-        
-        print(f"❌ Avion {aircraft_id} non trouvé pour suppression")
-        return False
+    def add_personnel(self, personnel_data: Dict[str, Any]) -> bool:
+        """CORRECTION: Ajoute un personnel avec rafraîchissement forcé"""
+        try:
+            data = self.load_data('personnel', use_cache=False)
+            personnel_list = data.get('personnel', [])
+            
+            # Vérification unicité ID
+            personnel_id = personnel_data.get('id_employe')
+            if any(p.get('id_employe') == personnel_id for p in personnel_list):
+                print(f"❌ Personnel {personnel_id} existe déjà")
+                return False
+            
+            personnel_data['created_at'] = datetime.now().isoformat()
+            personnel_list.append(personnel_data)
+            data['personnel'] = personnel_list
+            
+            success = self.save_data('personnel', data)
+            if success:
+                self.clear_cache()
+                print(f"✓ Personnel {personnel_id} ajouté")
+            return success
+            
+        except Exception as e:
+            print(f"❌ Erreur ajout personnel: {e}")
+            return False
     
     def get_personnel(self) -> List[Dict[str, Any]]:
         """Retourne la liste du personnel"""
@@ -276,56 +321,60 @@ class DataManager:
         return False
     
     def delete_personnel(self, personnel_id: str) -> bool:
-        """Supprime un membre du personnel"""
-        data = self.load_data('personnel')
-        personnel_list = data.get('personnel', [])
-        
-        original_length = len(personnel_list)
-        personnel_list = [p for p in personnel_list if p.get('id_employe') != personnel_id]
-        
-        if len(personnel_list) < original_length:
-            data['personnel'] = personnel_list
-            return self.save_data('personnel', data)
-        
-        print(f"❌ Personnel {personnel_id} non trouvé pour suppression")
-        return False
-        """Ajoute un membre du personnel"""
-        data = self.load_data('personnel')
-        personnel_list = data.get('personnel', [])
-        
-        # Vérification unicité ID
-        personnel_id = personnel_data.get('id_employe')
-        if any(p.get('id_employe') == personnel_id for p in personnel_list):
-            print(f"❌ Personnel {personnel_id} existe déjà")
+        """CORRECTION: Supprime un membre du personnel"""
+        try:
+            data = self.load_data('personnel', use_cache=False)  # Force rechargement
+            personnel_list = data.get('personnel', [])
+            
+            original_length = len(personnel_list)
+            # CORRECTION: Filtrage correct
+            updated_personnel = [p for p in personnel_list if p.get('id_employe') != personnel_id]
+            
+            if len(updated_personnel) < original_length:
+                data['personnel'] = updated_personnel
+                success = self.save_data('personnel', data)
+                if success:
+                    self.clear_cache()  # AJOUT: Vider le cache après suppression
+                    print(f"✓ Personnel {personnel_id} supprimé")
+                    return True
+            
+            print(f"❌ Personnel {personnel_id} non trouvé pour suppression")
+            return False
+            
+        except Exception as e:
+            print(f"❌ Erreur suppression personnel {personnel_id}: {e}")
             return False
         
-        personnel_data['created_at'] = datetime.now().isoformat()
-        personnel_list.append(personnel_data)
-        data['personnel'] = personnel_list
-        
-        return self.save_data('personnel', data)
-    
     def get_flights(self) -> List[Dict[str, Any]]:
         """Retourne la liste des vols"""
         data = self.load_data('flights')
         return data.get('flights', [])
     
     def add_flight(self, flight_data: Dict[str, Any]) -> bool:
-        """Ajoute un vol"""
-        data = self.load_data('flights')
-        flights_list = data.get('flights', [])
-        
-        # Vérification unicité numéro vol
-        flight_number = flight_data.get('numero_vol')
-        if any(f.get('numero_vol') == flight_number for f in flights_list):
-            print(f"❌ Vol {flight_number} existe déjà")
+        """CORRECTION: Ajoute un vol avec rafraîchissement forcé"""
+        try:
+            data = self.load_data('flights', use_cache=False)  # Force rechargement
+            flights_list = data.get('flights', [])
+            
+            # Vérification unicité numéro vol
+            flight_number = flight_data.get('numero_vol')
+            if any(f.get('numero_vol') == flight_number for f in flights_list):
+                print(f"❌ Vol {flight_number} existe déjà")
+                return False
+            
+            flight_data['created_at'] = datetime.now().isoformat()
+            flights_list.append(flight_data)
+            data['flights'] = flights_list
+            
+            success = self.save_data('flights', data)
+            if success:
+                self.clear_cache()  # AJOUT: Force le rafraîchissement
+                print(f"✓ Vol {flight_number} ajouté")
+            return success
+            
+        except Exception as e:
+            print(f"❌ Erreur ajout vol: {e}")
             return False
-        
-        flight_data['created_at'] = datetime.now().isoformat()
-        flights_list.append(flight_data)
-        data['flights'] = flights_list
-        
-        return self.save_data('flights', data)
     
     def get_passengers(self) -> List[Dict[str, Any]]:
         """Retourne la liste des passagers"""
@@ -333,17 +382,31 @@ class DataManager:
         return data.get('passengers', [])
     
     def add_passenger(self, passenger_data: Dict[str, Any]) -> bool:
-        """Ajoute un passager"""
-        data = self.load_data('passengers')
-        passengers_list = data.get('passengers', [])
-        
-        # Vérification unicité ID
-        passenger_id = passenger_data.get('id_passager')
-        if any(p.get('id_passager') == passenger_id for p in passengers_list):
-            print(f"❌ Passager {passenger_id} existe déjà")
+        """CORRECTION: Ajoute un passager avec rafraîchissement forcé"""
+        try:
+            data = self.load_data('passengers', use_cache=False)
+            passengers_list = data.get('passengers', [])
+            
+            # Vérification unicité ID
+            passenger_id = passenger_data.get('id_passager')
+            if any(p.get('id_passager') == passenger_id for p in passengers_list):
+                print(f"❌ Passager {passenger_id} existe déjà")
+                return False
+            
+            passenger_data['created_at'] = datetime.now().isoformat()
+            passengers_list.append(passenger_data)
+            data['passengers'] = passengers_list
+            
+            success = self.save_data('passengers', data)
+            if success:
+                self.clear_cache()
+                print(f"✓ Passager {passenger_id} ajouté")
+            return success
+            
+        except Exception as e:
+            print(f"❌ Erreur ajout passager: {e}")
             return False
         
-        passenger_data['created_at'] = datetime.now().isoformat()
     def update_passenger(self, passenger_id: str, passenger_data: Dict[str, Any]) -> bool:
         """Met à jour un passager existant"""
         data = self.load_data('passengers')
@@ -360,20 +423,29 @@ class DataManager:
         return False
     
     def delete_passenger(self, passenger_id: str) -> bool:
-        """Supprime un passager"""
-        data = self.load_data('passengers')
-        passengers_list = data.get('passengers', [])
+        """AJOUT: Supprime un passager (méthode manquante)"""
+        try:
+            data = self.load_data('passengers', use_cache=False)
+            passengers_list = data.get('passengers', [])
+            
+            original_length = len(passengers_list)
+            updated_passengers = [p for p in passengers_list if p.get('id_passager') != passenger_id]
+            
+            if len(updated_passengers) < original_length:
+                data['passengers'] = updated_passengers
+                success = self.save_data('passengers', data)
+                if success:
+                    self.clear_cache()
+                    print(f"✓ Passager {passenger_id} supprimé")
+                    return True
+            
+            print(f"❌ Passager {passenger_id} non trouvé pour suppression")
+            return False
+            
+        except Exception as e:
+            print(f"❌ Erreur suppression passager {passenger_id}: {e}")
+            return False
         
-        original_length = len(passengers_list)
-        passengers_list = [p for p in passengers_list if p.get('id_passager') != passenger_id]
-        
-        if len(passengers_list) < original_length:
-            data['passengers'] = passengers_list
-            return self.save_data('passengers', data)
-        
-        print(f"❌ Passager {passenger_id} non trouvé pour suppression")
-        return False
-    
     def update_flight(self, flight_number: str, flight_data: Dict[str, Any]) -> bool:
         """Met à jour un vol existant"""
         data = self.load_data('flights')
@@ -390,19 +462,29 @@ class DataManager:
         return False
     
     def delete_flight(self, flight_number: str) -> bool:
-        """Supprime un vol"""
-        data = self.load_data('flights')
-        flights_list = data.get('flights', [])
-        
-        original_length = len(flights_list)
-        flights_list = [f for f in flights_list if f.get('numero_vol') != flight_number]
-        
-        if len(flights_list) < original_length:
-            data['flights'] = flights_list
-            return self.save_data('flights', data)
-        
-        print(f"❌ Vol {flight_number} non trouvé pour suppression")
-        return False
+        """CORRECTION: Supprime un vol"""
+        try:
+            data = self.load_data('flights', use_cache=False)  # Force rechargement
+            flights_list = data.get('flights', [])
+            
+            original_length = len(flights_list)
+            # CORRECTION: Filtrage correct
+            updated_flights = [f for f in flights_list if f.get('numero_vol') != flight_number]
+            
+            if len(updated_flights) < original_length:
+                data['flights'] = updated_flights
+                success = self.save_data('flights', data)
+                if success:
+                    self.clear_cache()  # AJOUT: Vider le cache après suppression
+                    print(f"✓ Vol {flight_number} supprimé")
+                    return True
+            
+            print(f"❌ Vol {flight_number} non trouvé pour suppression")
+            return False
+            
+        except Exception as e:
+            print(f"❌ Erreur suppression vol {flight_number}: {e}")
+            return False
     
     def get_reservations(self) -> List[Dict[str, Any]]:
         """Retourne la liste des réservations"""
@@ -425,6 +507,30 @@ class DataManager:
         data['reservations'] = reservations_list
         
         return self.save_data('reservations', data)
+    
+    def delete_reservation(self, reservation_id: str) -> bool:
+        """AJOUT: Supprime une réservation (méthode manquante)"""
+        try:
+            data = self.load_data('reservations', use_cache=False)
+            reservations_list = data.get('reservations', [])
+            
+            original_length = len(reservations_list)
+            updated_reservations = [r for r in reservations_list if r.get('id_reservation') != reservation_id]
+            
+            if len(updated_reservations) < original_length:
+                data['reservations'] = updated_reservations
+                success = self.save_data('reservations', data)
+                if success:
+                    self.clear_cache()
+                    print(f"✓ Réservation {reservation_id} supprimée")
+                    return True
+            
+            print(f"❌ Réservation {reservation_id} non trouvée pour suppression")
+            return False
+            
+        except Exception as e:
+            print(f"❌ Erreur suppression réservation {reservation_id}: {e}")
+            return False
     
     def update_reservation(self, reservation_id: str, reservation_data: Dict[str, Any]) -> bool:
         """Met à jour une réservation existante"""
