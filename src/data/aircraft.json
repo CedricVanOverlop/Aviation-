@@ -2,21 +2,22 @@
   "aircrafts": [],
   "aircraft": [
     {
-      "num_id": "AIR-FC9E",
-      "modele": "Airbus A350",
-      "compagnie_aerienne": "Air python",
-      "capacite": 350,
-      "vitesse_croisiere": 900.0,
-      "autonomie": 15000.0,
+      "num_id": "BOE-44DF",
+      "modele": "Boeing 737 MAX",
+      "compagnie_aerienne": "AirPython",
+      "capacite": 210,
+      "vitesse_croisiere": 840.0,
+      "autonomie": 6570.0,
       "localisation": {
-        "latitude": 41.8003,
-        "longitude": 12.2389
+        "latitude": 51.47,
+        "longitude": -0.4543
       },
       "etat": "operationnel",
       "vol_actuel": null,
       "derniere_maintenance": null,
-      "created_at": "2025-06-22T00:48:53.901052"
+      "created_at": "2025-06-22T02:18:17.673105",
+      "updated_at": "2025-06-22T02:18:17.673105"
     }
   ],
-  "last_modified": "2025-06-22T00:48:53.902049"
+  "last_modified": "2025-06-22T02:18:17.675099"
 }

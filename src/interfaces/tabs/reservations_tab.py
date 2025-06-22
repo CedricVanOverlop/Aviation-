@@ -15,15 +15,6 @@ class ReservationDialog:
     """Dialogue pour créer ou modifier une réservation"""
     
     def __init__(self, parent, data_manager, reservation_data=None, passenger_id=None):
-        """
-        Initialise le dialogue.
-        
-        Args:
-            parent: Fenêtre parente
-            data_manager: Gestionnaire de données
-            reservation_data: Données de réservation existante (pour modification)
-            passenger_id: ID du passager pré-sélectionné (pour création depuis onglet passagers)
-        """
         self.parent = parent
         self.data_manager = data_manager
         self.reservation_data = reservation_data
@@ -81,8 +72,6 @@ class ReservationDialog:
         # Informations calculées
         self.vol_info_var = tk.StringVar(value="Sélectionnez un vol")
         self.passager_info_var = tk.StringVar(value="Sélectionnez un passager")
-        self.checkin_available_var = tk.StringVar(value="Non disponible")
-        self.checkin_color_var = tk.StringVar(value="gray")
     
     def load_reference_data(self):
         """Charge les données de référence"""
@@ -105,7 +94,6 @@ class ReservationDialog:
                             depart_time = datetime.fromisoformat(flight['heure_depart'])
                         else:
                             depart_time = flight['heure_depart']
-                        
                         date_str = depart_time.strftime("%Y-%m-%d %H:%M")
                     else:
                         date_str = "N/A"
@@ -115,7 +103,7 @@ class ReservationDialog:
                 choice = f"{flight.get('numero_vol', '')} - {flight.get('aeroport_depart', '')} → {flight.get('aeroport_arrivee', '')} ({date_str})"
                 self.flight_choices.append(choice)
         
-        self.statut_choices = [s.obtenir_nom_affichage() for s in StatutReservation]
+        self.statut_choices = ['Active', 'Annulée', 'Terminée', 'Expirée']
     
     def setup_ui(self):
         """Configure l'interface utilisateur"""
@@ -160,7 +148,6 @@ class ReservationDialog:
                                           values=self.passenger_choices, width=50)
         self.passager_combo.grid(row=0, column=1, sticky="ew", padx=(10, 5), pady=5)
         self.passager_combo.bind('<<ComboboxSelected>>', self.on_passenger_selected)
-        self.passager_combo.bind('<KeyRelease>', self.on_passenger_typed)
         
         # Vol
         ttk.Label(selection_frame, text="Vol*:").grid(row=1, column=0, sticky="w", pady=5)
@@ -168,7 +155,6 @@ class ReservationDialog:
                                      values=self.flight_choices, width=50)
         self.vol_combo.grid(row=1, column=1, sticky="ew", padx=(10, 5), pady=5)
         self.vol_combo.bind('<<ComboboxSelected>>', self.on_flight_selected)
-        self.vol_combo.bind('<KeyRelease>', self.on_flight_typed)
     
     def create_info_section(self, parent):
         """Crée la section d'informations"""
@@ -203,37 +189,16 @@ class ReservationDialog:
         self.siege_entry = ttk.Entry(seat_frame, textvariable=self.siege_var, width=10)
         self.siege_entry.grid(row=0, column=1, sticky="w", padx=(10, 5), pady=5)
         ttk.Label(seat_frame, text="Ex: 12A, 3B, 25F", foreground="gray").grid(row=0, column=2, sticky="w", padx=5)
-        
-        # Validation en temps réel
-        self.siege_entry.bind('<KeyRelease>', self.validate_seat_format)
-        
-        # Indicateur de format
-        self.seat_status_label = ttk.Label(seat_frame, text="", font=('Arial', 9))
-        self.seat_status_label.grid(row=1, column=1, sticky="w", padx=(10, 0), pady=(2, 0))
     
     def create_checkin_section(self, parent):
         """Crée la section du check-in"""
         checkin_frame = ttk.LabelFrame(parent, text="✅ Check-in", padding=15)
         checkin_frame.pack(fill="x", pady=(0, 10))
         
-        checkin_frame.grid_columnconfigure(1, weight=1)
-        
-        # État du check-in
-        ttk.Label(checkin_frame, text="Disponibilité:", font=('Arial', 10, 'bold')).grid(row=0, column=0, sticky="w", pady=5)
-        self.checkin_status_label = ttk.Label(checkin_frame, textvariable=self.checkin_available_var, 
-                                            font=('Arial', 10, 'bold'))
-        self.checkin_status_label.grid(row=0, column=1, sticky="w", padx=(10, 0), pady=5)
-        
         # Case à cocher check-in
         self.checkin_checkbox = ttk.Checkbutton(checkin_frame, text="Check-in effectué",
-                                               variable=self.checkin_var, state="disabled")
-        self.checkin_checkbox.grid(row=1, column=0, columnspan=2, sticky="w", pady=5)
-        
-        # Note explicative
-        note_label = ttk.Label(checkin_frame, 
-                              text="Le check-in est disponible 24h avant le départ et se ferme 30min avant",
-                              font=('Arial', 9), foreground="gray")
-        note_label.grid(row=2, column=0, columnspan=2, sticky="w", pady=(5, 0))
+                                               variable=self.checkin_var)
+        self.checkin_checkbox.pack(anchor="w", pady=5)
     
     def create_status_section(self, parent):
         """Crée la section du statut"""
@@ -271,45 +236,14 @@ class ReservationDialog:
                              text="Modifier" if self.is_editing else "Créer", 
                              command=self.save_reservation, width=12)
         btn_save.pack(side="right")
-        
-        # Style pour rendre les boutons plus visibles
-        btn_save.configure(style='Action.TButton')
     
     def on_passenger_selected(self, event=None):
         """Gestionnaire de sélection de passager"""
         self.update_passenger_info()
     
-    def on_passenger_typed(self, event=None):
-        """Gestionnaire de saisie manuelle de passager"""
-        typed = self.passager_var.get().upper()
-        if len(typed) >= 2:
-            matches = [choice for choice in self.passenger_choices 
-                      if typed.lower() in choice.lower()]
-            if matches:
-                self.passager_combo['values'] = matches
-        else:
-            self.passager_combo['values'] = self.passenger_choices
-        
-        self.update_passenger_info()
-    
     def on_flight_selected(self, event=None):
         """Gestionnaire de sélection de vol"""
         self.update_flight_info()
-        self.update_checkin_availability()
-    
-    def on_flight_typed(self, event=None):
-        """Gestionnaire de saisie manuelle de vol"""
-        typed = self.vol_var.get().upper()
-        if len(typed) >= 2:
-            matches = [choice for choice in self.flight_choices 
-                      if typed.lower() in choice.lower()]
-            if matches:
-                self.vol_combo['values'] = matches
-        else:
-            self.vol_combo['values'] = self.flight_choices
-        
-        self.update_flight_info()
-        self.update_checkin_availability()
     
     def update_passenger_info(self):
         """Met à jour les informations du passager"""
@@ -355,7 +289,6 @@ class ReservationDialog:
                                 depart_time = datetime.fromisoformat(flight['heure_depart'])
                             else:
                                 depart_time = flight['heure_depart']
-                            
                             date_str = depart_time.strftime("%Y-%m-%d à %H:%M")
                         else:
                             date_str = "N/A"
@@ -369,70 +302,6 @@ class ReservationDialog:
             pass
         
         self.vol_info_var.set("Vol non trouvé")
-    
-    def update_checkin_availability(self):
-        """Met à jour la disponibilité du check-in"""
-        selection = self.vol_var.get()
-        
-        if not selection or ' - ' not in selection:
-            self.checkin_available_var.set("Non disponible")
-            self.checkin_status_label.configure(foreground="gray")
-            self.checkin_checkbox.configure(state="disabled")
-            return
-        
-        try:
-            # Extraire le numéro de vol
-            flight_number = selection.split(' - ')[0]
-            
-            # Trouver le vol correspondant
-            for flight in self.flights:
-                if flight.get('numero_vol') == flight_number:
-                    if flight.get('heure_depart'):
-                        if isinstance(flight['heure_depart'], str):
-                            depart_time = datetime.fromisoformat(flight['heure_depart'])
-                        else:
-                            depart_time = flight['heure_depart']
-                        
-                        now = datetime.now()
-                        time_to_departure = depart_time - now
-                        
-                        # Check-in disponible 24h avant, fermé 30min avant
-                        if time_to_departure <= timedelta(hours=24) and time_to_departure >= timedelta(minutes=30):
-                            self.checkin_available_var.set("✓ Disponible")
-                            self.checkin_status_label.configure(foreground="green")
-                            self.checkin_checkbox.configure(state="normal")
-                        elif time_to_departure > timedelta(hours=24):
-                            hours_remaining = int(time_to_departure.total_seconds() // 3600)
-                            self.checkin_available_var.set(f"Dans {hours_remaining - 24}h")
-                            self.checkin_status_label.configure(foreground="orange")
-                            self.checkin_checkbox.configure(state="disabled")
-                        else:
-                            self.checkin_available_var.set("✗ Fermé")
-                            self.checkin_status_label.configure(foreground="red")
-                            self.checkin_checkbox.configure(state="disabled")
-                        return
-        except:
-            pass
-        
-        self.checkin_available_var.set("Non disponible")
-        self.checkin_status_label.configure(foreground="gray")
-        self.checkin_checkbox.configure(state="disabled")
-    
-    def validate_seat_format(self, event=None):
-        """Valide le format du siège en temps réel"""
-        seat = self.siege_var.get().strip().upper()
-        
-        if not seat:
-            self.seat_status_label.configure(text="", foreground="gray")
-            return
-        
-        # Vérifier le format (chiffres + lettre)
-        import re
-        if re.match(r'^\d{1,3}[A-Z]$', seat):
-            self.seat_status_label.configure(text="✓ Format valide", foreground="green")
-            self.siege_var.set(seat)  # Forcer majuscules
-        else:
-            self.seat_status_label.configure(text="✗ Format invalide (ex: 12A)", foreground="red")
     
     def preselect_passenger(self):
         """Pré-sélectionne un passager (quand appelé depuis l'onglet passagers)"""
@@ -480,14 +349,11 @@ class ReservationDialog:
         # Mettre à jour les informations
         self.update_passenger_info()
         self.update_flight_info()
-        self.update_checkin_availability()
-        self.validate_seat_format()
     
     def validate_fields(self):
         """Valide tous les champs obligatoires"""
         errors = []
         
-        # Vérifications de base
         if not self.passager_var.get().strip():
             errors.append("Le passager est obligatoire")
         
@@ -501,53 +367,10 @@ class ReservationDialog:
             if not re.match(r'^\d{1,3}[A-Z]$', seat):
                 errors.append("Format de siège invalide (ex: 12A, 3B)")
         
-        # Vérification que le passager existe
-        passenger_selection = self.passager_var.get()
-        if passenger_selection and ' (ID: ' in passenger_selection:
-            passenger_id_part = passenger_selection.split(' (ID: ')[1].replace(')', '')
-            passenger_found = any(p.get('id_passager', '').startswith(passenger_id_part) 
-                                for p in self.passengers)
-            if not passenger_found:
-                errors.append("Passager sélectionné non valide")
-        
-        # Vérification que le vol existe
-        vol_selection = self.vol_var.get()
-        if vol_selection and ' - ' in vol_selection:
-            flight_number = vol_selection.split(' - ')[0]
-            flight_found = any(f.get('numero_vol') == flight_number for f in self.flights)
-            if not flight_found:
-                errors.append("Vol sélectionné non valide")
-        
-        # Vérification unicité (passager + vol) pour création
-        if not self.is_editing:
-            if passenger_selection and vol_selection:
-                try:
-                    passenger_id_part = passenger_selection.split(' (ID: ')[1].replace(')', '')
-                    flight_number = vol_selection.split(' - ')[0]
-                    
-                    # Trouver l'ID complet du passager
-                    full_passenger_id = None
-                    for p in self.passengers:
-                        if p.get('id_passager', '').startswith(passenger_id_part):
-                            full_passenger_id = p.get('id_passager')
-                            break
-                    
-                    if full_passenger_id:
-                        existing_reservations = self.data_manager.get_reservations()
-                        duplicate = any(r.get('passager_id') == full_passenger_id 
-                                      and r.get('vol_numero') == flight_number 
-                                      and r.get('statut') == 'active'
-                                      for r in existing_reservations)
-                        if duplicate:
-                            errors.append("Ce passager a déjà une réservation active pour ce vol")
-                except:
-                    pass
-        
         return errors
     
     def save_reservation(self):
         """Sauvegarde la réservation"""
-        # Validation
         errors = self.validate_fields()
         if errors:
             messagebox.showerror("Erreurs de Validation", 
@@ -591,15 +414,16 @@ class ReservationDialog:
                 'checkin_effectue': self.checkin_var.get(),
                 'statut': status_mapping.get(self.statut_var.get(), 'active'),
                 'date_creation': datetime.now().isoformat() if not self.is_editing else self.reservation_data.get('date_creation'),
-                'validite': (datetime.now() + timedelta(days=1)).isoformat()  # Valide 24h
+                'validite': (datetime.now() + timedelta(days=1)).isoformat(),
+                'updated_at': datetime.now().isoformat()
             }
             
-            # CORRECTION BUG: Sauvegarder avec méthodes correctes du data_manager
+            # Sauvegarder
             if self.is_editing:
-                success = self.data_manager.update_reservation(reservation_data['id_reservation'], reservation_data)
+                success = self.safe_update_reservation(reservation_data)
                 action = "modifiée"
             else:
-                success = self.data_manager.add_reservation(reservation_data)
+                success = self.safe_add_reservation(reservation_data)
                 action = "créée"
             
             if success:
@@ -612,6 +436,46 @@ class ReservationDialog:
         except Exception as e:
             messagebox.showerror("Erreur", f"Erreur lors de la sauvegarde:\n{e}")
             print(f"❌ Erreur sauvegarde réservation: {e}")
+    
+    def safe_add_reservation(self, reservation_data):
+        """Ajout sécurisé de réservation"""
+        try:
+            data = self.data_manager.load_data('reservations')
+            if 'reservations' not in data:
+                data['reservations'] = []
+            
+            data['reservations'].append(reservation_data)
+            return self.data_manager.save_data('reservations', data)
+        except Exception as e:
+            print(f"❌ Erreur ajout réservation: {e}")
+            return False
+    
+    def safe_update_reservation(self, reservation_data):
+        """Mise à jour sécurisée de réservation"""
+        try:
+            data = self.data_manager.load_data('reservations')
+            if 'reservations' not in data:
+                return False
+            
+            # Trouver la réservation à modifier
+            reservation_index = -1
+            original_id = self.reservation_data.get('id_reservation')
+            
+            for i, reservation in enumerate(data['reservations']):
+                if reservation.get('id_reservation') == original_id:
+                    reservation_index = i
+                    break
+            
+            if reservation_index == -1:
+                print(f"❌ Réservation {original_id} non trouvée")
+                return False
+            
+            # Mettre à jour
+            data['reservations'][reservation_index] = reservation_data
+            return self.data_manager.save_data('reservations', data)
+        except Exception as e:
+            print(f"❌ Erreur modification réservation: {e}")
+            return False
     
     def cancel(self):
         """Annule le dialogue"""
@@ -658,25 +522,23 @@ def create_reservations_tab_content(parent_frame, data_manager):
               command=edit_reservation_callback).grid(row=0, column=1, padx=(0, 5))
     ttk.Button(toolbar, text="✅ Check-in", 
               command=checkin_reservation_callback).grid(row=0, column=2, padx=(0, 5))
-    ttk.Button(toolbar, text="🎯 Valider", 
-              command=lambda: validate_reservation(data_manager, reservations_tree)).grid(row=0, column=3, padx=(0, 5))
     ttk.Button(toolbar, text="👁️ Voir Détails", 
-              command=view_reservation_callback).grid(row=0, column=4, padx=(0, 5))
+              command=view_reservation_callback).grid(row=0, column=3, padx=(0, 5))
     ttk.Button(toolbar, text="❌ Annuler Réservation", 
               command=cancel_reservation_callback, 
-              style='Danger.TButton').grid(row=0, column=5, padx=(0, 20))
+              style='Danger.TButton').grid(row=0, column=4, padx=(0, 20))
     
     # Recherche
-    ttk.Label(toolbar, text="🔍 Recherche:").grid(row=0, column=6, padx=(0, 5))
+    ttk.Label(toolbar, text="🔍 Recherche:").grid(row=0, column=5, padx=(0, 5))
     search_entry = ttk.Entry(toolbar, textvariable=reservations_search_var, width=20)
-    search_entry.grid(row=0, column=7, padx=(0, 5))
+    search_entry.grid(row=0, column=6, padx=(0, 5))
     search_entry.bind('<KeyRelease>', filter_reservations_callback)
     
     # Filtre par statut
-    ttk.Label(toolbar, text="Statut:").grid(row=0, column=8, padx=(10, 5))
+    ttk.Label(toolbar, text="Statut:").grid(row=0, column=7, padx=(10, 5))
     filter_combo = ttk.Combobox(toolbar, textvariable=reservations_filter_var, width=15, state="readonly")
     filter_combo['values'] = ['Tous', 'Active', 'Annulée', 'Terminée', 'Expirée']
-    filter_combo.grid(row=0, column=9, padx=(0, 5))
+    filter_combo.grid(row=0, column=8, padx=(0, 5))
     filter_combo.bind('<<ComboboxSelected>>', filter_reservations_callback)
     
     # Tableau des réservations
@@ -723,32 +585,36 @@ def new_reservation_dialog(parent, data_manager, reservations_tree):
 
 
 def edit_reservation(parent, data_manager, reservations_tree):
-    """Modifie la réservation sélectionnée - CORRECTION BUG"""
+    """Modifie la réservation sélectionnée"""
     selection = reservations_tree.selection()
     if not selection:
         messagebox.showwarning("Sélection", "Veuillez sélectionner une réservation à modifier.")
         return
     
-    item = reservations_tree.item(selection[0])
-    reservation_id = item['values'][0]
-    
-    # CORRECTION: Meilleure recherche des données complètes de la réservation
-    all_reservations = data_manager.get_reservations()
-    reservation_data = None
-    for reservation in all_reservations:
-        if reservation.get('id_reservation', '').startswith(reservation_id.replace('...', '')):
-            reservation_data = reservation
-            break
-    
-    if not reservation_data:
-        messagebox.showerror("Erreur", "Réservation non trouvée.")
-        return
-    
-    dialog = ReservationDialog(parent, data_manager, reservation_data)
-    if dialog.result:
-        # CORRECTION: Rafraîchissement immédiat forcé
-        refresh_reservations_data(reservations_tree, data_manager)
-        messagebox.showinfo("Succès", "Réservation modifiée avec succès!")
+    try:
+        item = reservations_tree.item(selection[0])
+        reservation_id = item['values'][0]
+        
+        # Recherche robuste de la réservation
+        all_reservations = data_manager.get_reservations()
+        reservation_data = None
+        
+        for reservation in all_reservations:
+            if reservation.get('id_reservation', '').startswith(reservation_id.replace('...', '')):
+                reservation_data = reservation
+                break
+        
+        if not reservation_data:
+            messagebox.showerror("Erreur", "Réservation non trouvée.")
+            return
+        
+        dialog = ReservationDialog(parent, data_manager, reservation_data)
+        if dialog.result:
+            refresh_reservations_data(reservations_tree, data_manager)
+            messagebox.showinfo("Succès", "Réservation modifiée avec succès!")
+            
+    except Exception as e:
+        messagebox.showerror("Erreur", f"Erreur lors de la modification: {e}")
 
 
 def view_reservation_details(reservations_tree, data_manager):
@@ -801,15 +667,6 @@ def view_reservation_details(reservations_tree, data_manager):
             flight_info = f"{flight.get('aeroport_depart', '')} → {flight.get('aeroport_arrivee', '')} le {date_str}"
             break
     
-    # Construire les détails
-    try:
-        if reservation_data.get('date_creation'):
-            creation_date = datetime.fromisoformat(reservation_data['date_creation']).strftime("%Y-%m-%d %H:%M")
-        else:
-            creation_date = "N/A"
-    except:
-        creation_date = "N/A"
-    
     details = f"""Détails de la Réservation
 
 ID: {reservation_data.get('id_reservation', 'N/A')}
@@ -821,220 +678,105 @@ Route: {flight_info}
 
 Siège: {reservation_data.get('siege_assigne', 'Non assigné')}
 Check-in: {'Effectué' if reservation_data.get('checkin_effectue', False) else 'Non effectué'}
-Statut: {reservation_data.get('statut', 'N/A').capitalize()}
-
-Date de création: {creation_date}"""
+Statut: {reservation_data.get('statut', 'N/A').capitalize()}"""
     
     messagebox.showinfo("Détails de la Réservation", details)
 
 
-def validate_reservation(data_manager, reservations_tree):
-    """Valide/Confirme la réservation sélectionnée (marque comme terminée)"""
-    selection = reservations_tree.selection()
-    if not selection:
-        messagebox.showwarning("Sélection", "Veuillez sélectionner une réservation à valider.")
-        return
-    
-    item = reservations_tree.item(selection[0])
-    reservation_id = item['values'][0]
-    passenger_name = item['values'][1]
-    flight_number = item['values'][2]
-    current_status = item['values'][7]
-    
-    # Vérifier que la réservation est active
-    if current_status != "Active":
-        messagebox.showwarning("Validation impossible", 
-                              f"Impossible de valider une réservation {current_status.lower()}.")
-        return
-    
-    # Vérifier que le check-in a été effectué
-    checkin_status = item['values'][6]
-    if checkin_status == "✗":
-        messagebox.showwarning("Check-in requis", 
-                              "Le check-in doit être effectué avant de valider la réservation.")
-        return
-    
-    if messagebox.askyesno("Confirmation", 
-                          f"Valider la réservation ?\n\n"
-                          f"Passager: {passenger_name}\n"
-                          f"Vol: {flight_number}\n\n"
-                          "Cette action marquera la réservation comme terminée."):
-        
-        # CORRECTION BUG: Utiliser les méthodes du data_manager
-        reservation_id_full = reservation_id.replace('...', '')
-        all_reservations = data_manager.get_reservations()
-        
-        for reservation in all_reservations:
-            if reservation.get('id_reservation', '').startswith(reservation_id_full):
-                # Mise à jour via data_manager
-                update_data = {
-                    'statut': 'terminee',
-                    'updated_at': datetime.now().isoformat()
-                }
-                success = data_manager.update_reservation(reservation.get('id_reservation'), update_data)
-                
-                if success:
-                    refresh_reservations_data(reservations_tree, data_manager)
-                    messagebox.showinfo("Succès", "Réservation validée avec succès.")
-                else:
-                    messagebox.showerror("Erreur", "Impossible de valider la réservation.")
-                return
-        
-        messagebox.showerror("Erreur", "Réservation non trouvée.")
-
-
 def cancel_reservation(data_manager, reservations_tree):
-    """CORRECTION BUG: Annule la réservation sélectionnée avec confirmation et mise à jour correcte"""
+    """Annule la réservation sélectionnée"""
     selection = reservations_tree.selection()
     if not selection:
         messagebox.showwarning("Sélection", "Veuillez sélectionner une réservation à annuler.")
         return
     
-    item = reservations_tree.item(selection[0])
-    reservation_id = item['values'][0]
-    passenger_name = item['values'][1]
-    flight_number = item['values'][2]
-    current_status = item['values'][7]
-    
-    # Vérifier que la réservation peut être annulée
-    if current_status in ["Annulée", "Terminée"]:
-        messagebox.showwarning("Annulation impossible", 
-                              f"Impossible d'annuler une réservation {current_status.lower()}.")
-        return
-    
-    if messagebox.askyesno("Confirmation", 
-                          f"Voulez-vous vraiment annuler la réservation ?\n\n"
-                          f"Passager: {passenger_name}\n"
-                          f"Vol: {flight_number}\n\n"
-                          "Cette action est irréversible."):
+    try:
+        item = reservations_tree.item(selection[0])
+        reservation_id = item['values'][0]
+        passenger_name = item['values'][1]
+        flight_number = item['values'][2]
+        current_status = item['values'][7]
         
-        # CORRECTION BUG: Utiliser les méthodes correctes du data_manager
-        reservation_id_full = reservation_id.replace('...', '')
-        all_reservations = data_manager.get_reservations()
+        if current_status in ["Annulée", "Terminée"]:
+            messagebox.showwarning("Annulation impossible", 
+                                  f"Impossible d'annuler une réservation {current_status.lower()}.")
+            return
         
-        for reservation in all_reservations:
-            if reservation.get('id_reservation', '').startswith(reservation_id_full):
-                # Mise à jour via data_manager avec statut annulée
-                update_data = {
-                    'statut': 'annulee',
-                    'checkin_effectue': False,  # Annuler aussi le check-in
-                    'updated_at': datetime.now().isoformat()
-                }
-                success = data_manager.update_reservation(reservation.get('id_reservation'), update_data)
-                
-                if success:
-                    # CORRECTION: Rafraîchissement immédiat forcé
-                    refresh_reservations_data(reservations_tree, data_manager)
-                    messagebox.showinfo("Succès", "Réservation annulée avec succès.")
-                else:
-                    messagebox.showerror("Erreur", "Impossible d'annuler la réservation.")
+        if messagebox.askyesno("Confirmation", 
+                              f"Voulez-vous vraiment annuler la réservation ?\n\n"
+                              f"Passager: {passenger_name}\n"
+                              f"Vol: {flight_number}"):
+            
+            # Annuler la réservation
+            data = data_manager.load_data('reservations')
+            if 'reservations' not in data:
                 return
-        
-        messagebox.showerror("Erreur", "Réservation non trouvée.")
+            
+            # Trouver et modifier la réservation
+            for i, reservation in enumerate(data['reservations']):
+                if reservation.get('id_reservation', '').startswith(reservation_id.replace('...', '')):
+                    data['reservations'][i]['statut'] = 'annulee'
+                    data['reservations'][i]['checkin_effectue'] = False
+                    data['reservations'][i]['updated_at'] = datetime.now().isoformat()
+                    break
+            
+            if data_manager.save_data('reservations', data):
+                refresh_reservations_data(reservations_tree, data_manager)
+                messagebox.showinfo("Succès", "Réservation annulée avec succès.")
+            else:
+                messagebox.showerror("Erreur", "Erreur lors de l'annulation.")
+    
+    except Exception as e:
+        messagebox.showerror("Erreur", f"Erreur lors de l'annulation: {e}")
 
 
 def toggle_checkin(data_manager, reservations_tree):
-    """Effectue ou annule le check-in - CORRECTION BUG"""
+    """Effectue ou annule le check-in"""
     selection = reservations_tree.selection()
     if not selection:
         messagebox.showwarning("Sélection", "Veuillez sélectionner une réservation.")
         return
     
-    item = reservations_tree.item(selection[0])
-    reservation_id = item['values'][0]
-    current_checkin = item['values'][6]
-    current_status = item['values'][7]
-    
-    # Vérifier que la réservation est active
-    if current_status != "Active":
-        messagebox.showwarning("Check-in impossible", 
-                              f"Impossible de faire le check-in d'une réservation {current_status.lower()}.")
-        return
-    
-    # Trouver la réservation et vérifier la disponibilité du check-in
-    reservation_id_full = reservation_id.replace('...', '')
-    all_reservations = data_manager.get_reservations()
-    reservation_data = None
-    
-    for reservation in all_reservations:
-        if reservation.get('id_reservation', '').startswith(reservation_id_full):
-            reservation_data = reservation
-            break
-    
-    if not reservation_data:
-        messagebox.showerror("Erreur", "Réservation non trouvée.")
-        return
-    
-    # Vérifier si le check-in est disponible
-    flights = data_manager.get_flights()
-    flight_data = None
-    for flight in flights:
-        if flight.get('numero_vol') == reservation_data.get('vol_numero'):
-            flight_data = flight
-            break
-    
-    if not flight_data:
-        messagebox.showerror("Erreur", "Vol non trouvé.")
-        return
-    
-    # Vérifier la fenêtre de check-in
     try:
-        if flight_data.get('heure_depart'):
-            if isinstance(flight_data['heure_depart'], str):
-                depart_time = datetime.fromisoformat(flight_data['heure_depart'])
-            else:
-                depart_time = flight_data['heure_depart']
-            
-            now = datetime.now()
-            time_to_departure = depart_time - now
-            
-            # Check-in disponible 24h avant, fermé 30min avant
-            checkin_available = (time_to_departure <= timedelta(hours=24) and 
-                               time_to_departure >= timedelta(minutes=30))
-            
-            if not checkin_available and current_checkin == "✗":
-                if time_to_departure > timedelta(hours=24):
-                    messagebox.showwarning("Check-in indisponible", 
-                                         "Le check-in n'est pas encore ouvert.\n"
-                                         "Il sera disponible 24h avant le départ.")
-                else:
-                    messagebox.showwarning("Check-in fermé", 
-                                         "Le check-in est fermé.\n"
-                                         "Il se ferme 30 minutes avant le départ.")
-                return
-    except:
-        messagebox.showerror("Erreur", "Impossible de vérifier l'heure de départ.")
-        return
-    
-    # Vérifier qu'un siège est assigné pour le check-in
-    if current_checkin == "✗" and not reservation_data.get('siege_assigne'):
-        messagebox.showwarning("Siège requis", 
-                              "Un siège doit être assigné avant le check-in.\n"
-                              "Modifiez la réservation pour assigner un siège.")
-        return
-    
-    # Effectuer ou annuler le check-in
-    new_checkin_status = not reservation_data.get('checkin_effectue', False)
-    action = "effectué" if new_checkin_status else "annulé"
-    
-    if messagebox.askyesno("Confirmation", f"Check-in {action} ?"):
-        # CORRECTION BUG: Mise à jour via data_manager
-        update_data = {
-            'checkin_effectue': new_checkin_status,
-            'updated_at': datetime.now().isoformat()
-        }
-        success = data_manager.update_reservation(reservation_data.get('id_reservation'), update_data)
+        item = reservations_tree.item(selection[0])
+        reservation_id = item['values'][0]
+        current_checkin = item['values'][6]
+        current_status = item['values'][7]
         
-        if success:
-            # CORRECTION: Rafraîchissement immédiat forcé
-            refresh_reservations_data(reservations_tree, data_manager)
-            messagebox.showinfo("Succès", f"Check-in {action} avec succès.")
-        else:
-            messagebox.showerror("Erreur", f"Impossible de {action.replace('é', 'er')} le check-in.")
+        if current_status != "Active":
+            messagebox.showwarning("Check-in impossible", 
+                                  f"Impossible de faire le check-in d'une réservation {current_status.lower()}.")
+            return
+        
+        new_checkin_status = current_checkin == "✗"
+        action = "effectué" if new_checkin_status else "annulé"
+        
+        if messagebox.askyesno("Confirmation", f"Check-in {action} ?"):
+            
+            # Modifier le check-in
+            data = data_manager.load_data('reservations')
+            if 'reservations' not in data:
+                return
+            
+            # Trouver et modifier la réservation
+            for i, reservation in enumerate(data['reservations']):
+                if reservation.get('id_reservation', '').startswith(reservation_id.replace('...', '')):
+                    data['reservations'][i]['checkin_effectue'] = new_checkin_status
+                    data['reservations'][i]['updated_at'] = datetime.now().isoformat()
+                    break
+            
+            if data_manager.save_data('reservations', data):
+                refresh_reservations_data(reservations_tree, data_manager)
+                messagebox.showinfo("Succès", f"Check-in {action} avec succès.")
+            else:
+                messagebox.showerror("Erreur", f"Erreur lors du check-in.")
+    
+    except Exception as e:
+        messagebox.showerror("Erreur", f"Erreur lors du check-in: {e}")
 
 
 def filter_reservations(reservations_tree, data_manager, search_var, filter_var):
-    """Filtre la liste des réservations - AMÉLIORATION"""
+    """Filtre la liste des réservations"""
     search_text = search_var.get().lower()
     filter_status = filter_var.get()
     
@@ -1102,81 +844,86 @@ def filter_reservations(reservations_tree, data_manager, search_var, filter_var)
             reservation_status
         )
         
-        # Coloration selon le statut
         item_id = reservations_tree.insert('', 'end', values=values)
         if reservation_status == 'Annulée':
             reservations_tree.set(item_id, 'Statut', '❌ Annulée')
         elif reservation_status == 'Terminée':
             reservations_tree.set(item_id, 'Statut', '✅ Terminée')
-        elif reservation.get('checkin_effectue', False):
-            reservations_tree.set(item_id, 'Check-in', '✅ Fait')
 
 
 def refresh_reservations_data(reservations_tree, data_manager):
-    """CORRECTION: Rafraîchit les données des réservations avec meilleure gestion"""
-    # Vider le tableau
-    for item in reservations_tree.get_children():
-        reservations_tree.delete(item)
-    
-    # Forcer le rechargement des données
-    data_manager.clear_cache()
-    all_reservations = data_manager.get_reservations()
-    passengers = data_manager.get_passengers()
-    flights = data_manager.get_flights()
-    
-    # Mapping des statuts pour l'affichage
-    status_mapping = {
-        'active': 'Active',
-        'annulee': 'Annulée',
-        'terminee': 'Terminée',
-        'expiree': 'Expirée'
-    }
-    
-    for reservation in all_reservations:
-        reservation_status = status_mapping.get(reservation.get('statut', ''), 'Inconnu')
+    """Rafraîchit les données des réservations"""
+    try:
+        print("🔄 Rafraîchissement des données réservations...")
         
-        # Trouver les informations du passager
-        passenger_name = "Inconnu"
-        for passenger in passengers:
-            if passenger.get('id_passager') == reservation.get('passager_id'):
-                passenger_name = f"{passenger.get('prenom', '')} {passenger.get('nom', '')}"
-                break
+        # Vider le tableau
+        for item in reservations_tree.get_children():
+            reservations_tree.delete(item)
         
-        # Trouver les informations du vol
-        flight_route = "N/A"
-        flight_date = "N/A"
-        for flight in flights:
-            if flight.get('numero_vol') == reservation.get('vol_numero'):
-                flight_route = f"{flight.get('aeroport_depart', '')} → {flight.get('aeroport_arrivee', '')}"
-                try:
-                    if flight.get('heure_depart'):
-                        if isinstance(flight['heure_depart'], str):
-                            depart_time = datetime.fromisoformat(flight['heure_depart'])
-                        else:
-                            depart_time = flight['heure_depart']
-                        flight_date = depart_time.strftime("%Y-%m-%d %H:%M")
-                except:
-                    pass
-                break
+        all_reservations = data_manager.get_reservations()
+        passengers = data_manager.get_passengers()
+        flights = data_manager.get_flights()
         
-        values = (
-            reservation.get('id_reservation', '')[:8] + '...' if len(reservation.get('id_reservation', '')) > 8 else reservation.get('id_reservation', ''),
-            passenger_name,
-            reservation.get('vol_numero', ''),
-            flight_route,
-            flight_date,
-            reservation.get('siege_assigne', 'N/A'),
-            "✓" if reservation.get('checkin_effectue', False) else "✗",
-            reservation_status
-        )
+        print(f"  📊 {len(all_reservations)} réservations chargées")
         
-        # Coloration selon le statut
-        item_id = reservations_tree.insert('', 'end', values=values)
-        if reservation_status == 'Annulée':
-            reservations_tree.set(item_id, 'Statut', '❌ Annulée')
-        elif reservation_status == 'Terminée':
-            reservations_tree.set(item_id, 'Statut', '✅ Terminée')
-        elif reservation.get('checkin_effectue', False):
-            reservations_tree.set(item_id, 'Check-in', '✅ Fait')
-    
-    print(f"✓ Données réservations rafraîchies: {len(all_reservations)} réservations chargées")
+        # Mapping des statuts pour l'affichage
+        status_mapping = {
+            'active': 'Active',
+            'annulee': 'Annulée',
+            'terminee': 'Terminée',
+            'expiree': 'Expirée'
+        }
+        
+        for reservation in all_reservations:
+            try:
+                reservation_status = status_mapping.get(reservation.get('statut', ''), 'Inconnu')
+                
+                # Trouver les informations du passager
+                passenger_name = "Inconnu"
+                for passenger in passengers:
+                    if passenger.get('id_passager') == reservation.get('passager_id'):
+                        passenger_name = f"{passenger.get('prenom', '')} {passenger.get('nom', '')}"
+                        break
+                
+                # Trouver les informations du vol
+                flight_route = "N/A"
+                flight_date = "N/A"
+                for flight in flights:
+                    if flight.get('numero_vol') == reservation.get('vol_numero'):
+                        flight_route = f"{flight.get('aeroport_depart', '')} → {flight.get('aeroport_arrivee', '')}"
+                        try:
+                            if flight.get('heure_depart'):
+                                if isinstance(flight['heure_depart'], str):
+                                    depart_time = datetime.fromisoformat(flight['heure_depart'])
+                                else:
+                                    depart_time = flight['heure_depart']
+                                flight_date = depart_time.strftime("%Y-%m-%d %H:%M")
+                        except:
+                            pass
+                        break
+                
+                values = (
+                    reservation.get('id_reservation', '')[:8] + '...' if len(reservation.get('id_reservation', '')) > 8 else reservation.get('id_reservation', ''),
+                    passenger_name,
+                    reservation.get('vol_numero', ''),
+                    flight_route,
+                    flight_date,
+                    reservation.get('siege_assigne', 'N/A'),
+                    "✓" if reservation.get('checkin_effectue', False) else "✗",
+                    reservation_status
+                )
+                
+                item_id = reservations_tree.insert('', 'end', values=values)
+                if reservation_status == 'Annulée':
+                    reservations_tree.set(item_id, 'Statut', '❌ Annulée')
+                elif reservation_status == 'Terminée':
+                    reservations_tree.set(item_id, 'Statut', '✅ Terminée')
+                    
+            except Exception as e:
+                print(f"  ⚠️ Erreur traitement réservation: {e}")
+                continue
+        
+        print(f"✅ Réservations rafraîchies: {len(all_reservations)} réservations affichées")
+        
+    except Exception as e:
+        print(f"❌ Erreur refresh réservations: {e}")

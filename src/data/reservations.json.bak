@@ -1,17 +1,16 @@
 {
   "reservations": [
     {
-      "id_reservation": "e0e193a4-cdc6-4eea-a089-399c2480e989",
-      "passager_id": "0f054701-f830-4ef9-9ffa-7ac8fb2e87fb",
-      "vol_numero": "1",
+      "id_reservation": "f9cda86c-ea75-4257-9432-908829782ed1",
+      "passager_id": "3ed4a5b1-b84e-4e81-8334-f68b5bd9a0f2",
+      "vol_numero": "1245",
       "siege_assigne": "12A",
       "checkin_effectue": false,
       "statut": "annulee",
-      "date_creation": "2025-06-20T23:29:27.579128",
-      "validite": "2025-06-21T23:29:27.579128",
-      "created_at": "2025-06-20T23:29:27.579128",
-      "updated_at": "2025-06-21T23:51:30.297054"
+      "date_creation": "2025-06-22T02:20:46.883710",
+      "validite": "2025-06-23T02:20:46.883710",
+      "updated_at": "2025-06-22T02:20:57.510039"
     }
   ],
-  "last_modified": "2025-06-21T23:51:30.298051"
+  "last_modified": "2025-06-22T02:20:57.511041"
 }

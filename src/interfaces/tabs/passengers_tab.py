@@ -15,14 +15,6 @@ class PassengerDialog:
     """Dialogue pour créer ou modifier un passager"""
     
     def __init__(self, parent, data_manager, passenger_data=None):
-        """
-        Initialise le dialogue.
-        
-        Args:
-            parent: Fenêtre parente
-            data_manager: Gestionnaire de données
-            passenger_data: Données du passager existant (pour modification)
-        """
         self.parent = parent
         self.data_manager = data_manager
         self.passenger_data = passenger_data
@@ -96,10 +88,6 @@ class PassengerDialog:
         # Section documents
         self.create_documents_section(main_frame)
         
-        # Section historique (si modification)
-        if self.is_editing:
-            self.create_history_section(main_frame)
-        
         # Boutons
         self.create_buttons(main_frame)
     
@@ -108,20 +96,17 @@ class PassengerDialog:
         personal_frame = ttk.LabelFrame(parent, text="👤 Informations Personnelles", padding=15)
         personal_frame.pack(fill="x", pady=(0, 10))
         
-        # Configuration de la grille
         personal_frame.grid_columnconfigure(1, weight=1)
         
         # Nom
         ttk.Label(personal_frame, text="Nom*:").grid(row=0, column=0, sticky="w", pady=5)
         self.nom_entry = ttk.Entry(personal_frame, textvariable=self.nom_var, width=30)
         self.nom_entry.grid(row=0, column=1, sticky="ew", padx=(10, 5), pady=5)
-        ttk.Label(personal_frame, text="Ex: MARTIN", foreground="gray").grid(row=0, column=2, sticky="w", padx=5)
         
         # Prénom
         ttk.Label(personal_frame, text="Prénom*:").grid(row=1, column=0, sticky="w", pady=5)
         self.prenom_entry = ttk.Entry(personal_frame, textvariable=self.prenom_var, width=30)
         self.prenom_entry.grid(row=1, column=1, sticky="ew", padx=(10, 5), pady=5)
-        ttk.Label(personal_frame, text="Ex: Jean", foreground="gray").grid(row=1, column=2, sticky="w", padx=5)
         
         # Sexe
         ttk.Label(personal_frame, text="Sexe*:").grid(row=2, column=0, sticky="w", pady=5)
@@ -134,13 +119,11 @@ class PassengerDialog:
         ttk.Label(personal_frame, text="Date de naissance:").grid(row=3, column=0, sticky="w", pady=5)
         self.date_naissance_entry = ttk.Entry(personal_frame, textvariable=self.date_naissance_var, width=15)
         self.date_naissance_entry.grid(row=3, column=1, sticky="w", padx=(10, 5), pady=5)
-        ttk.Label(personal_frame, text="Format: YYYY-MM-DD", foreground="gray").grid(row=3, column=2, sticky="w", padx=5)
         
         # Adresse
         ttk.Label(personal_frame, text="Adresse*:").grid(row=4, column=0, sticky="w", pady=5)
         self.adresse_entry = ttk.Entry(personal_frame, textvariable=self.adresse_var, width=50)
         self.adresse_entry.grid(row=4, column=1, sticky="ew", padx=(10, 5), pady=5)
-        ttk.Label(personal_frame, text="Ex: 123 Rue de la Paix, Paris", foreground="gray").grid(row=4, column=2, sticky="w", padx=5)
     
     def create_contact_section(self, parent):
         """Crée la section des informations de contact"""
@@ -153,13 +136,11 @@ class PassengerDialog:
         ttk.Label(contact_frame, text="Téléphone:").grid(row=0, column=0, sticky="w", pady=5)
         self.telephone_entry = ttk.Entry(contact_frame, textvariable=self.telephone_var, width=20)
         self.telephone_entry.grid(row=0, column=1, sticky="w", padx=(10, 5), pady=5)
-        ttk.Label(contact_frame, text="Ex: +33 1 23 45 67 89", foreground="gray").grid(row=0, column=2, sticky="w", padx=5)
         
         # Email
         ttk.Label(contact_frame, text="Email:").grid(row=1, column=0, sticky="w", pady=5)
         self.email_entry = ttk.Entry(contact_frame, textvariable=self.email_var, width=40)
         self.email_entry.grid(row=1, column=1, sticky="ew", padx=(10, 5), pady=5)
-        ttk.Label(contact_frame, text="Ex: jean.martin@email.com", foreground="gray").grid(row=1, column=2, sticky="w", padx=5)
     
     def create_documents_section(self, parent):
         """Crée la section des documents"""
@@ -172,37 +153,6 @@ class PassengerDialog:
         ttk.Label(docs_frame, text="Numéro de passeport:").grid(row=0, column=0, sticky="w", pady=5)
         self.passeport_entry = ttk.Entry(docs_frame, textvariable=self.numero_passeport_var, width=20)
         self.passeport_entry.grid(row=0, column=1, sticky="w", padx=(10, 5), pady=5)
-        ttk.Label(docs_frame, text="Ex: 12AB34567", foreground="gray").grid(row=0, column=2, sticky="w", padx=5)
-        
-        # Note sur la validation
-        note_label = ttk.Label(docs_frame, text="Note: Aucune validation de passeport n'est effectuée", 
-                              foreground="gray", font=('Arial', 9))
-        note_label.grid(row=1, column=0, columnspan=3, sticky="w", pady=(5, 0))
-    
-    def create_history_section(self, parent):
-        """Crée la section historique (pour modification uniquement)"""
-        history_frame = ttk.LabelFrame(parent, text="📊 Historique", padding=15)
-        history_frame.pack(fill="x", pady=(0, 10))
-        
-        # Informations sur les réservations
-        if self.passenger_data:
-            # Compter les réservations
-            all_reservations = self.data_manager.get_reservations()
-            passenger_reservations = [r for r in all_reservations 
-                                    if r.get('passager_id') == self.passenger_data.get('id_passager')]
-            
-            info_text = f"Nombre de réservations: {len(passenger_reservations)}"
-            if passenger_reservations:
-                # Dernière réservation
-                last_reservation = max(passenger_reservations, 
-                                     key=lambda x: x.get('created_at', ''))
-                try:
-                    last_date = datetime.fromisoformat(last_reservation.get('created_at', ''))
-                    info_text += f"\nDernière réservation: {last_date.strftime('%Y-%m-%d')}"
-                except:
-                    pass
-            
-            ttk.Label(history_frame, text=info_text, font=('Arial', 10)).pack(anchor="w")
     
     def create_buttons(self, parent):
         """Crée les boutons du dialogue"""
@@ -250,21 +200,20 @@ class PassengerDialog:
         self.numero_passeport_var.set(self.passenger_data.get('numero_passeport', ''))
         
         # Date de naissance
-        try:
-            if self.passenger_data.get('date_naissance'):
+        if self.passenger_data.get('date_naissance'):
+            try:
                 if isinstance(self.passenger_data['date_naissance'], str):
                     birth_date = datetime.fromisoformat(self.passenger_data['date_naissance'])
                 else:
                     birth_date = self.passenger_data['date_naissance']
                 self.date_naissance_var.set(birth_date.strftime("%Y-%m-%d"))
-        except:
-            pass
+            except:
+                pass
     
     def validate_fields(self):
         """Valide tous les champs obligatoires"""
         errors = []
         
-        # Vérifications de base
         if not self.nom_var.get().strip():
             errors.append("Le nom est obligatoire")
         
@@ -284,10 +233,8 @@ class PassengerDialog:
         if date_naissance:
             try:
                 birth_date = datetime.strptime(date_naissance, "%Y-%m-%d")
-                # Vérifier que la date n'est pas dans le futur
                 if birth_date > datetime.now():
                     errors.append("La date de naissance ne peut pas être dans le futur")
-                # Vérifier un âge raisonnable (0-120 ans)
                 age = (datetime.now() - birth_date).days / 365.25
                 if age > 120:
                     errors.append("Âge non valide (plus de 120 ans)")
@@ -298,7 +245,6 @@ class PassengerDialog:
     
     def save_passenger(self):
         """Sauvegarde le passager"""
-        # Validation
         errors = self.validate_fields()
         if errors:
             messagebox.showerror("Erreurs de Validation", 
@@ -307,7 +253,6 @@ class PassengerDialog:
             return
         
         try:
-            # Mapping des énumérations
             sexe_mapping = {
                 'Masculin': 'masculin',
                 'Féminin': 'feminin',
@@ -330,33 +275,18 @@ class PassengerDialog:
                 'email': self.email_var.get().strip(),
                 'numero_passeport': self.numero_passeport_var.get().strip(),
                 'date_naissance': date_naissance.isoformat() if date_naissance else None,
-                'checkin_effectue': False,
-                'reservations_count': 0
+                'checkin_effectue': self.passenger_data.get('checkin_effectue', False) if self.is_editing else False,
+                'reservations_count': self.passenger_data.get('reservations_count', 0) if self.is_editing else 0,
+                'created_at': self.passenger_data.get('created_at', datetime.now().isoformat()) if self.is_editing else datetime.now().isoformat(),
+                'updated_at': datetime.now().isoformat()
             }
             
             # Sauvegarder
             if self.is_editing:
-                # Pour la modification
-                all_passengers = self.data_manager.get_passengers()
-                for i, passenger in enumerate(all_passengers):
-                    if passenger.get('id_passager') == passenger_data['id_passager']:
-                        passenger_data['updated_at'] = datetime.now().isoformat()
-                        # Conserver le nombre de réservations
-                        passenger_data['reservations_count'] = passenger.get('reservations_count', 0)
-                        all_passengers[i] = {**passenger, **passenger_data}
-                        break
-                
-                data = self.data_manager.load_data('passengers')
-                data['passengers'] = all_passengers
-                success = self.data_manager.save_data('passengers', data)
+                success = self.safe_update_passenger(passenger_data)
                 action = "modifié"
             else:
-                passenger_data['created_at'] = datetime.now().isoformat()
-                data = self.data_manager.load_data('passengers')
-                if 'passengers' not in data:
-                    data['passengers'] = []
-                data['passengers'].append(passenger_data)
-                success = self.data_manager.save_data('passengers', data)
+                success = self.safe_add_passenger(passenger_data)
                 action = "créé"
             
             if success:
@@ -369,6 +299,46 @@ class PassengerDialog:
         except Exception as e:
             messagebox.showerror("Erreur", f"Erreur lors de la sauvegarde:\n{e}")
             print(f"❌ Erreur sauvegarde passager: {e}")
+    
+    def safe_add_passenger(self, passenger_data):
+        """Ajout sécurisé de passager"""
+        try:
+            data = self.data_manager.load_data('passengers')
+            if 'passengers' not in data:
+                data['passengers'] = []
+            
+            data['passengers'].append(passenger_data)
+            return self.data_manager.save_data('passengers', data)
+        except Exception as e:
+            print(f"❌ Erreur ajout passager: {e}")
+            return False
+    
+    def safe_update_passenger(self, passenger_data):
+        """Mise à jour sécurisée de passager"""
+        try:
+            data = self.data_manager.load_data('passengers')
+            if 'passengers' not in data:
+                return False
+            
+            # Trouver le passager à modifier
+            passenger_index = -1
+            original_id = self.passenger_data.get('id_passager')
+            
+            for i, passenger in enumerate(data['passengers']):
+                if passenger.get('id_passager') == original_id:
+                    passenger_index = i
+                    break
+            
+            if passenger_index == -1:
+                print(f"❌ Passager {original_id} non trouvé")
+                return False
+            
+            # Mettre à jour
+            data['passengers'][passenger_index] = passenger_data
+            return self.data_manager.save_data('passengers', data)
+        except Exception as e:
+            print(f"❌ Erreur modification passager: {e}")
+            return False
     
     def cancel(self):
         """Annule le dialogue"""
@@ -405,44 +375,39 @@ def create_passengers_tab_content(parent_frame, data_manager):
     def filter_passengers_callback(event=None):
         filter_passengers(passengers_tree, data_manager, passengers_search_var, passengers_filter_var)
     
-    def create_reservation_callback():
-        create_reservation_for_passenger(parent_frame, data_manager, passengers_tree)
-    
     ttk.Button(toolbar, text="➕ Nouveau Passager", 
               command=new_passenger_callback, 
               style='Action.TButton').grid(row=0, column=0, padx=(0, 5))
     ttk.Button(toolbar, text="✏️ Modifier", 
               command=edit_passenger_callback).grid(row=0, column=1, padx=(0, 5))
-    ttk.Button(toolbar, text="🎫 Créer Réservation", 
-              command=create_reservation_callback).grid(row=0, column=2, padx=(0, 5))
     ttk.Button(toolbar, text="👁️ Voir Détails", 
-              command=view_passenger_callback).grid(row=0, column=3, padx=(0, 5))
+              command=view_passenger_callback).grid(row=0, column=2, padx=(0, 5))
     ttk.Button(toolbar, text="🗑️ Supprimer", 
               command=delete_passenger_callback, 
-              style='Danger.TButton').grid(row=0, column=4, padx=(0, 20))
+              style='Danger.TButton').grid(row=0, column=3, padx=(0, 20))
     
     # Recherche
-    ttk.Label(toolbar, text="🔍 Recherche:").grid(row=0, column=5, padx=(0, 5))
+    ttk.Label(toolbar, text="🔍 Recherche:").grid(row=0, column=4, padx=(0, 5))
     search_entry = ttk.Entry(toolbar, textvariable=passengers_search_var, width=20)
-    search_entry.grid(row=0, column=6, padx=(0, 5))
+    search_entry.grid(row=0, column=5, padx=(0, 5))
     search_entry.bind('<KeyRelease>', filter_passengers_callback)
     
     # Filtre par sexe
-    ttk.Label(toolbar, text="Sexe:").grid(row=0, column=7, padx=(10, 5))
+    ttk.Label(toolbar, text="Sexe:").grid(row=0, column=6, padx=(10, 5))
     filter_combo = ttk.Combobox(toolbar, textvariable=passengers_filter_var, width=15, state="readonly")
     filter_combo['values'] = ['Tous', 'Masculin', 'Féminin', 'Autre']
-    filter_combo.grid(row=0, column=8, padx=(0, 5))
+    filter_combo.grid(row=0, column=7, padx=(0, 5))
     filter_combo.bind('<<ComboboxSelected>>', filter_passengers_callback)
     
     # Tableau des passagers
-    columns = ('ID', 'Nom', 'Prénom', 'Sexe', 'Âge', 'Contact', 'Réservations', 'Check-in')
+    columns = ('ID', 'Nom', 'Prénom', 'Sexe', 'Contact', 'Passeport', 'Check-in')
     passengers_tree = ttk.Treeview(parent_frame, columns=columns, show='headings')
     passengers_tree.grid(row=1, column=0, sticky="nsew", padx=10, pady=(0, 10))
     
     # Configuration colonnes
     column_widths = {
         'ID': 100, 'Nom': 120, 'Prénom': 120, 'Sexe': 80, 
-        'Âge': 60, 'Contact': 200, 'Réservations': 100, 'Check-in': 80
+        'Contact': 200, 'Passeport': 120, 'Check-in': 80
     }
     for col in columns:
         passengers_tree.heading(col, text=col)
@@ -484,24 +449,31 @@ def edit_passenger(parent, data_manager, passengers_tree):
         messagebox.showwarning("Sélection", "Veuillez sélectionner un passager à modifier.")
         return
     
-    item = passengers_tree.item(selection[0])
-    passenger_id = item['values'][0]
-    
-    # Trouver les données complètes du passager
-    all_passengers = data_manager.get_passengers()
-    passenger_data = None
-    for passenger in all_passengers:
-        if passenger.get('id_passager', '').startswith(passenger_id.replace('...', '')):
-            passenger_data = passenger
-            break
-    
-    if not passenger_data:
-        messagebox.showerror("Erreur", "Passager non trouvé.")
-        return
-    
-    dialog = PassengerDialog(parent, data_manager, passenger_data)
-    if dialog.result:
-        refresh_passengers_data(passengers_tree, data_manager)
+    try:
+        item = passengers_tree.item(selection[0])
+        passenger_id = item['values'][0]
+        
+        # Recherche robuste du passager
+        all_passengers = data_manager.get_passengers()
+        passenger_data = None
+        
+        for passenger in all_passengers:
+            if passenger.get('id_passager', '').startswith(passenger_id.replace('...', '')):
+                passenger_data = passenger
+                break
+        
+        if not passenger_data:
+            messagebox.showerror("Erreur", f"Passager non trouvé.")
+            return
+        
+        # Ouvrir le dialogue de modification
+        dialog = PassengerDialog(parent, data_manager, passenger_data)
+        if dialog.result:
+            refresh_passengers_data(passengers_tree, data_manager)
+            messagebox.showinfo("Succès", "Passager modifié avec succès!")
+            
+    except Exception as e:
+        messagebox.showerror("Erreur", f"Erreur lors de la modification: {e}")
 
 
 def view_passenger_details(passengers_tree, data_manager):
@@ -526,11 +498,6 @@ def view_passenger_details(passengers_tree, data_manager):
         messagebox.showerror("Erreur", "Passager non trouvé.")
         return
     
-    # Construire les détails avec les réservations
-    all_reservations = data_manager.get_reservations()
-    passenger_reservations = [r for r in all_reservations 
-                            if r.get('passager_id') == passenger_data.get('id_passager')]
-    
     details = f"""Détails du Passager
 
 Informations personnelles:
@@ -546,26 +513,11 @@ Contact:
 Documents:
 • Passeport: {passenger_data.get('numero_passeport', 'N/A')}
 
-Historique:
-• Réservations: {len(passenger_reservations)}
-• Check-in effectué: {'Oui' if passenger_data.get('checkin_effectue', False) else 'Non'}"""
+Statut:
+• Check-in effectué: {'Oui' if passenger_data.get('checkin_effectue', False) else 'Non'}
+• Nombre de réservations: {passenger_data.get('reservations_count', 0)}"""
     
     messagebox.showinfo("Détails du Passager", details)
-
-
-def create_reservation_for_passenger(parent, data_manager, passengers_tree):
-    """Crée une réservation pour le passager sélectionné"""
-    selection = passengers_tree.selection()
-    if not selection:
-        messagebox.showwarning("Sélection", "Veuillez sélectionner un passager.")
-        return
-    
-    item = passengers_tree.item(selection[0])
-    passenger_name = f"{item['values'][2]} {item['values'][1]}"
-    
-    messagebox.showinfo("Créer Réservation", 
-                       f"Fonctionnalité à venir:\nCréer une réservation pour {passenger_name}\n\n"
-                       "Cette fonctionnalité sera disponible dans l'onglet Réservations.")
 
 
 def delete_passenger(data_manager, passengers_tree):
@@ -575,44 +527,47 @@ def delete_passenger(data_manager, passengers_tree):
         messagebox.showwarning("Sélection", "Veuillez sélectionner un passager à supprimer.")
         return
     
-    item = passengers_tree.item(selection[0])
-    passenger_id = item['values'][0]
-    passenger_name = f"{item['values'][2]} {item['values'][1]}"
+    try:
+        item = passengers_tree.item(selection[0])
+        passenger_id = item['values'][0]
+        passenger_name = f"{item['values'][2]} {item['values'][1]}"
+        
+        # Vérifier s'il y a des réservations actives
+        all_reservations = data_manager.get_reservations()
+        active_reservations = [r for r in all_reservations 
+                              if r.get('passager_id', '').startswith(passenger_id.replace('...', '')) 
+                              and r.get('statut') == 'active']
+        
+        if active_reservations:
+            messagebox.showwarning("Suppression impossible", 
+                                  f"Impossible de supprimer {passenger_name}.\n"
+                                  f"Le passager a {len(active_reservations)} réservation(s) active(s).")
+            return
+        
+        if messagebox.askyesno("Confirmation", 
+                              f"Voulez-vous vraiment supprimer {passenger_name} ?"):
+            
+            # Supprimer de la liste
+            data = data_manager.load_data('passengers')
+            if 'passengers' not in data:
+                return
+            
+            original_count = len(data['passengers'])
+            data['passengers'] = [p for p in data['passengers'] 
+                                 if not p.get('id_passager', '').startswith(passenger_id.replace('...', ''))]
+            
+            if len(data['passengers']) == original_count:
+                messagebox.showerror("Erreur", "Passager non trouvé.")
+                return
+            
+            if data_manager.save_data('passengers', data):
+                refresh_passengers_data(passengers_tree, data_manager)
+                messagebox.showinfo("Succès", "Passager supprimé avec succès.")
+            else:
+                messagebox.showerror("Erreur", "Erreur lors de la suppression.")
     
-    # Vérifier s'il y a des réservations actives
-    all_reservations = data_manager.get_reservations()
-    active_reservations = [r for r in all_reservations 
-                          if r.get('passager_id', '').startswith(passenger_id.replace('...', '')) 
-                          and r.get('statut') == 'active']
-    
-    if active_reservations:
-        messagebox.showwarning("Suppression impossible", 
-                              f"Impossible de supprimer {passenger_name}.\n"
-                              f"Le passager a {len(active_reservations)} réservation(s) active(s).\n\n"
-                              "Annulez d'abord les réservations.")
-        return
-    
-    if messagebox.askyesno("Confirmation", 
-                          f"Voulez-vous vraiment supprimer {passenger_name} ?\n\n"
-                          "Cette action est irréversible."):
-        
-        # Supprimer de la liste
-        all_passengers = data_manager.get_passengers()
-        updated_passengers = []
-        
-        for passenger in all_passengers:
-            if not passenger.get('id_passager', '').startswith(passenger_id.replace('...', '')):
-                updated_passengers.append(passenger)
-        
-        # Sauvegarder
-        data = data_manager.load_data('passengers')
-        data['passengers'] = updated_passengers
-        
-        if data_manager.save_data('passengers', data):
-            refresh_passengers_data(passengers_tree, data_manager)
-            messagebox.showinfo("Succès", "Passager supprimé avec succès.")
-        else:
-            messagebox.showerror("Erreur", "Impossible de supprimer le passager.")
+    except Exception as e:
+        messagebox.showerror("Erreur", f"Erreur lors de la suppression: {e}")
 
 
 def filter_passengers(passengers_tree, data_manager, search_var, filter_var):
@@ -646,19 +601,6 @@ def filter_passengers(passengers_tree, data_manager, search_var, filter_var):
         if search_text and search_text not in searchable_text:
             continue
         
-        # Calculer l'âge
-        age = "N/A"
-        try:
-            if passenger.get('date_naissance'):
-                if isinstance(passenger['date_naissance'], str):
-                    birth_date = datetime.fromisoformat(passenger['date_naissance'])
-                else:
-                    birth_date = passenger['date_naissance']
-                
-                age = int((datetime.now() - birth_date).days / 365.25)
-        except:
-            pass
-        
         # Contact (priorité email puis téléphone)
         contact = ""
         if passenger.get('email'):
@@ -666,19 +608,13 @@ def filter_passengers(passengers_tree, data_manager, search_var, filter_var):
         elif passenger.get('numero_telephone'):
             contact = passenger.get('numero_telephone')
         
-        # Compter les réservations
-        all_reservations = data_manager.get_reservations()
-        passenger_reservations = [r for r in all_reservations 
-                                if r.get('passager_id') == passenger.get('id_passager')]
-        
         values = (
             passenger.get('id_passager', '')[:8] + '...' if len(passenger.get('id_passager', '')) > 8 else passenger.get('id_passager', ''),
             passenger.get('nom', ''),
             passenger.get('prenom', ''),
             passenger_sexe,
-            str(age),
             contact,
-            str(len(passenger_reservations)),
+            passenger.get('numero_passeport', 'N/A'),
             "✓" if passenger.get('checkin_effectue', False) else "✗"
         )
         
@@ -687,57 +623,51 @@ def filter_passengers(passengers_tree, data_manager, search_var, filter_var):
 
 def refresh_passengers_data(passengers_tree, data_manager):
     """Rafraîchit les données des passagers"""
-    # Vider le tableau
-    for item in passengers_tree.get_children():
-        passengers_tree.delete(item)
-    
-    # Recharger les données
-    all_passengers = data_manager.get_passengers()
-    all_reservations = data_manager.get_reservations()
-    
-    # Mapping des sexes pour l'affichage
-    sexe_mapping = {
-        'masculin': 'Masculin',
-        'feminin': 'Féminin',
-        'autre': 'Autre'
-    }
-    
-    for passenger in all_passengers:
-        passenger_sexe = sexe_mapping.get(passenger.get('sexe', ''), 'Inconnu')
+    try:
+        print("🔄 Rafraîchissement des données passagers...")
         
-        # Calculer l'âge
-        age = "N/A"
-        try:
-            if passenger.get('date_naissance'):
-                if isinstance(passenger['date_naissance'], str):
-                    birth_date = datetime.fromisoformat(passenger['date_naissance'])
-                else:
-                    birth_date = passenger['date_naissance']
+        # Vider le tableau
+        for item in passengers_tree.get_children():
+            passengers_tree.delete(item)
+        
+        all_passengers = data_manager.get_passengers()
+        print(f"  📊 {len(all_passengers)} passagers chargés")
+        
+        # Mapping des sexes pour l'affichage
+        sexe_mapping = {
+            'masculin': 'Masculin',
+            'feminin': 'Féminin',
+            'autre': 'Autre'
+        }
+        
+        for passenger in all_passengers:
+            try:
+                passenger_sexe = sexe_mapping.get(passenger.get('sexe', ''), 'Inconnu')
                 
-                age = int((datetime.now() - birth_date).days / 365.25)
-        except:
-            pass
+                # Contact (priorité email puis téléphone)
+                contact = ""
+                if passenger.get('email'):
+                    contact = passenger.get('email')
+                elif passenger.get('numero_telephone'):
+                    contact = passenger.get('numero_telephone')
+                
+                values = (
+                    passenger.get('id_passager', '')[:8] + '...' if len(passenger.get('id_passager', '')) > 8 else passenger.get('id_passager', ''),
+                    passenger.get('nom', ''),
+                    passenger.get('prenom', ''),
+                    passenger_sexe,
+                    contact,
+                    passenger.get('numero_passeport', 'N/A'),
+                    "✓" if passenger.get('checkin_effectue', False) else "✗"
+                )
+                
+                passengers_tree.insert('', 'end', values=values)
+                
+            except Exception as e:
+                print(f"  ⚠️ Erreur traitement passager: {e}")
+                continue
         
-        # Contact (priorité email puis téléphone)
-        contact = ""
-        if passenger.get('email'):
-            contact = passenger.get('email')
-        elif passenger.get('numero_telephone'):
-            contact = passenger.get('numero_telephone')
+        print(f"✅ Passagers rafraîchis: {len(all_passengers)} passagers affichés")
         
-        # Compter les réservations pour ce passager
-        passenger_reservations = [r for r in all_reservations 
-                                if r.get('passager_id') == passenger.get('id_passager')]
-        
-        values = (
-            passenger.get('id_passager', '')[:8] + '...' if len(passenger.get('id_passager', '')) > 8 else passenger.get('id_passager', ''),
-            passenger.get('nom', ''),
-            passenger.get('prenom', ''),
-            passenger_sexe,
-            str(age),
-            contact,
-            str(len(passenger_reservations)),
-            "✓" if passenger.get('checkin_effectue', False) else "✗"
-        )
-        
-        passengers_tree.insert('', 'end', values=values)
+    except Exception as e:
+        print(f"❌ Erreur refresh passagers: {e}")

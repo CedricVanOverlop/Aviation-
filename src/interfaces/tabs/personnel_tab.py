@@ -15,14 +15,6 @@ class PersonnelDialog:
     """Dialogue pour créer ou modifier un membre du personnel"""
     
     def __init__(self, parent, data_manager, personnel_data=None):
-        """
-        Initialise le dialogue.
-        
-        Args:
-            parent: Fenêtre parente
-            data_manager: Gestionnaire de données
-            personnel_data: Données du personnel existant (pour modification)
-        """
         self.parent = parent
         self.data_manager = data_manager
         self.personnel_data = personnel_data
@@ -112,20 +104,17 @@ class PersonnelDialog:
         personal_frame = ttk.LabelFrame(parent, text="👤 Informations Personnelles", padding=15)
         personal_frame.pack(fill="x", pady=(0, 10))
         
-        # Configuration de la grille
         personal_frame.grid_columnconfigure(1, weight=1)
         
         # Nom
         ttk.Label(personal_frame, text="Nom*:").grid(row=0, column=0, sticky="w", pady=5)
         self.nom_entry = ttk.Entry(personal_frame, textvariable=self.nom_var, width=30)
         self.nom_entry.grid(row=0, column=1, sticky="ew", padx=(10, 5), pady=5)
-        ttk.Label(personal_frame, text="Ex: MARTIN", foreground="gray").grid(row=0, column=2, sticky="w", padx=5)
         
         # Prénom
         ttk.Label(personal_frame, text="Prénom*:").grid(row=1, column=0, sticky="w", pady=5)
         self.prenom_entry = ttk.Entry(personal_frame, textvariable=self.prenom_var, width=30)
         self.prenom_entry.grid(row=1, column=1, sticky="ew", padx=(10, 5), pady=5)
-        ttk.Label(personal_frame, text="Ex: Jean", foreground="gray").grid(row=1, column=2, sticky="w", padx=5)
         
         # Sexe
         ttk.Label(personal_frame, text="Sexe*:").grid(row=2, column=0, sticky="w", pady=5)
@@ -138,19 +127,16 @@ class PersonnelDialog:
         ttk.Label(personal_frame, text="Adresse*:").grid(row=3, column=0, sticky="w", pady=5)
         self.adresse_entry = ttk.Entry(personal_frame, textvariable=self.adresse_var, width=50)
         self.adresse_entry.grid(row=3, column=1, sticky="ew", padx=(10, 5), pady=5)
-        ttk.Label(personal_frame, text="Ex: 123 Rue de la Paix, Paris", foreground="gray").grid(row=3, column=2, sticky="w", padx=5)
         
         # Téléphone
         ttk.Label(personal_frame, text="Téléphone:").grid(row=4, column=0, sticky="w", pady=5)
         self.telephone_entry = ttk.Entry(personal_frame, textvariable=self.telephone_var, width=20)
         self.telephone_entry.grid(row=4, column=1, sticky="w", padx=(10, 5), pady=5)
-        ttk.Label(personal_frame, text="Ex: +33 1 23 45 67 89", foreground="gray").grid(row=4, column=2, sticky="w", padx=5)
         
         # Email
         ttk.Label(personal_frame, text="Email:").grid(row=5, column=0, sticky="w", pady=5)
         self.email_entry = ttk.Entry(personal_frame, textvariable=self.email_var, width=40)
         self.email_entry.grid(row=5, column=1, sticky="ew", padx=(10, 5), pady=5)
-        ttk.Label(personal_frame, text="Ex: jean.martin@airline.com", foreground="gray").grid(row=5, column=2, sticky="w", padx=5)
     
     def create_professional_section(self, parent):
         """Crée la section des informations professionnelles"""
@@ -161,7 +147,7 @@ class PersonnelDialog:
         
         # Type de personnel
         ttk.Label(prof_frame, text="Poste*:").grid(row=0, column=0, sticky="w", pady=5)
-        type_choices = [t.obtenir_nom_affichage() for t in TypePersonnel]
+        type_choices = ["Pilote", "Copilote", "Hôtesse de l'air", "Steward", "Mécanicien", "Contrôleur aérien", "Gestionnaire"]
         self.type_combo = ttk.Combobox(prof_frame, textvariable=self.type_personnel_var,
                                       values=type_choices, state="readonly", width=25)
         self.type_combo.grid(row=0, column=1, sticky="w", padx=(10, 5), pady=5)
@@ -180,7 +166,6 @@ class PersonnelDialog:
         ttk.Label(prof_frame, text="Spécialisation:").grid(row=2, column=0, sticky="w", pady=5)
         self.specialisation_entry = ttk.Entry(prof_frame, textvariable=self.specialisation_var, width=30)
         self.specialisation_entry.grid(row=2, column=1, sticky="ew", padx=(10, 5), pady=5)
-        ttk.Label(prof_frame, text="Ex: Ligne, Cargo, Formation", foreground="gray").grid(row=2, column=2, sticky="w", padx=5)
         
         # Disponibilité
         disponible_cb = ttk.Checkbutton(prof_frame, text="Disponible pour affectation",
@@ -224,13 +209,11 @@ class PersonnelDialog:
         ttk.Label(self.spec_frame, text="Numéro de licence*:").grid(row=0, column=0, sticky="w", pady=5)
         self.licence_entry = ttk.Entry(self.spec_frame, textvariable=self.numero_licence_var, width=20)
         self.licence_entry.grid(row=0, column=1, sticky="w", padx=(10, 5), pady=5)
-        ttk.Label(self.spec_frame, text="Ex: ATPL-12345", foreground="gray").grid(row=0, column=2, sticky="w", padx=5)
         
         # Heures de vol
         ttk.Label(self.spec_frame, text="Heures de vol:").grid(row=1, column=0, sticky="w", pady=5)
         self.heures_entry = ttk.Entry(self.spec_frame, textvariable=self.heures_vol_var, width=10)
         self.heures_entry.grid(row=1, column=1, sticky="w", padx=(10, 5), pady=5)
-        ttk.Label(self.spec_frame, text="Ex: 1500", foreground="gray").grid(row=1, column=2, sticky="w", padx=5)
     
     def create_cabin_crew_fields(self):
         """Champs spécifiques au personnel navigant"""
@@ -258,7 +241,6 @@ class PersonnelDialog:
         ttk.Label(self.spec_frame, text="Tour de contrôle:").grid(row=0, column=0, sticky="w", pady=5)
         self.tour_entry = ttk.Entry(self.spec_frame, textvariable=self.tour_controle_var, width=30)
         self.tour_entry.grid(row=0, column=1, sticky="ew", padx=(10, 5), pady=5)
-        ttk.Label(self.spec_frame, text="Ex: CDG-Tower", foreground="gray").grid(row=0, column=2, sticky="w", padx=5)
     
     def create_generic_fields(self):
         """Champs pour les autres types de personnel"""
@@ -268,7 +250,6 @@ class PersonnelDialog:
         ttk.Label(self.spec_frame, text="Département:").grid(row=0, column=0, sticky="w", pady=5)
         self.dept_entry = ttk.Entry(self.spec_frame, textvariable=self.departement_var, width=30)
         self.dept_entry.grid(row=0, column=1, sticky="ew", padx=(10, 5), pady=5)
-        ttk.Label(self.spec_frame, text="Ex: Maintenance, Administration", foreground="gray").grid(row=0, column=2, sticky="w", padx=5)
     
     def create_buttons(self, parent):
         """Crée les boutons du dialogue"""
@@ -350,7 +331,6 @@ class PersonnelDialog:
         """Valide tous les champs obligatoires"""
         errors = []
         
-        # Vérifications de base
         if not self.nom_var.get().strip():
             errors.append("Le nom est obligatoire")
         
@@ -383,7 +363,6 @@ class PersonnelDialog:
     
     def save_personnel(self):
         """Sauvegarde le personnel"""
-        # Validation
         errors = self.validate_fields()
         if errors:
             messagebox.showerror("Erreurs de Validation", 
@@ -392,7 +371,6 @@ class PersonnelDialog:
             return
         
         try:
-            # Mapping des énumérations
             sexe_mapping = {
                 'Masculin': 'masculin',
                 'Féminin': 'feminin',
@@ -429,30 +407,17 @@ class PersonnelDialog:
                 'heures_vol': float(self.heures_vol_var.get()) if self.heures_vol_var.get().strip() else 0.0,
                 'departement': self.departement_var.get().strip(),
                 'tour_controle': self.tour_controle_var.get().strip(),
-                'langues_parlees': langues_selectionnees
+                'langues_parlees': langues_selectionnees,
+                'created_at': self.personnel_data.get('created_at', datetime.now().isoformat()) if self.is_editing else datetime.now().isoformat(),
+                'updated_at': datetime.now().isoformat()
             }
             
             # Sauvegarder
             if self.is_editing:
-                # Pour la modification, on met à jour dans la liste existante
-                all_personnel = self.data_manager.get_personnel()
-                for i, person in enumerate(all_personnel):
-                    if person.get('id_employe') == personnel_data['id_employe']:
-                        personnel_data['updated_at'] = datetime.now().isoformat()
-                        all_personnel[i] = {**person, **personnel_data}
-                        break
-                
-                data = self.data_manager.load_data('personnel')
-                data['personnel'] = all_personnel
-                success = self.data_manager.save_data('personnel', data)
+                success = self.safe_update_personnel(personnel_data)
                 action = "modifié"
             else:
-                personnel_data['created_at'] = datetime.now().isoformat()
-                data = self.data_manager.load_data('personnel')
-                if 'personnel' not in data:
-                    data['personnel'] = []
-                data['personnel'].append(personnel_data)
-                success = self.data_manager.save_data('personnel', data)
+                success = self.safe_add_personnel(personnel_data)
                 action = "créé"
             
             if success:
@@ -465,6 +430,46 @@ class PersonnelDialog:
         except Exception as e:
             messagebox.showerror("Erreur", f"Erreur lors de la sauvegarde:\n{e}")
             print(f"❌ Erreur sauvegarde personnel: {e}")
+    
+    def safe_add_personnel(self, personnel_data):
+        """Ajout sécurisé de personnel"""
+        try:
+            data = self.data_manager.load_data('personnel')
+            if 'personnel' not in data:
+                data['personnel'] = []
+            
+            data['personnel'].append(personnel_data)
+            return self.data_manager.save_data('personnel', data)
+        except Exception as e:
+            print(f"❌ Erreur ajout personnel: {e}")
+            return False
+    
+    def safe_update_personnel(self, personnel_data):
+        """Mise à jour sécurisée de personnel"""
+        try:
+            data = self.data_manager.load_data('personnel')
+            if 'personnel' not in data:
+                return False
+            
+            # Trouver le personnel à modifier
+            personnel_index = -1
+            original_id = self.personnel_data.get('id_employe')
+            
+            for i, person in enumerate(data['personnel']):
+                if person.get('id_employe') == original_id:
+                    personnel_index = i
+                    break
+            
+            if personnel_index == -1:
+                print(f"❌ Personnel {original_id} non trouvé")
+                return False
+            
+            # Mettre à jour
+            data['personnel'][personnel_index] = personnel_data
+            return self.data_manager.save_data('personnel', data)
+        except Exception as e:
+            print(f"❌ Erreur modification personnel: {e}")
+            return False
     
     def cancel(self):
         """Annule le dialogue"""
@@ -575,24 +580,30 @@ def edit_personnel(parent, data_manager, personnel_tree):
         messagebox.showwarning("Sélection", "Veuillez sélectionner un membre du personnel à modifier.")
         return
     
-    item = personnel_tree.item(selection[0])
-    personnel_id = item['values'][0]
-    
-    # Trouver les données complètes du personnel
-    all_personnel = data_manager.get_personnel()
-    personnel_data = None
-    for person in all_personnel:
-        if person.get('id_employe', '').startswith(personnel_id.replace('...', '')):
-            personnel_data = person
-            break
-    
-    if not personnel_data:
-        messagebox.showerror("Erreur", "Personnel non trouvé.")
-        return
-    
-    dialog = PersonnelDialog(parent, data_manager, personnel_data)
-    if dialog.result:
-        refresh_personnel_data(personnel_tree, data_manager)
+    try:
+        item = personnel_tree.item(selection[0])
+        personnel_id = item['values'][0]
+        
+        # Recherche robuste du personnel
+        all_personnel = data_manager.get_personnel()
+        personnel_data = None
+        
+        for person in all_personnel:
+            if person.get('id_employe', '').startswith(personnel_id.replace('...', '')):
+                personnel_data = person
+                break
+        
+        if not personnel_data:
+            messagebox.showerror("Erreur", "Personnel non trouvé.")
+            return
+        
+        dialog = PersonnelDialog(parent, data_manager, personnel_data)
+        if dialog.result:
+            refresh_personnel_data(personnel_tree, data_manager)
+            messagebox.showinfo("Succès", "Personnel modifié avec succès!")
+            
+    except Exception as e:
+        messagebox.showerror("Erreur", f"Erreur lors de la modification: {e}")
 
 
 def view_personnel_details(personnel_tree):
@@ -626,30 +637,35 @@ def delete_personnel(data_manager, personnel_tree):
         messagebox.showwarning("Sélection", "Veuillez sélectionner un membre du personnel à supprimer.")
         return
     
-    item = personnel_tree.item(selection[0])
-    personnel_id = item['values'][0]
-    personnel_name = f"{item['values'][2]} {item['values'][1]}"
+    try:
+        item = personnel_tree.item(selection[0])
+        personnel_id = item['values'][0]
+        personnel_name = f"{item['values'][2]} {item['values'][1]}"
+        
+        if messagebox.askyesno("Confirmation", 
+                              f"Voulez-vous vraiment supprimer {personnel_name} ?"):
+            
+            # Supprimer de la liste
+            data = data_manager.load_data('personnel')
+            if 'personnel' not in data:
+                return
+            
+            original_count = len(data['personnel'])
+            data['personnel'] = [p for p in data['personnel'] 
+                               if not p.get('id_employe', '').startswith(personnel_id.replace('...', ''))]
+            
+            if len(data['personnel']) == original_count:
+                messagebox.showerror("Erreur", "Personnel non trouvé.")
+                return
+            
+            if data_manager.save_data('personnel', data):
+                refresh_personnel_data(personnel_tree, data_manager)
+                messagebox.showinfo("Succès", "Personnel supprimé avec succès.")
+            else:
+                messagebox.showerror("Erreur", "Erreur lors de la suppression.")
     
-    if messagebox.askyesno("Confirmation", 
-                          f"Voulez-vous vraiment supprimer {personnel_name} ?"):
-        
-        # Supprimer de la liste
-        all_personnel = data_manager.get_personnel()
-        updated_personnel = []
-        
-        for person in all_personnel:
-            if not person.get('id_employe', '').startswith(personnel_id.replace('...', '')):
-                updated_personnel.append(person)
-        
-        # Sauvegarder
-        data = data_manager.load_data('personnel')
-        data['personnel'] = updated_personnel
-        
-        if data_manager.save_data('personnel', data):
-            refresh_personnel_data(personnel_tree, data_manager)
-            messagebox.showinfo("Succès", "Personnel supprimé avec succès.")
-        else:
-            messagebox.showerror("Erreur", "Impossible de supprimer le personnel.")
+    except Exception as e:
+        messagebox.showerror("Erreur", f"Erreur lors de la suppression: {e}")
 
 
 def filter_personnel(personnel_tree, data_manager, search_var, filter_var):
@@ -710,43 +726,56 @@ def filter_personnel(personnel_tree, data_manager, search_var, filter_var):
 
 def refresh_personnel_data(personnel_tree, data_manager):
     """Rafraîchit les données du personnel"""
-    # Vider le tableau
-    for item in personnel_tree.get_children():
-        personnel_tree.delete(item)
-    
-    # Recharger les données
-    all_personnel = data_manager.get_personnel()
-    
-    # Mapping des types pour l'affichage
-    type_mapping = {
-        'pilote': 'Pilote',
-        'copilote': 'Copilote',
-        'hotesse': 'Hôtesse de l\'air',
-        'steward': 'Steward',
-        'mecanicien': 'Mécanicien',
-        'controleur': 'Contrôleur aérien',
-        'gestionnaire': 'Gestionnaire'
-    }
-    
-    for person in all_personnel:
-        person_type = type_mapping.get(person.get('type_personnel', ''), 'Inconnu')
+    try:
+        print("🔄 Rafraîchissement des données personnel...")
         
-        # Contact (priorité email puis téléphone)
-        contact = ""
-        if person.get('email'):
-            contact = person.get('email')
-        elif person.get('numero_telephone'):
-            contact = person.get('numero_telephone')
+        # Vider le tableau
+        for item in personnel_tree.get_children():
+            personnel_tree.delete(item)
         
-        values = (
-            person.get('id_employe', '')[:8] + '...' if len(person.get('id_employe', '')) > 8 else person.get('id_employe', ''),
-            person.get('nom', ''),
-            person.get('prenom', ''),
-            person_type,
-            person.get('specialisation', ''),
-            person.get('horaire', ''),
-            "✓" if person.get('disponible', True) else "✗",
-            contact
-        )
+        all_personnel = data_manager.get_personnel()
+        print(f"  📊 {len(all_personnel)} membres du personnel chargés")
         
-        personnel_tree.insert('', 'end', values=values)
+        # Mapping des types pour l'affichage
+        type_mapping = {
+            'pilote': 'Pilote',
+            'copilote': 'Copilote',
+            'hotesse': 'Hôtesse de l\'air',
+            'steward': 'Steward',
+            'mecanicien': 'Mécanicien',
+            'controleur': 'Contrôleur aérien',
+            'gestionnaire': 'Gestionnaire'
+        }
+        
+        for person in all_personnel:
+            try:
+                person_type = type_mapping.get(person.get('type_personnel', ''), 'Inconnu')
+                
+                # Contact (priorité email puis téléphone)
+                contact = ""
+                if person.get('email'):
+                    contact = person.get('email')
+                elif person.get('numero_telephone'):
+                    contact = person.get('numero_telephone')
+                
+                values = (
+                    person.get('id_employe', '')[:8] + '...' if len(person.get('id_employe', '')) > 8 else person.get('id_employe', ''),
+                    person.get('nom', ''),
+                    person.get('prenom', ''),
+                    person_type,
+                    person.get('specialisation', ''),
+                    person.get('horaire', ''),
+                    "✓" if person.get('disponible', True) else "✗",
+                    contact
+                )
+                
+                personnel_tree.insert('', 'end', values=values)
+                
+            except Exception as e:
+                print(f"  ⚠️ Erreur traitement personnel: {e}")
+                continue
+        
+        print(f"✅ Personnel rafraîchi: {len(all_personnel)} membres affichés")
+        
+    except Exception as e:
+        print(f"❌ Erreur refresh personnel: {e}")
